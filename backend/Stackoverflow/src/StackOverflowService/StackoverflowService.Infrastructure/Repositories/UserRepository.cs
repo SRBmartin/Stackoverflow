@@ -17,6 +17,22 @@ namespace StackoverflowService.Infrastructure.Repositories
 
         public UserRepository(ITableContext ctx) { _users = ctx.Users; }
 
+        public async Task<bool> ExistsByEmailAsync(string email, CancellationToken cancellationToken)
+        {
+            var filter = TableClient.CreateQueryFilter<UserEntity>(
+                e => e.PartitionKey == "USR" && e.Email == email
+            );
+
+            await foreach (var _ in _users.QueryAsync<UserEntity>(
+                filter, maxPerPage: 1, cancellationToken: cancellationToken
+            ))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         public async Task<User?> GetAsync(string userId, CancellationToken cancellationToken)
         {
             try

@@ -1,5 +1,6 @@
 using Autofac;
 using Autofac.Integration.WebApi;
+using StackoverflowService.Application.Composition;
 using StackoverflowService.Infrastructure.Composition;
 using System.Reflection;
 using System.Web;
@@ -18,6 +19,7 @@ namespace StackOverflowService.WebRole
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
 
             builder.RegisterModule(new InfrastructureModule());
+            builder.RegisterModule(new ApplicationModule());
 
             var container = builder.Build();
 

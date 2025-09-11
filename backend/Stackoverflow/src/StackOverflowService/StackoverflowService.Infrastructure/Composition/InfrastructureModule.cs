@@ -1,6 +1,8 @@
 ﻿using Autofac;
+using StackoverflowService.Application.Abstractions;
 using StackoverflowService.Domain.Repositories;
 using StackoverflowService.Infrastructure.Repositories;
+using StackoverflowService.Infrastructure.Security;
 using StackoverflowService.Infrastructure.Tables.Context;
 using StackoverflowService.Infrastructure.Tables.Interfaces;
 
@@ -11,8 +13,12 @@ namespace StackoverflowService.Infrastructure.Composition
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<TableContext>()
-             .As<ITableContext>()
-             .SingleInstance();
+                 .As<ITableContext>()
+                 .SingleInstance();
+
+            builder.RegisterType<PasswordHasherPbkdf2>()
+                .As<IPasswordHasher>()
+                .SingleInstance();
 
             builder.RegisterType<UserRepository>().As<IUserRepository>().InstancePerLifetimeScope();
             builder.RegisterType<QuestionRepository>().As<IQuestionRepository>().InstancePerLifetimeScope();

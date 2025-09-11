@@ -18,7 +18,7 @@ namespace StackoverflowService.Domain.Entities
         public string City { get; private set; }
         public string Address { get; private set; }
         public string PasswordHash { get; private set; }
-        public PhotoRef Photo { get; private set; }
+        public PhotoRef? Photo { get; private set; }
 
         public User(string id, string name, string lastname, string email, string passwordHash,
                     Gender gender = Gender.Male, string state = "", string city = "", string address = "",
