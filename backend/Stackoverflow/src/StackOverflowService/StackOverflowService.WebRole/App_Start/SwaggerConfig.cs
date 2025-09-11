@@ -4,6 +4,7 @@ using StackOverflowService.WebRole;
 using Swashbuckle.Application;
 using System.IO;
 using System;
+using StackOverflowService.WebRole.Swagger;
 
 [assembly: PreApplicationStartMethod(typeof(SwaggerConfig), "Register")]
 
@@ -25,6 +26,8 @@ namespace StackOverflowService.WebRole
                         var xmlPath = Path.Combine(basePath, "bin", "StackOverflowService.WebRole.xml");
                         if (File.Exists(xmlPath))
                             c.IncludeXmlComments(xmlPath);
+
+                        c.OperationFilter<FileUploadOperationFilter>();
                     })
                 .EnableSwaggerUi(c =>
                     {

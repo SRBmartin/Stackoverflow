@@ -56,6 +56,8 @@ namespace StackoverflowService.Application.Features.Users.RegisterUser
 
             await _userRepository.AddAsync(user, cancellationToken);
 
+            //TODO: Add email service call via Notification entity
+
             var dto = new UserDto
             {
                 Id = user.Id,
