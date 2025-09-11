@@ -3,6 +3,7 @@ using StackoverflowService.Application.Abstractions;
 using StackoverflowService.Domain.Repositories;
 using StackoverflowService.Infrastructure.Repositories;
 using StackoverflowService.Infrastructure.Security;
+using StackoverflowService.Infrastructure.Storage;
 using StackoverflowService.Infrastructure.Tables.Context;
 using StackoverflowService.Infrastructure.Tables.Interfaces;
 
@@ -14,7 +15,12 @@ namespace StackoverflowService.Infrastructure.Composition
         {
             builder.RegisterType<TableContext>()
                  .As<ITableContext>()
-                 .SingleInstance();
+                 .SingleInstance()
+                 .AutoActivate();
+
+            builder.RegisterType<UserPhotoStorage>()
+                .As<IPhotoStorage>()
+                .SingleInstance();
 
             builder.RegisterType<PasswordHasherPbkdf2>()
                 .As<IPasswordHasher>()

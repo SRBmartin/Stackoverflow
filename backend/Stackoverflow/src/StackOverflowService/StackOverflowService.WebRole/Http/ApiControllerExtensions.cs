@@ -1,8 +1,7 @@
-﻿// /WebRole/Http/ApiControllerExtensions.cs
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
 using System.Web.Http;
-using System.Web.Http.Results;                 // OkResult, NegotiatedContentResult<T>
+using System.Web.Http.Results;
 using StackoverflowService.Application.Common;
 using StackoverflowService.Application.Common.StackoverflowService.Application.Common.Results;
 

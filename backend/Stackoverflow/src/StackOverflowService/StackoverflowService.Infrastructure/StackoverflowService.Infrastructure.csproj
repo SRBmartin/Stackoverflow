@@ -155,6 +155,7 @@
     <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="Repositories\VoteRepository.cs" />
     <Compile Include="Security\PasswordHasherPbkdf2.cs" />
+    <Compile Include="Storage\UserPhotoStorage.cs" />
     <Compile Include="Tables\Context\TableContext.cs" />
     <Compile Include="Tables\Interfaces\ITableContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
