@@ -30,6 +30,10 @@ namespace StackoverflowService.Infrastructure.Composition
                 .As<IIdentityService>()
                 .SingleInstance();
 
+            builder.RegisterType<IdentityValidator>()
+                .As<IIdentityValidator>()
+                .SingleInstance();
+
             builder.RegisterType<UserRepository>().As<IUserRepository>().InstancePerLifetimeScope();
             builder.RegisterType<QuestionRepository>().As<IQuestionRepository>().InstancePerLifetimeScope();
             builder.RegisterType<AnswerRepository>().As<IAnswerRepository>().InstancePerLifetimeScope();

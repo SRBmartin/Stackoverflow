@@ -126,6 +126,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstractions\IIdentityService.cs" />
+    <Compile Include="Abstractions\IIdentityValidator.cs" />
     <Compile Include="Abstractions\IPasswordHasher.cs" />
     <Compile Include="Abstractions\IPhotoStorage.cs" />
     <Compile Include="Behaviors\ValidationBehavior.cs" />

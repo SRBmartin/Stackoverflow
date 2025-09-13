@@ -5,11 +5,14 @@ using StackoverflowService.Application.Features.Users.SetUserPhoto;
 using StackOverflowService.WebRole.Http;
 using StackOverflowService.WebRole.Requests.User;
 using StackOverflowService.WebRole.Swagger;
+using StackOverflowService.WebRole.Security;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Security.Claims;
+using System.Net;
 
 namespace StackOverflowService.WebRole.Controllers
 {
@@ -33,9 +36,10 @@ namespace StackOverflowService.WebRole.Controllers
             return this.ToActionResult(result);
         }
 
-        [HttpPost, Route("{userId}/photo")]
+        [HttpPost, Route("photo")]
         [SwaggerFileUpload]
-        public async Task<IHttpActionResult> Upload(string userId, CancellationToken cancellationToken)
+        [RequireJwtAuth]
+        public async Task<IHttpActionResult> Upload(CancellationToken cancellationToken)
         {
             if (!Request.Content.IsMimeMultipartContent())
                 return BadRequest("multipart/form-data expected");
@@ -48,6 +52,11 @@ namespace StackOverflowService.WebRole.Controllers
                 ?? provider.Contents.FirstOrDefault();
 
             if (file == null) return BadRequest("File part 'file' not found.");
+
+            var principal = User as ClaimsPrincipal;
+            var userId = principal?.FindFirst("sub")?.Value ?? principal?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId)) return ResponseMessage(Request.CreateResponse(HttpStatusCode.Unauthorized));
 
             var dto = new FileUploadDto
             {

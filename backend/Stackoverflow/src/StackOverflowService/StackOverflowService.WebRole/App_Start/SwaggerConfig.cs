@@ -28,11 +28,17 @@ namespace StackOverflowService.WebRole
                             c.IncludeXmlComments(xmlPath);
 
                         c.OperationFilter<FileUploadOperationFilter>();
+
+                        c.ApiKey("Bearer")
+                            .Description("JWT Authorization header using the Bearer scheme. Example: \"Bearer <token>\".")
+                            .Name("Authorization")
+                            .In("header");
                     })
                 .EnableSwaggerUi(c =>
                     {
                         c.DocumentTitle("StackOverflowService API Docs");
                         c.DisableValidator();
+                        c.EnableApiKeySupport("Authorization", "header");
                     });
         }
     }
