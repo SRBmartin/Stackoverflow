@@ -1,10 +1,10 @@
 ﻿using MediatR;
 using StackoverflowService.Application.Common.StackoverflowService.Application.Common.Results;
-using StackoverflowService.Application.DTOs.Users;
+using StackoverflowService.Application.DTOs.Auth;
 
 namespace StackoverflowService.Application.Features.Users.RegisterUser
 {
-    public sealed class RegisterUserCommand : IRequest<Result<UserDto>>
+    public sealed class RegisterUserCommand : IRequest<Result<AuthResponseDto>>
     {
         public string Name { get; }
         public string Lastname { get; }

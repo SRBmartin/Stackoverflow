@@ -2,7 +2,7 @@
 using StackoverflowService.Application.Abstractions;
 using StackoverflowService.Application.Common;
 using StackoverflowService.Application.Common.StackoverflowService.Application.Common.Results;
-using StackoverflowService.Application.DTOs.Users;
+using StackoverflowService.Application.DTOs.Auth;
 using StackoverflowService.Domain.Entities;
 using StackoverflowService.Domain.Enums;
 using StackoverflowService.Domain.Repositories;
@@ -14,27 +14,30 @@ using System.Threading.Tasks;
 
 namespace StackoverflowService.Application.Features.Users.RegisterUser
 {
-    public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, Result<UserDto>>
+    public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, Result<AuthResponseDto>>
     {
         private readonly IUserRepository _userRepository;
         private readonly IPasswordHasher _passwordHasher;
+        private readonly IIdentityService _identityService;
 
         public RegisterUserCommandHandler(
             IUserRepository userRepository,
-            IPasswordHasher passwordHasher
+            IPasswordHasher passwordHasher,
+            IIdentityService identityService
         )
         {
             _userRepository = userRepository;
             _passwordHasher = passwordHasher;
+            _identityService = identityService;
         }
 
-        public async Task<Result<UserDto?>> Handle(RegisterUserCommand command, CancellationToken cancellationToken)
+        public async Task<Result<AuthResponseDto?>> Handle(RegisterUserCommand command, CancellationToken cancellationToken)
         {
             var email = command.Email.Trim();
 
             if (await _userRepository.ExistsByEmailAsync(email, cancellationToken))
             {
-                return Result.Fail<UserDto>(Error.Conflict("User.EmailInUse", "User is already registered with this email address."))!;
+                return Result.Fail<AuthResponseDto>(Error.Conflict("User.EmailInUse", "User is already registered with this email address."))!;
             }
 
             var userId = Guid.NewGuid().ToString();
@@ -58,22 +61,9 @@ namespace StackoverflowService.Application.Features.Users.RegisterUser
 
             //TODO: Add email service call via Notification entity
 
-            var dto = new UserDto
-            {
-                Id = user.Id,
-                Name = user.Name,
-                Lastname = user.Lastname,
-                Email = user.Email,
-                Gender = ToGenderString(user.Gender),
-                State = user.State,
-                City = user.City,
-                Address = user.Address,
-                PhotoBlobName = user.Photo?.BlobName,
-                PhotoContainer = user.Photo?.Container,
-                CreationDate = user.CreationDate
-            };
+            var response = _identityService.CreateAccessToken(user);
 
-            return Result.Ok(dto)!;
+            return Result.Ok(response)!;
         }
 
         private static Gender ParseGender(string? s)

@@ -13,7 +13,7 @@ namespace StackoverflowService.Infrastructure.Tables.Entities
         public string Lastname { get; set; } = default;
         public DateTimeOffset CreationDate { get; set; }
         public string Email { get; set; } = default;
-        public string Gender { get; set; } = default; // "M" "F" 1-char string
+        public string Gender { get; set; } = default; // "M" "F"
         public string State { get; set; } = default;
         public string City { get; set; } = default;
         public string Address { get; set; } = default;

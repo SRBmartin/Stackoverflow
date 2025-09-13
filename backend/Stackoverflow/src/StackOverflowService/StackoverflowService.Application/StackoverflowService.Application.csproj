@@ -125,6 +125,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abstractions\IIdentityService.cs" />
     <Compile Include="Abstractions\IPasswordHasher.cs" />
     <Compile Include="Abstractions\IPhotoStorage.cs" />
     <Compile Include="Behaviors\ValidationBehavior.cs" />
@@ -132,6 +133,7 @@
     <Compile Include="Common\ErrorType.cs" />
     <Compile Include="Common\Result.cs" />
     <Compile Include="Composition\ApplicationModule.cs" />
+    <Compile Include="DTOs\Auth\AuthResponseDto.cs" />
     <Compile Include="DTOs\File\FileUploadDto.cs" />
     <Compile Include="DTOs\Users\UserDto.cs" />
     <Compile Include="Features\Users\RegisterUser\RegisterUserCommand.cs" />

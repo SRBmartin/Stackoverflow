@@ -26,6 +26,10 @@ namespace StackoverflowService.Infrastructure.Composition
                 .As<IPasswordHasher>()
                 .SingleInstance();
 
+            builder.RegisterType<IdentityService>()
+                .As<IIdentityService>()
+                .SingleInstance();
+
             builder.RegisterType<UserRepository>().As<IUserRepository>().InstancePerLifetimeScope();
             builder.RegisterType<QuestionRepository>().As<IQuestionRepository>().InstancePerLifetimeScope();
             builder.RegisterType<AnswerRepository>().As<IAnswerRepository>().InstancePerLifetimeScope();
