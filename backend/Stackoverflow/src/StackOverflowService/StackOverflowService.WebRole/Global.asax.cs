@@ -2,6 +2,7 @@ using Autofac;
 using Autofac.Integration.WebApi;
 using StackoverflowService.Application.Composition;
 using StackoverflowService.Infrastructure.Composition;
+using System;
 using System.Reflection;
 using System.Web;
 using System.Web.Http;
@@ -27,5 +28,17 @@ namespace StackOverflowService.WebRole
 
             GlobalConfiguration.Configuration.DependencyResolver = resolver;
         }
+
+        protected void Application_BeginRequest(object sender, EventArgs e)
+        {
+            var ctx = HttpContext.Current;
+            var path = ctx?.Request?.Url?.AbsolutePath ?? "";
+            if (string.Equals(path, "/", StringComparison.Ordinal))
+            {
+                ctx.Response.Redirect("~/swagger/ui/index", endResponse: true);
+            }
+
+        }
+
     }
 }
