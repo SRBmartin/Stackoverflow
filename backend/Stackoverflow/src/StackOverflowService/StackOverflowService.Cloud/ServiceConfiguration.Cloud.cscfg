@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ServiceConfiguration serviceName="StackOverflowService.Cloud" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="7" osVersion="*" schemaVersion="2015-04.2.6">
+  <Role name="StackOverflowService.WebRole">
+    <Instances count="1" />
+    <ConfigurationSettings />
+  </Role>
+  <NetworkConfiguration>
+    <VirtualNetworkSite name="stackoverflowservice.cloudVNet" />
+    <AddressAssignments>
+      <InstanceAddress roleName="StackOverflowService.WebRole">
+        <Subnets>
+          <Subnet name="WebTier" />
+        </Subnets>
+      </InstanceAddress>
+    </AddressAssignments>
+  </NetworkConfiguration>
+</ServiceConfiguration>

@@ -1,0 +1,18 @@
+﻿#nullable enable
+
+using StackoverflowService.Domain.Entities;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Threading;
+
+namespace StackoverflowService.Domain.Repositories
+{
+    public interface IVoteRepository
+    {
+        Task<Vote?> GetAsync(string answerId, string voteId, CancellationToken cancellationToken);
+        Task AddAsync(Vote vote, CancellationToken cancellationToken);
+        Task<IReadOnlyList<Vote>> ListByAnswerAsync(string answerId, int take, CancellationToken cancellationToken);
+        Task<Vote?> GetUserVoteForAnswerAsync(string answerId, string userId, CancellationToken cancellationToken);
+        Task UpsertAsync(Vote vote, CancellationToken cancellationToken);
+    }
+}
