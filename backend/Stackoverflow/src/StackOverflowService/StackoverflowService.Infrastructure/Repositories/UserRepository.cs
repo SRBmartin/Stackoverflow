@@ -43,6 +43,17 @@ namespace StackoverflowService.Infrastructure.Repositories
             catch (Azure.RequestFailedException) { return null; }
         }
 
+        public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken)
+        {
+            var filter = TableClient.CreateQueryFilter<UserEntity>(e => e.PartitionKey == "USR" && e.Email == email);
+            await foreach (var e in _users.QueryAsync<UserEntity>(filter, maxPerPage: 1, cancellationToken: cancellationToken))
+            {
+                return e.ToDomain();
+            }
+
+            return null;
+        }
+
         public async Task AddAsync(User user, CancellationToken cancellationToken)
             => await _users.AddEntityAsync(user.ToTable(), cancellationToken);
 

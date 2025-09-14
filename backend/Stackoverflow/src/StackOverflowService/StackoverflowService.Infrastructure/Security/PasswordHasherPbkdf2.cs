@@ -63,7 +63,10 @@ namespace StackoverflowService.Infrastructure.Security
             if (!parts[0].Equals("PBKDF2-SHA1", StringComparison.Ordinal)) return false;
             if (!parts[1].Equals("v1", StringComparison.Ordinal)) return false;
 
-            var iterPart = parts[2]; var saltPart = parts[3]; var hashPart = parts[4];
+            var iterPart = parts[2];
+            var saltPart = parts[3];
+            var hashPart = parts[4];
+
             if (!iterPart.StartsWith("iter=", StringComparison.Ordinal)) return false;
             if (!saltPart.StartsWith("salt=", StringComparison.Ordinal)) return false;
             if (!hashPart.StartsWith("hash=", StringComparison.Ordinal)) return false;

@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Security.Claims;
 using System.Net;
+using StackoverflowService.Application.Features.Users.Login;
 
 namespace StackOverflowService.WebRole.Controllers
 {
@@ -30,6 +31,16 @@ namespace StackOverflowService.WebRole.Controllers
         public async Task<IHttpActionResult> Register(CreateUserRequest request, CancellationToken cancellationToken)
         {
             var command = new RegisterUserCommand(request.Name, request.Lastname, request.Email, request.Password, request.Gender, request.State, request.City, request.Address);
+
+            var result = await _mediator.Send(command, cancellationToken);
+
+            return this.ToActionResult(result);
+        }
+
+        [HttpPost, Route("login")]
+        public async Task<IHttpActionResult> Login(LoginUserRequest request, CancellationToken cancellationToken)
+        {
+            var command = new LoginCommand(request.Email, request.Password);
 
             var result = await _mediator.Send(command, cancellationToken);
 

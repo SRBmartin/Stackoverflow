@@ -3,7 +3,7 @@ using System.Net;
 using System.Web.Http;
 using System.Web.Http.Results;
 using StackoverflowService.Application.Common;
-using StackoverflowService.Application.Common.StackoverflowService.Application.Common.Results;
+using StackoverflowService.Application.Common.Results;
 
 namespace StackOverflowService.WebRole.Http
 {

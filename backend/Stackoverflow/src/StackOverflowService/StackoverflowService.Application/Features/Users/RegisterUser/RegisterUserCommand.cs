@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using StackoverflowService.Application.Common.StackoverflowService.Application.Common.Results;
+using StackoverflowService.Application.Common.Results;
 using StackoverflowService.Application.DTOs.Auth;
 
 namespace StackoverflowService.Application.Features.Users.RegisterUser

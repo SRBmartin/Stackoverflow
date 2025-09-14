@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using StackoverflowService.Application.Common.StackoverflowService.Application.Common.Results;
+using StackoverflowService.Application.Common.Results;
 using StackoverflowService.Application.DTOs.File;
 using StackoverflowService.Application.DTOs.Users;
 

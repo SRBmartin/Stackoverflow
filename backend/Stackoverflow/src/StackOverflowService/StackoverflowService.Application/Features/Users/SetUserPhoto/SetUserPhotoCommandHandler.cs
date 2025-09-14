@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using StackoverflowService.Application.Abstractions;
 using StackoverflowService.Application.Common;
-using StackoverflowService.Application.Common.StackoverflowService.Application.Common.Results;
+using StackoverflowService.Application.Common.Results;
 using StackoverflowService.Application.DTOs.Users;
 using StackoverflowService.Domain.Enums;
 using StackoverflowService.Domain.Repositories;

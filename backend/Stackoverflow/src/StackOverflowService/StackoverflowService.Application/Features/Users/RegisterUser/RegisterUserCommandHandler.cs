@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using StackoverflowService.Application.Abstractions;
 using StackoverflowService.Application.Common;
-using StackoverflowService.Application.Common.StackoverflowService.Application.Common.Results;
+using StackoverflowService.Application.Common.Results;
 using StackoverflowService.Application.DTOs.Auth;
 using StackoverflowService.Domain.Entities;
 using StackoverflowService.Domain.Enums;

@@ -137,6 +137,9 @@
     <Compile Include="DTOs\Auth\AuthResponseDto.cs" />
     <Compile Include="DTOs\File\FileUploadDto.cs" />
     <Compile Include="DTOs\Users\UserDto.cs" />
+    <Compile Include="Features\Users\Login\LoginCommand.cs" />
+    <Compile Include="Features\Users\Login\LoginCommandHandler.cs" />
+    <Compile Include="Features\Users\Login\LoginCommandValidator.cs" />
     <Compile Include="Features\Users\RegisterUser\RegisterUserCommand.cs" />
     <Compile Include="Features\Users\RegisterUser\RegisterUserCommandHandler.cs" />
     <Compile Include="Features\Users\RegisterUser\RegisterUserCommandValidator.cs" />
