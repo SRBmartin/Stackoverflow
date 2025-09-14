@@ -1,4 +1,6 @@
-﻿using System.Web.Http;
+﻿using System.Configuration;
+using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace StackOverflowService.WebRole
 {
@@ -6,9 +8,16 @@ namespace StackOverflowService.WebRole
     {
         public static void Register(HttpConfiguration config)
         {
-            // Web API configuration and services
+            var origins = (ConfigurationManager.AppSettings["Cors:AllowedOrigins"] ?? "").Replace(" ", "");
+            var methods = ConfigurationManager.AppSettings["Cors:AllowedMethods"] ?? "GET,POST,PUT,PATCH,DELETE,OPTIONS";
+            var headers = ConfigurationManager.AppSettings["Cors:AllowedHeaders"] ?? "Authorization,Content-Type,Accept,Origin,X-Requested-With";
 
-            // Web API routes
+            var cors = new EnableCorsAttribute(origins, headers, methods)
+            {
+                PreflightMaxAge = 600
+            };
+            config.EnableCors(cors);
+
             config.MapHttpAttributeRoutes();
 
             config.Routes.MapHttpRoute(

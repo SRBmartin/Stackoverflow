@@ -18,6 +18,7 @@ namespace StackOverflowService.WebRole.Security
         public override void OnAuthorization(HttpActionContext actionContext)
         {
             if (SkipAuthorization(actionContext)) return;
+            if (actionContext.Request.Method == HttpMethod.Options) return; //We will let preflight through
 
             var request = actionContext.Request;
             var auth = request.Headers.Authorization;
