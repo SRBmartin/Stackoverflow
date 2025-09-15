@@ -129,6 +129,7 @@
     <Compile Include="Abstractions\IIdentityValidator.cs" />
     <Compile Include="Abstractions\IPasswordHasher.cs" />
     <Compile Include="Abstractions\IPhotoStorage.cs" />
+    <Compile Include="Abstractions\IQuestionPhotoStorage.cs" />
     <Compile Include="Behaviors\ValidationBehavior.cs" />
     <Compile Include="Common\Error.cs" />
     <Compile Include="Common\ErrorType.cs" />
@@ -142,6 +143,9 @@
     <Compile Include="Features\Questions\CreateQuestion\CreateQuestionCommand.cs" />
     <Compile Include="Features\Questions\CreateQuestion\CreateQuestionCommandHandler.cs" />
     <Compile Include="Features\Questions\CreateQuestion\CreateQuestionCommandValidator.cs" />
+    <Compile Include="Features\Questions\SetQuestionPhoto\SetQuestionPhotoCommand.cs" />
+    <Compile Include="Features\Questions\SetQuestionPhoto\SetQuestionPhotoCommandHandler.cs" />
+    <Compile Include="Features\Questions\SetQuestionPhoto\SetQuestionPhotoCommandValidator.cs" />
     <Compile Include="Features\Users\Login\LoginCommand.cs" />
     <Compile Include="Features\Users\Login\LoginCommandHandler.cs" />
     <Compile Include="Features\Users\Login\LoginCommandValidator.cs" />

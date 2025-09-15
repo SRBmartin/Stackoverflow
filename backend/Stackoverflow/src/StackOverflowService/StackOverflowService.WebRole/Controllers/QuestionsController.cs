@@ -9,6 +9,11 @@ using System.Net;
 using System.Security.Claims;
 using StackoverflowService.Application.Features.Questions.CreateQuestion;
 using StackOverflowService.WebRole.Http;
+using StackOverflowService.WebRole.Swagger;
+using StackoverflowService.Application.DTOs.File;
+using StackoverflowService.Application.Features.Questions.SetQuestionPhoto;
+using System.Net.Http;
+using System.Linq;
 
 namespace StackOverflowService.WebRole.Controllers
 {
@@ -36,6 +41,48 @@ namespace StackOverflowService.WebRole.Controllers
             }
 
             var command = new CreateQuestionCommand(userId, request.Title, request.Description);
+
+            var result = await _mediator.Send(command, cancellationToken);
+
+            return this.ToActionResult(result);
+        }
+
+        [HttpPost, Route("{id}/photo")]
+        [SwaggerFileUpload]
+        [RequireJwtAuth]
+        public async Task<IHttpActionResult> UploadPhoto(string id, CancellationToken cancellationToken)
+        {
+            if (!Request.Content.IsMimeMultipartContent())
+                return BadRequest("multipart/form-data expected");
+
+            var provider = await Request.Content.ReadAsMultipartAsync(new MultipartMemoryStreamProvider(), cancellationToken);
+
+            var file = provider.Contents.FirstOrDefault(c =>
+                (c.Headers.ContentDisposition?.Name ?? "").Trim('"') == "file")
+                ?? provider.Contents.FirstOrDefault();
+
+            if (file == null) return BadRequest("File part 'file' not found.");
+
+            var principal = User as ClaimsPrincipal;
+            var userId = principal?.FindFirst("sub")?.Value
+                      ?? principal?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.Unauthorized));
+
+            var dto = new FileUploadDto
+            {
+                Content = await file.ReadAsByteArrayAsync(),
+                ContentType = file.Headers.ContentType?.MediaType ?? "application/octet-stream",
+                FileName = file.Headers.ContentDisposition?.FileName?.Trim('"') ?? "upload"
+            };
+
+            var command = new SetQuestionPhotoCommand
+            {
+                UserId = userId,
+                QuestionId = id,
+                File = dto
+            };
 
             var result = await _mediator.Send(command, cancellationToken);
 

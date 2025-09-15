@@ -35,6 +35,7 @@ namespace StackoverflowService.Domain.Entities
             Title = title;
             Description = text;
         }
+        public void SetPhoto(PhotoRef photo) => Photo = photo;
         public void Close() => IsClosed = true;
         public void Delete() => IsDeleted = true;
 
