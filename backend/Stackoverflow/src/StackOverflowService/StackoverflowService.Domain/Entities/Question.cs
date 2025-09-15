@@ -30,6 +30,11 @@ namespace StackoverflowService.Domain.Entities
             IsDeleted = isDeleted;
         }
 
+        public void Edit(string title, string text)
+        {
+            Title = title;
+            Description = text;
+        }
         public void Close() => IsClosed = true;
         public void Delete() => IsDeleted = true;
 

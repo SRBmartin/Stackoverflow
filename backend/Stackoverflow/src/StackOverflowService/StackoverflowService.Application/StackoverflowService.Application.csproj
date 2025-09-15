@@ -136,7 +136,12 @@
     <Compile Include="Composition\ApplicationModule.cs" />
     <Compile Include="DTOs\Auth\AuthResponseDto.cs" />
     <Compile Include="DTOs\File\FileUploadDto.cs" />
+    <Compile Include="DTOs\Questions\QuestionDto.cs" />
     <Compile Include="DTOs\Users\UserDto.cs" />
+    <Compile Include="DTOs\Users\UserPreviewDto.cs" />
+    <Compile Include="Features\Questions\CreateQuestion\CreateQuestionCommand.cs" />
+    <Compile Include="Features\Questions\CreateQuestion\CreateQuestionCommandHandler.cs" />
+    <Compile Include="Features\Questions\CreateQuestion\CreateQuestionCommandValidator.cs" />
     <Compile Include="Features\Users\Login\LoginCommand.cs" />
     <Compile Include="Features\Users\Login\LoginCommandHandler.cs" />
     <Compile Include="Features\Users\Login\LoginCommandValidator.cs" />
