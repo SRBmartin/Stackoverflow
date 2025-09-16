@@ -1,1 +1,94 @@
-<p>register works!</p>
+<div class="register-container">
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <div class="register-box">
+      <h2>CREATE YOUR ACCOUNT</h2>
+
+      <div class="top-section">
+        <div class="left-col">
+          <div class="photo-preview-wrapper" *ngIf="photoPreview">
+            <img [src]="photoPreview" class="photo-preview" />
+          </div>
+          <div class="photo-drop-zone"
+               [class.dragging]="isDragging"
+               (dragover)="onDragOver($event)"
+               (dragleave)="onDragLeave($event)"
+               (drop)="onDrop($event)">
+            <p *ngIf="!photoPreview">Click and drop photo</p>
+            <input type="file" (change)="onFileSelected($event)" />
+          </div>
+        </div>
+
+        <div class="name-fields">
+          <div class="form-group">
+            <label for="name">Name *</label>
+            <input id="name" type="text" formControlName="name" placeholder="John"
+                   [ngClass]="{'invalid-input': name?.invalid && name?.touched}" />
+            <div class="error-message" *ngIf="name?.invalid && name?.touched">This field is required</div>
+          </div>
+
+          <div class="form-group">
+            <label for="lastname">Surname *</label>
+            <input id="lastname" type="text" formControlName="lastname" placeholder="Doe"
+                   [ngClass]="{'invalid-input': lastname?.invalid && lastname?.touched}" />
+            <div class="error-message" *ngIf="lastname?.invalid && lastname?.touched">This field is required</div>
+          </div>
+
+          <div class="form-group">
+            <label for="gender">Gender *</label>
+            <select id="gender" formControlName="gender"
+                    [ngClass]="{'invalid-input': gender?.invalid && gender?.touched}">
+              <option value="" disabled>Select gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+            <div class="error-message" *ngIf="gender?.invalid && gender?.touched">This field is required</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="email">Email *</label>
+          <input id="email" type="email" formControlName="email" placeholder="example@mail.com"
+                 [ngClass]="{'invalid-input': email?.invalid && email?.touched}" />
+          <div class="error-message" *ngIf="email?.touched && email?.errors?.['required']">Email is required</div>
+          <div class="error-message" *ngIf="email?.touched && email?.errors?.['email']">Enter a valid email</div>
+        </div>
+
+        <div class="form-group">
+          <label for="state">State</label>
+          <input id="state" type="text" formControlName="state" placeholder="State" />
+        </div>
+
+        <div class="form-group">
+          <label for="city">City</label>
+          <input id="city" type="text" formControlName="city" placeholder="City" />
+        </div>
+
+        <div class="form-group">
+          <label for="address">Address</label>
+          <input id="address" type="text" formControlName="address" placeholder="Street, No" />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password *</label>
+          <input id="password" type="password" formControlName="password" placeholder="••••••••"
+                 [ngClass]="{'invalid-input': password?.invalid && password?.touched}" />
+          <div class="error-message" *ngIf="password?.touched && password?.errors?.['required']">Password is required</div>
+          <div class="error-message" *ngIf="password?.touched && password?.errors?.['minlength']">Password must be at least 8 characters</div>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password *</label>
+          <input id="confirmPassword" type="password" formControlName="confirmPassword" placeholder="••••••••"
+                 [ngClass]="{'invalid-input': confirmPassword?.touched && registerForm.errors?.['passwordMismatch']}" />
+          <div class="error-message" *ngIf="confirmPassword?.touched && registerForm.errors?.['passwordMismatch']">
+            Passwords do not match
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-primary">Register</button>
+    </div>
+  </form>
+</div>
