@@ -28,6 +28,26 @@ namespace StackoverflowService.Infrastructure.Repositories
             catch (Azure.RequestFailedException) { return null; }
         }
 
+        public async Task<IReadOnlyList<Question>> GetAllFilteredAsync(string? titleStartsWith, CancellationToken cancellationToken)
+        {
+            string filter = "IsDeleted eq false";
+
+            if (!string.IsNullOrWhiteSpace(titleStartsWith) && !string.IsNullOrEmpty(titleStartsWith))
+            {
+                var low = EscapeOdataString(titleStartsWith);
+                var high = low + "\uFFFF";
+                filter += $" and Title ge '{low}' and Title lt '{high}'";
+            }
+
+            var list = new List<Question>(capacity: 128);
+            await foreach (var e in _questions.QueryAsync<QuestionEntity>(filter: filter, cancellationToken: cancellationToken))
+            {
+                list.Add(e.ToDomain());
+            }
+
+            return list;
+        }
+
         public async Task AddAsync(Question q, CancellationToken cancellationToken)
             => await _questions.AddEntityAsync(q.ToTable(), cancellationToken);
 
@@ -45,5 +65,10 @@ namespace StackoverflowService.Infrastructure.Repositories
 
         public async Task UpdateAsync(Question q, CancellationToken cancellationToken)
             => await _questions.UpsertEntityAsync(q.ToTable(), TableUpdateMode.Replace, cancellationToken);
+
+        #region Helpers
+        private static string EscapeOdataString(string s) => s.Replace("'", "''");
+        #endregion
+
     }
 }

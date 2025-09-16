@@ -14,6 +14,8 @@ using StackoverflowService.Application.DTOs.File;
 using StackoverflowService.Application.Features.Questions.SetQuestionPhoto;
 using System.Net.Http;
 using System.Linq;
+using StackoverflowService.Application.Features.Questions.GetQuestions.Enums;
+using StackoverflowService.Application.Features.Questions.GetQuestions;
 
 namespace StackOverflowService.WebRole.Controllers
 {
@@ -25,6 +27,32 @@ namespace StackOverflowService.WebRole.Controllers
         public QuestionsController(IMediator mediator)
         {
             _mediator = mediator;
+        }
+
+        [HttpGet, Route("")]
+        [RequireJwtAuth]
+        public async Task<IHttpActionResult> List([FromUri] GetQuestionsRequest request, CancellationToken cancellationToken)
+        {
+            if (request == null) request = new GetQuestionsRequest(); //take all default fields
+
+            var sortBy = request?.SortBy?.ToLowerInvariant() == "votes"
+                ? QuestionsSortBy.Votes
+                : QuestionsSortBy.Date;
+
+            var dir = request?.Direction?.ToLowerInvariant() == "asc"
+                ? SortDirection.Asc
+                : SortDirection.Desc;
+
+            var query = new GetQuestionsQuery(
+                page: request.Page <= 0 ? 1 : request.Page,
+                titleStartsWith: string.IsNullOrWhiteSpace(request.Title) ? string.Empty : request.Title,
+                sortBy: sortBy,
+                direction: dir
+            );
+
+            var result = await _mediator.Send(query, cancellationToken);
+
+            return this.ToActionResult(result);
         }
 
         [HttpPost, Route("")]

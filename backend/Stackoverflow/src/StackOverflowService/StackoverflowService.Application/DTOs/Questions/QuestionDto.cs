@@ -14,8 +14,9 @@ namespace StackoverflowService.Application.DTOs.Questions
         public DateTimeOffset CreationDate { get; set; }
         public bool IsClosed { get; set; }
         public bool IsDeleted { get; set; }
-
         
+        //Agregation and navigation fields
         public UserPreviewDto User { get; set; } = new UserPreviewDto();
+        public int VoteScore { get; set; } = default!;
     }
 }

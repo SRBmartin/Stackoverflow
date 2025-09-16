@@ -136,6 +136,7 @@
     <Compile Include="Common\Result.cs" />
     <Compile Include="Composition\ApplicationModule.cs" />
     <Compile Include="DTOs\Auth\AuthResponseDto.cs" />
+    <Compile Include="DTOs\Common\PagedResult.cs" />
     <Compile Include="DTOs\File\FileUploadDto.cs" />
     <Compile Include="DTOs\Questions\QuestionDto.cs" />
     <Compile Include="DTOs\Users\UserDto.cs" />
@@ -143,6 +144,11 @@
     <Compile Include="Features\Questions\CreateQuestion\CreateQuestionCommand.cs" />
     <Compile Include="Features\Questions\CreateQuestion\CreateQuestionCommandHandler.cs" />
     <Compile Include="Features\Questions\CreateQuestion\CreateQuestionCommandValidator.cs" />
+    <Compile Include="Features\Questions\GetQuestions\Enums\QuestionsSortBy.cs" />
+    <Compile Include="Features\Questions\GetQuestions\Enums\SortDirection.cs" />
+    <Compile Include="Features\Questions\GetQuestions\GetQuestionsQueryHandler.cs" />
+    <Compile Include="Features\Questions\GetQuestions\GetQuestionsQuery.cs" />
+    <Compile Include="Features\Questions\GetQuestions\GetQuestionsQueryValidator.cs" />
     <Compile Include="Features\Questions\SetQuestionPhoto\SetQuestionPhotoCommand.cs" />
     <Compile Include="Features\Questions\SetQuestionPhoto\SetQuestionPhotoCommandHandler.cs" />
     <Compile Include="Features\Questions\SetQuestionPhoto\SetQuestionPhotoCommandValidator.cs" />
