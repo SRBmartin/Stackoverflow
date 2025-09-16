@@ -5,7 +5,7 @@ using System.Web.Http.Description;
 
 namespace StackOverflowService.WebRole.Swagger
 {
-	public class FIleResponseOperationFilter : IOperationFilter
+	public class FileResponseOperationFilter : IOperationFilter
 	{
         public void Apply(Operation operation, SchemaRegistry schemaRegistry, ApiDescription apiDescription)
         {

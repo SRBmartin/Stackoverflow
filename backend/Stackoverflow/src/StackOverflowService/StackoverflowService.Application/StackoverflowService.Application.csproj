@@ -166,6 +166,9 @@
     <Compile Include="Features\Questions\UpdateQuestion\UpdateQuestionCommand.cs" />
     <Compile Include="Features\Questions\UpdateQuestion\UpdateQuestionCommandHandler.cs" />
     <Compile Include="Features\Questions\UpdateQuestion\UpdateQuestionCommandValidator.cs" />
+    <Compile Include="Features\Users\GetUserPhoto\GetUserPhotoQuery.cs" />
+    <Compile Include="Features\Users\GetUserPhoto\GetUserPhotoQueryHandler.cs" />
+    <Compile Include="Features\Users\GetUserPhoto\GetUserPhotoQueryValidator.cs" />
     <Compile Include="Features\Users\Login\LoginCommand.cs" />
     <Compile Include="Features\Users\Login\LoginCommandHandler.cs" />
     <Compile Include="Features\Users\Login\LoginCommandValidator.cs" />
