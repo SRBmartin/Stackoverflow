@@ -28,6 +28,18 @@ namespace StackoverflowService.Infrastructure.Repositories
             catch (Azure.RequestFailedException) { return null; }
         }
 
+        public async Task<Question?> GetByIdAsync(string questionId, CancellationToken cancellationToken)
+        {
+            var filter = TableClient.CreateQueryFilter<QuestionEntity>(e => e.RowKey == questionId && e.IsDeleted == false);
+
+            await foreach (var e in _questions.QueryAsync<QuestionEntity>(filter, maxPerPage: 1, cancellationToken: cancellationToken))
+            {
+                return e.ToDomain();
+            }
+
+            return null;
+        }
+
         public async Task<IReadOnlyList<Question>> GetAllFilteredAsync(string? titleStartsWith, CancellationToken cancellationToken)
         {
             string filter = "IsDeleted eq false";

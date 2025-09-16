@@ -16,6 +16,7 @@ using System.Net.Http;
 using System.Linq;
 using StackoverflowService.Application.Features.Questions.GetQuestions.Enums;
 using StackoverflowService.Application.Features.Questions.GetQuestions;
+using StackoverflowService.Application.Features.Questions.GetQuestionById;
 
 namespace StackOverflowService.WebRole.Controllers
 {
@@ -51,6 +52,17 @@ namespace StackOverflowService.WebRole.Controllers
             );
 
             var result = await _mediator.Send(query, cancellationToken);
+
+            return this.ToActionResult(result);
+        }
+
+        [HttpGet, Route("{id}")]
+        [RequireJwtAuth]
+        public async Task<IHttpActionResult> GetById(string id, CancellationToken cancellationToken)
+        {
+            var command = new GetQuestionByIdQuery(id);
+
+            var result = await _mediator.Send(command, cancellationToken);
 
             return this.ToActionResult(result);
         }
