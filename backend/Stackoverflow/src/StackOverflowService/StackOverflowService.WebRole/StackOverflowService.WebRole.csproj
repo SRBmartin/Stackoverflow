@@ -204,7 +204,9 @@
     <Compile Include="Requests\User\CreateUserRequest.cs" />
     <Compile Include="Requests\User\LoginUserRequest.cs" />
     <Compile Include="Security\RequireJwtAuth.cs" />
+    <Compile Include="Swagger\FIleResponseOperationFilter.cs" />
     <Compile Include="Swagger\FileUploadOperationFilter.cs" />
+    <Compile Include="Swagger\SwaggerFileResponseAttribute.cs" />
     <Compile Include="Swagger\SwaggerFileUploadAttribute.cs" />
     <Compile Include="WebRole.cs" />
   </ItemGroup>

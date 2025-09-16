@@ -128,6 +128,7 @@
     <Compile Include="Abstractions\IIdentityService.cs" />
     <Compile Include="Abstractions\IIdentityValidator.cs" />
     <Compile Include="Abstractions\IPasswordHasher.cs" />
+    <Compile Include="Abstractions\IPhotoReader.cs" />
     <Compile Include="Abstractions\IPhotoStorage.cs" />
     <Compile Include="Abstractions\IQuestionPhotoStorage.cs" />
     <Compile Include="Behaviors\ValidationBehavior.cs" />
@@ -137,6 +138,7 @@
     <Compile Include="Composition\ApplicationModule.cs" />
     <Compile Include="DTOs\Auth\AuthResponseDto.cs" />
     <Compile Include="DTOs\Common\PagedResult.cs" />
+    <Compile Include="DTOs\File\FileDownloadDto.cs" />
     <Compile Include="DTOs\File\FileUploadDto.cs" />
     <Compile Include="DTOs\Questions\QuestionDto.cs" />
     <Compile Include="DTOs\Users\UserDto.cs" />
@@ -150,6 +152,9 @@
     <Compile Include="Features\Questions\GetQuestionById\GetQuestionByIdQuery.cs" />
     <Compile Include="Features\Questions\GetQuestionById\GetQuestionByIdQueryHandler.cs" />
     <Compile Include="Features\Questions\GetQuestionById\GetQuestionByIdQueryValidator.cs" />
+    <Compile Include="Features\Questions\GetQuestionPhoto\GetQuestionPhotoQuery.cs" />
+    <Compile Include="Features\Questions\GetQuestionPhoto\GetQuestionPhotoQueryHandler.cs" />
+    <Compile Include="Features\Questions\GetQuestionPhoto\GetQuestionPhotoQueryValidator.cs" />
     <Compile Include="Features\Questions\GetQuestions\Enums\QuestionsSortBy.cs" />
     <Compile Include="Features\Questions\GetQuestions\Enums\SortDirection.cs" />
     <Compile Include="Features\Questions\GetQuestions\GetQuestionsQueryHandler.cs" />

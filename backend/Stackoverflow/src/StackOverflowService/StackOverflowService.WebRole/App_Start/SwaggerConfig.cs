@@ -28,6 +28,7 @@ namespace StackOverflowService.WebRole
                             c.IncludeXmlComments(xmlPath);
 
                         c.OperationFilter<FileUploadOperationFilter>();
+                        c.OperationFilter<FIleResponseOperationFilter>();
 
                         c.ApiKey("Bearer")
                             .Description("JWT Authorization header using the Bearer scheme. Example: \"Bearer <token>\".")

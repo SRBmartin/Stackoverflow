@@ -19,6 +19,8 @@ using StackoverflowService.Application.Features.Questions.GetQuestions;
 using StackoverflowService.Application.Features.Questions.GetQuestionById;
 using StackoverflowService.Application.Features.Questions.UpdateQuestion;
 using StackoverflowService.Application.Features.Questions.DeleteQuestion;
+using StackoverflowService.Application.Features.Questions.GetQuestionPhoto;
+using System.Net.Http.Headers;
 
 namespace StackOverflowService.WebRole.Controllers
 {
@@ -172,6 +174,34 @@ namespace StackOverflowService.WebRole.Controllers
             var result = await _mediator.Send(command, cancellationToken);
 
             return this.ToActionResult(result);
+        }
+
+        [HttpGet, Route("{id}/photo")]
+        [RequireJwtAuth]
+        [SwaggerFileResponse("image/jpeg", "image/png", "image/gif", "image/webp", "application/octet-stream")]
+        public async Task<IHttpActionResult> DownloadPhoto(string id, CancellationToken cancellationToken)
+        {
+            var query = new GetQuestionPhotoQuery(id);
+
+            var result = await _mediator.Send(query, cancellationToken);
+
+            if (!result.IsSuccess)
+                return this.ToActionResult(result);
+
+            var file = result.Value;
+
+            var response = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new ByteArrayContent(file.Content)
+            };
+
+            response.Content.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType ?? "application/octet-stream");
+            response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("inline")
+            {
+                FileName = file.FileName
+            };
+
+            return ResponseMessage(response);
         }
 
     }
