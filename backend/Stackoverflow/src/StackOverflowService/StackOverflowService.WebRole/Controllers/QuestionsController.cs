@@ -17,6 +17,7 @@ using System.Linq;
 using StackoverflowService.Application.Features.Questions.GetQuestions.Enums;
 using StackoverflowService.Application.Features.Questions.GetQuestions;
 using StackoverflowService.Application.Features.Questions.GetQuestionById;
+using StackoverflowService.Application.Features.Questions.UpdateQuestion;
 
 namespace StackOverflowService.WebRole.Controllers
 {
@@ -81,6 +82,26 @@ namespace StackOverflowService.WebRole.Controllers
             }
 
             var command = new CreateQuestionCommand(userId, request.Title, request.Description);
+
+            var result = await _mediator.Send(command, cancellationToken);
+
+            return this.ToActionResult(result);
+        }
+
+        [HttpPut, Route("{id}")]
+        [RequireJwtAuth]
+        public async Task<IHttpActionResult> Update(string id, UpdateQuestionRequest request, CancellationToken cancellationToken)
+        {
+            var principal = User as ClaimsPrincipal;
+            var userId = principal?.FindFirst("sub")?.Value
+                      ?? principal?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Content(HttpStatusCode.Unauthorized, "Unauthorized");
+            }
+
+            var command = new UpdateQuestionCommand(userId, id, request.Title, request.Description);
 
             var result = await _mediator.Send(command, cancellationToken);
 
