@@ -33,7 +33,7 @@ export class LoginComponent {
   
     const request: LoginUserRequest = { email: this.email, password: this.password };
     this.authService.login(request).subscribe({
-      next: () => this.router.navigate(['/']),
+      next: () => this.router.navigate(['/questions']),
       error: (err) => {
         console.error('Login error', err); // vidi ceo odgovor
         this.errorMessage = err?.error?.message || 'Login failed. Check your credentials.';

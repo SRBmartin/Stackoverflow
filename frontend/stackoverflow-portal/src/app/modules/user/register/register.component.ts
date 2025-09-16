@@ -98,7 +98,7 @@ export class RegisterComponent {
       .subscribe({
         next: () => {
           console.log('Registration successful');
-          this.router.navigate(['/login']);
+          this.router.navigate(['/questions']);
         },
         error: () => console.error('Something went wrong')
       });
