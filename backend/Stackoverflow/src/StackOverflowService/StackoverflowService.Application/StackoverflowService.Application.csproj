@@ -144,6 +144,9 @@
     <Compile Include="Features\Questions\CreateQuestion\CreateQuestionCommand.cs" />
     <Compile Include="Features\Questions\CreateQuestion\CreateQuestionCommandHandler.cs" />
     <Compile Include="Features\Questions\CreateQuestion\CreateQuestionCommandValidator.cs" />
+    <Compile Include="Features\Questions\DeleteQuestion\DeleteQuestionCommand.cs" />
+    <Compile Include="Features\Questions\DeleteQuestion\DeleteQuestionCommandHandler.cs" />
+    <Compile Include="Features\Questions\DeleteQuestion\DeleteQuestionCommandValidator.cs" />
     <Compile Include="Features\Questions\GetQuestionById\GetQuestionByIdQuery.cs" />
     <Compile Include="Features\Questions\GetQuestionById\GetQuestionByIdQueryHandler.cs" />
     <Compile Include="Features\Questions\GetQuestionById\GetQuestionByIdQueryValidator.cs" />

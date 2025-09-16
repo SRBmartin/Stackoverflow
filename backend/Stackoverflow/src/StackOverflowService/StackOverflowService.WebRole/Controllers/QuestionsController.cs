@@ -18,6 +18,7 @@ using StackoverflowService.Application.Features.Questions.GetQuestions.Enums;
 using StackoverflowService.Application.Features.Questions.GetQuestions;
 using StackoverflowService.Application.Features.Questions.GetQuestionById;
 using StackoverflowService.Application.Features.Questions.UpdateQuestion;
+using StackoverflowService.Application.Features.Questions.DeleteQuestion;
 
 namespace StackOverflowService.WebRole.Controllers
 {
@@ -104,6 +105,29 @@ namespace StackOverflowService.WebRole.Controllers
             var command = new UpdateQuestionCommand(userId, id, request.Title, request.Description);
 
             var result = await _mediator.Send(command, cancellationToken);
+
+            return this.ToActionResult(result);
+        }
+
+        [HttpDelete, Route("{id}")]
+        [RequireJwtAuth]
+        public async Task<IHttpActionResult> Delete(string id, CancellationToken cancellationToken)
+        {
+            var principal = User as ClaimsPrincipal;
+            var userId = principal?.FindFirst("sub")?.Value
+                      ?? principal?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+                return Content(HttpStatusCode.Unauthorized, "Unauthorized");
+
+            var command = new DeleteQuestionCommand(userId, id);
+
+            var result = await _mediator.Send(command, cancellationToken);
+
+            if (result.IsSuccess && result.Value)
+            {
+                return StatusCode(HttpStatusCode.NoContent);
+            }
 
             return this.ToActionResult(result);
         }

@@ -23,9 +23,19 @@ namespace StackoverflowService.Infrastructure.Repositories
             try
             {
                 var resp = await _questions.GetEntityAsync<QuestionEntity>(userId, questionId, cancellationToken: cancellationToken);
-                return resp.Value.ToDomain();
+
+                var e = resp.Value;
+                if (e.IsDeleted) return null;
+                return e.ToDomain();
             }
-            catch (Azure.RequestFailedException) { return null; }
+            catch (Azure.RequestFailedException ex) when (ex.Status == 404)
+            {
+                return null;
+            }
+            catch (Azure.RequestFailedException)
+            {
+                return null;
+            }
         }
 
         public async Task<Question?> GetByIdAsync(string questionId, CancellationToken cancellationToken)
