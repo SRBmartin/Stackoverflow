@@ -38,8 +38,8 @@
             <select id="gender" formControlName="gender"
                     [ngClass]="{'invalid-input': gender?.invalid && gender?.touched}">
               <option value="" disabled>Select gender</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
+              <option value="M">Male</option>
+              <option value="F">Female</option>
             </select>
             <div class="error-message" *ngIf="gender?.invalid && gender?.touched">This field is required</div>
           </div>

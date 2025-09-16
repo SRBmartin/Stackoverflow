@@ -26,13 +26,19 @@ export class LoginComponent {
 
   onSubmit() {
     if (!this.email || !this.password) return;
-
+  
+    // Debug: proveri šta korisnik unosi
+    console.log('Email unet:', this.email);
+    console.log('Password unet:', this.password);
+  
     const request: LoginUserRequest = { email: this.email, password: this.password };
     this.authService.login(request).subscribe({
       next: () => this.router.navigate(['/']),
       error: (err) => {
+        console.error('Login error', err); // vidi ceo odgovor
         this.errorMessage = err?.error?.message || 'Login failed. Check your credentials.';
       }
     });
   }
+  
 }

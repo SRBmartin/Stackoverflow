@@ -67,18 +67,41 @@ export class RegisterComponent {
   }
 
   onSubmit(): void {
+    // Prikaži sve error poruke
     this.registerForm.markAllAsTouched(); 
     if (this.registerForm.invalid) return;
-
-    const request = this.registerForm.value;
+  
+    // Form value
+    const formValue = this.registerForm.value;
+  
+    // DTO mora biti sa malim slovima (name, lastname...) da se poklapa sa backendom
+    const request = {
+      name: formValue.name,
+      lastname: formValue.lastname,
+      email: formValue.email,
+      password: formValue.password,
+      gender: formValue.gender,
+      state: formValue.state,
+      city: formValue.city,
+      address: formValue.address
+    };
+  
+    // Pozovi AuthService.register i, ako postoji fajl, odmah uploaduj sliku
     this.authService.register(request)
       .pipe(
         switchMap(() => this.photoFile ? this.userService.uploadPhoto(this.photoFile) : of(null)),
-        catchError(err => { console.error('Registration failed:', err); throw err; })
+        catchError(err => {
+          console.error('Registration failed:', err);
+          return of(null); // samo da ne pukne stream
+        })
       )
       .subscribe({
-        next: () => { console.log('Registration successful'); this.router.navigate(['/']); },
+        next: () => {
+          console.log('Registration successful');
+          this.router.navigate(['/login']);
+        },
         error: () => console.error('Something went wrong')
       });
   }
+  
 }
