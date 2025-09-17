@@ -1,15 +1,14 @@
 <div class="toast" [ngClass]="type" *ngIf="visible">
-    <div class="toast-content">
-      <div class="toast-icon">
-        <span *ngIf="type==='success'">✅</span>
-        <span *ngIf="type==='error'">❌</span>
-        <span *ngIf="type==='info'">ℹ️</span>
-        <span *ngIf="type==='warning'">⚠️</span>
-      </div>
-      <div class="toast-text">
-        <div class="toast-type">{{ type.toUpperCase() }}</div>
-        <div class="toast-message">{{ message }}</div>
-      </div>
+  <div class="toast-content">
+    <div class="toast-icon">
+      <img *ngIf="type==='success'" src="assets/correct-success-tick-svgrepo-com.svg" alt="Success" />
+      <img *ngIf="type==='error'" src="assets/cancel-delete-remove-svgrepo-com.svg" alt="Error" />
+      <img *ngIf="type==='info'" src="assets/help-info-information-svgrepo-com(1).svg" alt="Info" />
+      <img *ngIf="type==='warning'" src="assets/warning-circle-svgrepo-com.svg" alt="Warning" />
+    </div>
+    <div class="toast-text">
+      <div class="toast-type">{{ type.toUpperCase() }}</div>
+      <div class="toast-message">{{ message }}</div>
     </div>
   </div>
-  
+</div>

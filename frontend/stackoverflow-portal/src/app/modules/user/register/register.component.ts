@@ -77,7 +77,7 @@ export class RegisterComponent {
     this.registerForm.markAllAsTouched();
 
     if (this.registerForm.invalid || !this.photoFile) {
-      this.toastServer.showToast('Please fill all required fields correctly and upload a photo.', 'warning');
+      this.toastServer.showToast('Please fill all required fields correctly.', 'warning');
       return;
     }
   
