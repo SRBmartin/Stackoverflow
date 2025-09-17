@@ -16,6 +16,8 @@ using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
+using StackoverflowService.Application.Features.Users.GetUserPhoto;
+using System.Net.Http.Headers;
 
 namespace StackOverflowService.WebRole.Controllers
 {
@@ -83,6 +85,33 @@ namespace StackOverflowService.WebRole.Controllers
             return this.ToActionResult(result);
         }
 
+        [HttpGet, Route("{id}/photo")]
+        [RequireJwtAuth]
+        [SwaggerFileResponse("image/jpeg", "image/png", "image/gif", "image/webp", "application/octet-stream")]
+        public async Task<IHttpActionResult> DownloadAsync(string id, CancellationToken cancellationToken)
+        {
+            var query = new GetUserPhotoQuery(id);
+
+            var result = await _mediator.Send(query, cancellationToken);
+
+            if (!result.IsSuccess)
+                return this.ToActionResult(result);
+
+            var file = result.Value;
+
+            var response = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new ByteArrayContent(file.Content)
+            };
+            response.Content.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType ?? "application/octet-stream");
+            response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("inline")
+            {
+                FileName = file.FileName
+            };
+
+            return ResponseMessage(response);
+        }
+
         [HttpGet, Route("profile")]
         [RequireJwtAuth]
         public async Task<IHttpActionResult> GetProfile(CancellationToken cancellationToken)
@@ -121,5 +150,6 @@ namespace StackOverflowService.WebRole.Controllers
             var result = await _mediator.Send(command, cancellationToken);
             return this.ToActionResult(result);
         }
+
     }
 }

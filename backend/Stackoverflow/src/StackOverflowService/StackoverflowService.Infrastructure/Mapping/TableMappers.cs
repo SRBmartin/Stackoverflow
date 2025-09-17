@@ -62,7 +62,7 @@ namespace StackoverflowService.Infrastructure.Mapping
         };
 
         public static Answer ToDomain(this AnswerEntity e) =>
-            new Answer(id: e.RowKey, questionId: e.QuestionId, text: e.Text,
+            new Answer(id: e.RowKey, questionId: e.QuestionId, userId: e.UserId, text: e.Text,
                        created: e.CreationDate, isFinal: e.IsFinal, isDeleted: e.IsDeleted);
 
         public static AnswerEntity ToTable(this Answer a) => new AnswerEntity
@@ -70,26 +70,44 @@ namespace StackoverflowService.Infrastructure.Mapping
             PartitionKey = a.QuestionId,
             RowKey = a.Id,
             QuestionId = a.QuestionId,
+            UserId = a.UserId,
             Text = a.Text,
             CreationDate = a.CreationDate,
             IsFinal = a.IsFinal,
             IsDeleted = a.IsDeleted
         };
 
-        public static Vote ToDomain(this VoteEntity e) =>
-            new Vote(id: e.RowKey, answerId: e.AnswerId, userId: e.UserId,
-                     type: e.Type == "-" ? VoteType.Down : VoteType.Up,
-                     created: e.CreationDate);
-
-        public static VoteEntity ToTable(this Vote v) => new VoteEntity
+        public static VoteEntity ToTable(this Vote v)
         {
-            PartitionKey = v.AnswerId,
-            RowKey = v.Id,
-            AnswerId = v.AnswerId,
-            UserId = v.UserId,
-            Type = v.Type == VoteType.Down ? "-" : "+",
-            CreationDate = v.CreationDate
-        };
+            var tt = v.Target == VoteTarget.Question ? "Q" : "A";
+            return new VoteEntity
+            {
+                PartitionKey = v.TargetId,
+                RowKey = v.Id,
+
+                TargetType = tt,
+                TargetId = v.TargetId,
+
+                UserId = v.UserId,
+                Type = v.Type == VoteType.Up ? "+" : "-",
+                CreationDate = v.CreationDate
+            };
+        }
+
+        public static Vote ToDomain(this VoteEntity e)
+        {
+            var target = e.TargetType == "Q" ? VoteTarget.Question : VoteTarget.Answer;
+            var type = e.Type == "+" ? VoteType.Up : VoteType.Down;
+
+            return new Vote(
+                id: e.RowKey,
+                targetId: e.TargetId,
+                target: target,
+                userId: e.UserId,
+                type: type,
+                created: e.CreationDate
+            );
+        }
 
         private static Gender ParseGender(string s)
         {

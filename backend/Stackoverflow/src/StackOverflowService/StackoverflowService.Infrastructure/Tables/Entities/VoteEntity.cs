@@ -9,9 +9,10 @@ namespace StackoverflowService.Infrastructure.Tables.Entities
         public string PartitionKey { get; set; } = default; // answerId
         public string RowKey { get; set; } = default; // voteId
 
-        public string AnswerId { get; set; } = default;
-        public string UserId { get; set; } = default;
+        public string TargetType { get; set; } = default!; // "Q" or "A"
+        public string TargetId { get; set; } = default!;
 
+        public string UserId { get; set; } = default;
         public string Type { get; set; } = default; // "+" (upvote) or "-" (downvote)
         public DateTimeOffset CreationDate { get; set; }
 

@@ -23,9 +23,51 @@ namespace StackoverflowService.Infrastructure.Repositories
             try
             {
                 var resp = await _questions.GetEntityAsync<QuestionEntity>(userId, questionId, cancellationToken: cancellationToken);
-                return resp.Value.ToDomain();
+
+                var e = resp.Value;
+                if (e.IsDeleted) return null;
+                return e.ToDomain();
             }
-            catch (Azure.RequestFailedException) { return null; }
+            catch (Azure.RequestFailedException ex) when (ex.Status == 404)
+            {
+                return null;
+            }
+            catch (Azure.RequestFailedException)
+            {
+                return null;
+            }
+        }
+
+        public async Task<Question?> GetByIdAsync(string questionId, CancellationToken cancellationToken)
+        {
+            var filter = TableClient.CreateQueryFilter<QuestionEntity>(e => e.RowKey == questionId && e.IsDeleted == false);
+
+            await foreach (var e in _questions.QueryAsync<QuestionEntity>(filter, maxPerPage: 1, cancellationToken: cancellationToken))
+            {
+                return e.ToDomain();
+            }
+
+            return null;
+        }
+
+        public async Task<IReadOnlyList<Question>> GetAllFilteredAsync(string? titleStartsWith, CancellationToken cancellationToken)
+        {
+            string filter = "IsDeleted eq false";
+
+            if (!string.IsNullOrWhiteSpace(titleStartsWith) && !string.IsNullOrEmpty(titleStartsWith))
+            {
+                var low = EscapeOdataString(titleStartsWith);
+                var high = low + "\uFFFF";
+                filter += $" and Title ge '{low}' and Title lt '{high}'";
+            }
+
+            var list = new List<Question>(capacity: 128);
+            await foreach (var e in _questions.QueryAsync<QuestionEntity>(filter: filter, cancellationToken: cancellationToken))
+            {
+                list.Add(e.ToDomain());
+            }
+
+            return list;
         }
 
         public async Task AddAsync(Question q, CancellationToken cancellationToken)
@@ -45,5 +87,10 @@ namespace StackoverflowService.Infrastructure.Repositories
 
         public async Task UpdateAsync(Question q, CancellationToken cancellationToken)
             => await _questions.UpsertEntityAsync(q.ToTable(), TableUpdateMode.Replace, cancellationToken);
+
+        #region Helpers
+        private static string EscapeOdataString(string s) => s.Replace("'", "''");
+        #endregion
+
     }
 }
