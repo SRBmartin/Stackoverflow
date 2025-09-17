@@ -93,8 +93,8 @@ namespace StackOverflowService.WebRole.Controllers
             if (string.IsNullOrEmpty(userId))
                 return ResponseMessage(Request.CreateResponse(HttpStatusCode.Unauthorized));
 
-            var command = new GetUserProfileCommand(userId);
-            var result = await _mediator.Send(command, cancellationToken);
+            var query = new GetUserProfileQuery(userId);
+            var result = await _mediator.Send(query, cancellationToken);
 
             return this.ToActionResult(result);
         }

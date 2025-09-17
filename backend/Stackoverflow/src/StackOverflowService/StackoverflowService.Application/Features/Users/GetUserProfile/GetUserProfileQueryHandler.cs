@@ -3,27 +3,23 @@ using StackoverflowService.Application.Common;
 using StackoverflowService.Application.Common.Results;
 using StackoverflowService.Application.DTOs.Users;
 using StackoverflowService.Domain.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace StackoverflowService.Application.Features.Users.GetUserProfile
 {
-    public class GetUserProfileCommandHandler : IRequestHandler<GetUserProfileCommand, Result<UserDto>>
+    public class GetUserProfileQueryHandler : IRequestHandler<GetUserProfileQuery, Result<UserDto>>
     {
         private readonly IUserRepository _userRepository;
 
-        public GetUserProfileCommandHandler(IUserRepository userRepository)
+        public GetUserProfileQueryHandler(IUserRepository userRepository)
         {
             _userRepository = userRepository;
         }
 
-        public async Task<Result<UserDto>> Handle(GetUserProfileCommand command, CancellationToken cancellationToken)
+        public async Task<Result<UserDto>> Handle(GetUserProfileQuery query, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetAsync(command.UserId, cancellationToken);
+            var user = await _userRepository.GetAsync(query.UserId, cancellationToken);
 
             if (user == null)
             {
