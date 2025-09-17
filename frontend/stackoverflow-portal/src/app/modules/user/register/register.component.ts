@@ -22,12 +22,12 @@ export class RegisterComponent {
   isDragging = false;
 
   constructor(
-    private fb: FormBuilder,
-    private authService: AuthService,
-    private userService: UserService,
-    private router: Router,
-    private loaderService: LoaderService,
-    private toastServer : ToastServer
+    private readonly fb: FormBuilder,
+    private readonly authService: AuthService,
+    private readonly userService: UserService,
+    private readonly router: Router,
+    private readonly loaderService: LoaderService,
+    private readonly toastServer : ToastServer
   ) {
     this.registerForm = this.fb.group({
       name: ['', Validators.required],
@@ -99,7 +99,6 @@ export class RegisterComponent {
       .pipe(
         switchMap(() => this.authService.login({ email: request.email, password: request.password })),
         switchMap(loginRes => {
-          localStorage.setItem('token', loginRes.AccessToken);
           return this.photoFile ? this.userService.uploadPhoto(this.photoFile) : of(null);
         }),
         catchError(err => {
