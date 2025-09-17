@@ -32,7 +32,7 @@ namespace StackOverflowService.WebRole.Http
                     new { error = "Null result" }, controller);
 
             if (res.IsSuccess)
-                return new OkResult(controller); // 👈 instead of controller.Ok()
+                return new OkResult(controller);
 
             var first = res.Errors?.FirstOrDefault()
                         ?? Error.Failure("Unknown", "Unknown error");

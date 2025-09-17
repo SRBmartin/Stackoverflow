@@ -176,6 +176,8 @@
     <Compile Include="Features\Users\GetUserPhoto\GetUserPhotoQuery.cs" />
     <Compile Include="Features\Users\GetUserPhoto\GetUserPhotoQueryHandler.cs" />
     <Compile Include="Features\Users\GetUserPhoto\GetUserPhotoQueryValidator.cs" />
+    <Compile Include="Features\Users\GetUserProfile\GetUserProfileQuery.cs" />
+    <Compile Include="Features\Users\GetUserProfile\GetUserProfileQueryHandler.cs" />
     <Compile Include="Features\Users\Login\LoginCommand.cs" />
     <Compile Include="Features\Users\Login\LoginCommandHandler.cs" />
     <Compile Include="Features\Users\Login\LoginCommandValidator.cs" />
@@ -188,6 +190,9 @@
     <Compile Include="Features\Votes\VoteCommand.cs" />
     <Compile Include="Features\Votes\VoteCommandHandler.cs" />
     <Compile Include="Features\Votes\VoteCommandValidator.cs" />
+    <Compile Include="Features\Users\UpdateUserProfile\UpdateUserProfileCommand.cs" />
+    <Compile Include="Features\Users\UpdateUserProfile\UpdateUserProfileCommandHandler.cs" />
+    <Compile Include="Features\Users\UpdateUserProfile\UpdateUserProfileCommandValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
