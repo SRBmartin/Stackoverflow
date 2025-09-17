@@ -1,5 +1,12 @@
-<app-header/>
-    <main>
-        <router-outlet/>
-    </main>
-<app-footer/>
+<app-header />
+<main>
+<router-outlet />
+</main>
+<app-footer />
+<app-loader/>
+<app-toast 
+  *ngIf="toast$ | async as toast" 
+  [message]="toast.message" 
+  [type]="toast.type" 
+  [visible]="true">
+</app-toast>
