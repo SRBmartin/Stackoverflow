@@ -148,6 +148,9 @@
     <Compile Include="Features\Users\SetUserPhoto\SetUserPhotoCommandHandler.cs" />
     <Compile Include="Features\Users\SetUserPhoto\SetUserPhotoCommandValidator.cs" />
     <Compile Include="Features\Users\SetUserPhoto\SetUserPhotoCommand.cs" />
+    <Compile Include="Features\Users\UpdateUserProfile\UpdateUserProfileCommand.cs" />
+    <Compile Include="Features\Users\UpdateUserProfile\UpdateUserProfileCommandHandler.cs" />
+    <Compile Include="Features\Users\UpdateUserProfile\UpdateUserProfileCommandValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

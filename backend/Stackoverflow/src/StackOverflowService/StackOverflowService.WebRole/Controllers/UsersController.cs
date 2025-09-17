@@ -4,6 +4,7 @@ using StackoverflowService.Application.Features.Users.GetUserProfile;
 using StackoverflowService.Application.Features.Users.Login;
 using StackoverflowService.Application.Features.Users.RegisterUser;
 using StackoverflowService.Application.Features.Users.SetUserPhoto;
+using StackoverflowService.Application.Features.Users.UpdateUserProfile;
 using StackOverflowService.WebRole.Http;
 using StackOverflowService.WebRole.Requests.User;
 using StackOverflowService.WebRole.Security;
@@ -95,6 +96,29 @@ namespace StackOverflowService.WebRole.Controllers
             var command = new GetUserProfileCommand(userId);
             var result = await _mediator.Send(command, cancellationToken);
 
+            return this.ToActionResult(result);
+        }
+
+        [HttpPut, Route("profile")]
+        [RequireJwtAuth]
+        public async Task<IHttpActionResult> UpdateProfile(UpdateUserRequest request, CancellationToken cancellationToken)
+        {
+            var principal = User as ClaimsPrincipal;
+            var userId = principal?.FindFirst("sub")?.Value ?? principal?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.Unauthorized));
+
+            var command = new UpdateUserProfileCommand(
+                userId: userId,
+                name: request.Name,
+                lastname: request.Lastname,
+                state: request.State,
+                city: request.City,
+                address: request.Address
+            );
+
+            var result = await _mediator.Send(command, cancellationToken);
             return this.ToActionResult(result);
         }
     }
