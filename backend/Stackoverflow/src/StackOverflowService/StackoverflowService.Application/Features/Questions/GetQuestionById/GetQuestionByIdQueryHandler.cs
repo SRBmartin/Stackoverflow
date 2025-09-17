@@ -36,14 +36,14 @@ namespace StackoverflowService.Application.Features.Questions.GetQuestionById
         {
             var question = await _questionRepository.GetByIdAsync(query.QuestionId, cancellationToken);
             if (question is null)
-            {
                 return Result.Fail<QuestionDto>(Error.NotFound("Questions.NotFound", "Question not found."));
-            }
 
             var user = await _userRepository.GetAsync(question.UserId, cancellationToken);
 
-            var answers = await _answerRepository.ListByQuestionAsync(question.Id, take: 0, cancellationToken);
+            var (qUp, qDown) = await _voteRepository.CountByQuestionAsync(question.Id, cancellationToken);
+            var totalScore = qUp - qDown;
 
+            var answers = await _answerRepository.ListByQuestionAsync(question.Id, take: 0, cancellationToken);
             var countTasks = answers.ToDictionary(
                 a => a.Id,
                 a => _voteRepository.CountByAnswerAsync(a.Id, cancellationToken)
@@ -52,14 +52,10 @@ namespace StackoverflowService.Application.Features.Questions.GetQuestionById
             await Task.WhenAll(countTasks.Values);
 
             var answerDtos = new List<AnswerDto>(answers.Count);
-            var voteScore = 0;
-
             foreach (var a in answers)
             {
                 var (up, down) = countTasks[a.Id].Result;
                 var score = up - down;
-
-                voteScore += score;
 
                 answerDtos.Add(new AnswerDto
                 {
@@ -86,16 +82,18 @@ namespace StackoverflowService.Application.Features.Questions.GetQuestionById
                 CreationDate = question.CreationDate,
                 IsClosed = question.IsClosed,
                 IsDeleted = question.IsDeleted,
-                VoteScore = voteScore,
+
+                VoteScore = totalScore,
+
                 User = new UserPreviewDto
-                    {
-                        Id = user.Id,
-                        Name = user.Name,
-                        Lastname = user.Lastname,
-                        Email = user.Email,
-                        PhotoBlobName = user.Photo?.BlobName,
-                        PhotoContainer = user.Photo?.Container
-                    },
+                {
+                    Id = user.Id,
+                    Name = user.Name,
+                    Lastname = user.Lastname,
+                    Email = user.Email,
+                    PhotoBlobName = user.Photo?.BlobName,
+                    PhotoContainer = user.Photo?.Container
+                },
                 Answers = answerDtos
             };
 

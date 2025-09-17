@@ -47,16 +47,10 @@ namespace StackoverflowService.Application.Features.Questions.UpdateQuestion
             await _questionRepository.UpdateAsync(question, cancellationToken);
 
             var answers = await _answerRepository.ListByQuestionAsync(question.Id, take: 0, cancellationToken);
-            var voteScore = 0;
-            foreach (var a in answers)
-            {
-                var votes = await _voteRepository.ListByAnswerAsync(a.Id, take: 0, cancellationToken);
-                foreach (var v in votes)
-                {
-                    if (v.Type == VoteType.Up) voteScore += 1;
-                    else if (v.Type == VoteType.Down) voteScore -= 1;
-                }
-            }
+
+
+            var (qUp, qDown) = await _voteRepository.CountByQuestionAsync(question.Id, cancellationToken);
+            var voteScore = qUp - qDown;
 
             var user = await _userRepository.GetAsync(question.UserId, cancellationToken);
 
@@ -71,6 +65,7 @@ namespace StackoverflowService.Application.Features.Questions.UpdateQuestion
                 CreationDate = question.CreationDate,
                 IsClosed = question.IsClosed,
                 IsDeleted = question.IsDeleted,
+                VoteScore = voteScore,
                 User = new UserPreviewDto
                     {
                         Id = user.Id,

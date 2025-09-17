@@ -114,25 +114,14 @@ namespace StackoverflowService.Application.Features.Questions.GetQuestions
         private async Task<Dictionary<string, int>> ComputeVoteScoresAsync(IReadOnlyList<string> questionIds, CancellationToken cancellationToken)
         {
             var scores = new Dictionary<string, int>(StringComparer.Ordinal);
+            var tasks = questionIds.ToDictionary(id => id, id => _voteRepository.CountByQuestionAsync(id, cancellationToken));
+            await Task.WhenAll(tasks.Values);
 
-            foreach (var qid in questionIds)
+            foreach (var kv in tasks)
             {
-                var answers = await _answerRepository.ListByQuestionAsync(qid, take: 0, cancellationToken);
-                var total = 0;
-
-                foreach (var a in answers)
-                {
-                    var votes = await _voteRepository.ListByAnswerAsync(a.Id, take: 0, cancellationToken);
-                    foreach (var v in votes)
-                    {
-                        if (v.Type == VoteType.Up) total += 1;
-                        else if (v.Type == VoteType.Down) total -= 1;
-                    }
-                }
-
-                scores[qid] = total;
+                var (up, down) = kv.Value.Result;
+                scores[kv.Key] = up - down;
             }
-
             return scores;
         }
 
