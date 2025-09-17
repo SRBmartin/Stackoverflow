@@ -16,6 +16,9 @@
             <p *ngIf="!photoPreview">Click and drop photo</p>
             <input type="file" (change)="onFileSelected($event)" />
           </div>
+          <div class="error-message" *ngIf="!photoFile && registerForm.touched">
+            This field is required
+          </div>
         </div>
 
         <div class="name-fields">
@@ -51,38 +54,46 @@
           <label for="email">Email *</label>
           <input id="email" type="email" formControlName="email" placeholder="example@mail.com"
                  [ngClass]="{'invalid-input': email?.invalid && email?.touched}" />
-          <div class="error-message" *ngIf="email?.touched && email?.errors?.['required']">Email is required</div>
+          <div class="error-message" *ngIf="email?.touched && email?.errors?.['required']">This field is required</div>
           <div class="error-message" *ngIf="email?.touched && email?.errors?.['email']">Enter a valid email</div>
         </div>
 
         <div class="form-group">
-          <label for="state">State</label>
-          <input id="state" type="text" formControlName="state" placeholder="State" />
+          <label for="state">State *</label>
+          <input id="state" type="text" formControlName="state" placeholder="State"
+                 [ngClass]="{'invalid-input': state?.invalid && state?.touched}" />
+          <div class="error-message" *ngIf="state?.invalid && state?.touched">This field is required</div>
         </div>
 
         <div class="form-group">
-          <label for="city">City</label>
-          <input id="city" type="text" formControlName="city" placeholder="City" />
+          <label for="city">City *</label>
+          <input id="city" type="text" formControlName="city" placeholder="City"
+                 [ngClass]="{'invalid-input': city?.invalid && city?.touched}" />
+          <div class="error-message" *ngIf="city?.invalid && city?.touched">This field is required</div>
         </div>
 
         <div class="form-group">
-          <label for="address">Address</label>
-          <input id="address" type="text" formControlName="address" placeholder="Street, No" />
+          <label for="address">Address *</label>
+          <input id="address" type="text" formControlName="address" placeholder="Street, No"
+                 [ngClass]="{'invalid-input': address?.invalid && address?.touched}" />
+          <div class="error-message" *ngIf="address?.invalid && address?.touched">This field is required</div>
         </div>
 
         <div class="form-group">
           <label for="password">Password *</label>
           <input id="password" type="password" formControlName="password" placeholder="••••••••"
                  [ngClass]="{'invalid-input': password?.invalid && password?.touched}" />
-          <div class="error-message" *ngIf="password?.touched && password?.errors?.['required']">Password is required</div>
+          <div class="error-message" *ngIf="password?.touched && password?.errors?.['required']">This field is required</div>
           <div class="error-message" *ngIf="password?.touched && password?.errors?.['minlength']">Password must be at least 8 characters</div>
         </div>
 
         <div class="form-group">
           <label for="confirmPassword">Confirm Password *</label>
           <input id="confirmPassword" type="password" formControlName="confirmPassword" placeholder="••••••••"
-                 [ngClass]="{'invalid-input': confirmPassword?.touched && registerForm.errors?.['passwordMismatch']}" />
-          <div class="error-message" *ngIf="confirmPassword?.touched && registerForm.errors?.['passwordMismatch']">
+          [ngClass]="{'invalid-input': (confirmPassword?.invalid && confirmPassword?.touched) 
+          || (registerForm.errors?.['passwordMismatch'] && confirmPassword?.touched)}" />
+            <div class="error-message" *ngIf="confirmPassword?.touched && confirmPassword?.errors?.['required']">This field is required</div>
+            <div class="error-message" *ngIf="confirmPassword?.touched && registerForm.errors?.['passwordMismatch']">
             Passwords do not match
           </div>
         </div>

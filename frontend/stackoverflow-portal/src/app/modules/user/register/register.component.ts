@@ -36,9 +36,9 @@ export class RegisterComponent {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', Validators.required],
-      state: [''],
-      city: [''],
-      address: ['']
+      state: ['', Validators.required],
+      city: ['', Validators.required],
+      address: ['', Validators.required]
     }, { validators: this.passwordsMatch });
   }
 
@@ -54,6 +54,9 @@ export class RegisterComponent {
   get email() { return this.registerForm.get('email'); }
   get password() { return this.registerForm.get('password'); }
   get confirmPassword() { return this.registerForm.get('confirmPassword'); }
+  get state() { return this.registerForm.get('state'); }
+  get city() { return this.registerForm.get('city'); }
+  get address() { return this.registerForm.get('address'); }
 
   onDragOver(event: DragEvent) { event.preventDefault(); this.isDragging = true; }
   onDragLeave(event: DragEvent) { event.preventDefault(); this.isDragging = false; }
@@ -72,8 +75,9 @@ export class RegisterComponent {
 
   onSubmit(): void {
     this.registerForm.markAllAsTouched();
-    if (this.registerForm.invalid) {
-      this.toastServer.showToast('Please fill all required fields correctly.', 'warning');
+
+    if (this.registerForm.invalid || !this.photoFile) {
+      this.toastServer.showToast('Please fill all required fields correctly and upload a photo.', 'warning');
       return;
     }
   
@@ -119,7 +123,4 @@ export class RegisterComponent {
         }
       });
   }
-  
-  
-  
 }
