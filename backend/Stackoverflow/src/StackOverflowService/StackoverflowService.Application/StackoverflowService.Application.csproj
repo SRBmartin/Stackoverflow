@@ -185,6 +185,9 @@
     <Compile Include="Features\Users\SetUserPhoto\SetUserPhotoCommandHandler.cs" />
     <Compile Include="Features\Users\SetUserPhoto\SetUserPhotoCommandValidator.cs" />
     <Compile Include="Features\Users\SetUserPhoto\SetUserPhotoCommand.cs" />
+    <Compile Include="Features\Votes\VoteCommand.cs" />
+    <Compile Include="Features\Votes\VoteCommandHandler.cs" />
+    <Compile Include="Features\Votes\VoteCommandValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

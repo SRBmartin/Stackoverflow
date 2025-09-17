@@ -194,6 +194,7 @@
     <Compile Include="Controllers\AnswersController.cs" />
     <Compile Include="Controllers\QuestionsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Controllers\VotesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -206,6 +207,7 @@
     <Compile Include="Requests\Questions\UpdateQuestionRequest.cs" />
     <Compile Include="Requests\User\CreateUserRequest.cs" />
     <Compile Include="Requests\User\LoginUserRequest.cs" />
+    <Compile Include="Requests\Votes\VoteOnAnswerRequest.cs" />
     <Compile Include="Security\RequireJwtAuth.cs" />
     <Compile Include="Swagger\FileResponseOperationFilter.cs" />
     <Compile Include="Swagger\FileUploadOperationFilter.cs" />

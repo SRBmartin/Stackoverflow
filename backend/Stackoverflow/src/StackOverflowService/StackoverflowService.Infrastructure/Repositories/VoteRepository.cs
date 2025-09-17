@@ -36,6 +36,9 @@ namespace StackoverflowService.Infrastructure.Repositories
         public async Task UpsertAsync(Vote v, CancellationToken cancellationToken)
             => await _votes.UpsertEntityAsync(v.ToTable(), TableUpdateMode.Replace, cancellationToken);
 
+        public async Task DeleteAsync(Vote v, CancellationToken cancellationToken)
+            => await _votes.DeleteEntityAsync(v.TargetId, v.Id, ETag.All, cancellationToken: cancellationToken);
+
         public Task<IReadOnlyList<Vote>> ListByAnswerAsync(string answerId, int take, CancellationToken ct)
             => ListByPartitionAsync(answerId, take, ct);
 
