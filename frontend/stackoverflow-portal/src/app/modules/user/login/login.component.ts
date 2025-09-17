@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/auth/services/auth.service';
 import { LoginUserRequest } from '../../../core/auth/dto/login-user-request';
+import { LoaderService} from '../../../common/ui/loader/loader.service';
 
 @Component({
   selector: 'app-login',
@@ -18,7 +19,12 @@ export class LoginComponent {
   showPassword = false;
   errorMessage: string | null = null;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService, 
+    private router: Router, 
+    private loaderService: LoaderService 
+    )
+     {}
 
   togglePassword() {
     this.showPassword = !this.showPassword;
@@ -27,18 +33,21 @@ export class LoginComponent {
   onSubmit() {
     if (!this.email || !this.password) return;
   
-    // Debug: proveri šta korisnik unosi
-    console.log('Email unet:', this.email);
-    console.log('Password unet:', this.password);
+    this.loaderService.show(); 
   
     const request: LoginUserRequest = { email: this.email, password: this.password };
     this.authService.login(request).subscribe({
-      next: () => this.router.navigate(['/questions']),
+      next: () => {
+        this.loaderService.hide(); 
+        this.router.navigate(['/questions']);
+      },
       error: (err) => {
-        console.error('Login error', err); // vidi ceo odgovor
-        this.errorMessage = err?.error?.message || 'Login failed. Check your credentials.';
+        this.loaderService.hide(); 
+        this.errorMessage = err?.error?.message || 'Login failed';
       }
     });
   }
+  
+  
   
 }

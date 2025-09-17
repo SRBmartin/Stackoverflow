@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../../core/auth/services/auth.service';
 import { UserService } from '../../../core/services/user.service';
 import { catchError, switchMap, of } from 'rxjs';
+import { LoaderService } from '../../../common/ui/loader/loader.service';
 
 @Component({
   selector: 'app-register',
@@ -23,7 +24,8 @@ export class RegisterComponent {
     private fb: FormBuilder,
     private authService: AuthService,
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private loaderService: LoaderService
   ) {
     this.registerForm = this.fb.group({
       name: ['', Validators.required],
@@ -83,7 +85,7 @@ export class RegisterComponent {
       address: formValue.address
     };
   
-    
+    this.loaderService.show();
     this.authService.register(request)
       .pipe(
         switchMap(() => this.authService.login({ email: request.email, password: request.password })),
@@ -101,8 +103,12 @@ export class RegisterComponent {
         next: () => {
           console.log('Registration successful');
           this.router.navigate(['/questions']);
+          this.loaderService.hide();
         },
-        error: () => console.error('Something went wrong')
+        error: () => {
+          console.error('Something went wrong')
+          this.loaderService.hide();
+        }
       });
   }
   

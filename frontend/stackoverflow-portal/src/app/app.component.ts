@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from "./common/ui/header/header.component";
 import { FooterComponent } from "./common/ui/footer/footer.component";
 import { CommonModule } from '@angular/common';
+import { LoaderComponent } from './common/ui/loader/loader.component';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +12,9 @@ import { CommonModule } from '@angular/common';
     CommonModule,
     RouterOutlet,
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
+    LoaderComponent
+    
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
