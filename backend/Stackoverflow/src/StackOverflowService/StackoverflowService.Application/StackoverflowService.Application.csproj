@@ -144,6 +144,12 @@
     <Compile Include="DTOs\Questions\QuestionDto.cs" />
     <Compile Include="DTOs\Users\UserDto.cs" />
     <Compile Include="DTOs\Users\UserPreviewDto.cs" />
+    <Compile Include="Features\Answers\CreateAnswer\CreateAnswerCommand.cs" />
+    <Compile Include="Features\Answers\CreateAnswer\CreateAnswerCommandHandler.cs" />
+    <Compile Include="Features\Answers\CreateAnswer\CreateAnswerCommandValidator.cs" />
+    <Compile Include="Features\Answers\SetAnswerAsFinal\SetAnswerAsFinalCommand.cs" />
+    <Compile Include="Features\Answers\SetAnswerAsFinal\SetAnswerAsFinalCommandHandler.cs" />
+    <Compile Include="Features\Answers\SetAnswerAsFinal\SetAnswerAsFinalCommandValidator.cs" />
     <Compile Include="Features\Questions\CreateQuestion\CreateQuestionCommand.cs" />
     <Compile Include="Features\Questions\CreateQuestion\CreateQuestionCommandHandler.cs" />
     <Compile Include="Features\Questions\CreateQuestion\CreateQuestionCommandValidator.cs" />

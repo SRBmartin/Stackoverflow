@@ -6,6 +6,7 @@ namespace StackoverflowService.Application.DTOs.Answers
     {
         public string Id { get; set; } = default!;
         public string QuestionId { get; set; } = default!;
+        public string UserId { get; set; } = default!;
         public string Text { get; set; } = default!;
         public DateTimeOffset CreationDate { get; set; }
         public bool IsFinal { get; set; }

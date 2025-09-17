@@ -61,6 +61,7 @@ namespace StackoverflowService.Application.Features.Questions.GetQuestionById
                 {
                     Id = a.Id,
                     QuestionId = a.QuestionId,
+                    UserId = a.UserId,
                     Text = a.Text,
                     CreationDate = a.CreationDate,
                     IsFinal = a.IsFinal,

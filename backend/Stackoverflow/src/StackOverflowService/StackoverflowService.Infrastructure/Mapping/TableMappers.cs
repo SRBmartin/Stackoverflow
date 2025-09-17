@@ -62,7 +62,7 @@ namespace StackoverflowService.Infrastructure.Mapping
         };
 
         public static Answer ToDomain(this AnswerEntity e) =>
-            new Answer(id: e.RowKey, questionId: e.QuestionId, text: e.Text,
+            new Answer(id: e.RowKey, questionId: e.QuestionId, userId: e.UserId, text: e.Text,
                        created: e.CreationDate, isFinal: e.IsFinal, isDeleted: e.IsDeleted);
 
         public static AnswerEntity ToTable(this Answer a) => new AnswerEntity
@@ -70,6 +70,7 @@ namespace StackoverflowService.Infrastructure.Mapping
             PartitionKey = a.QuestionId,
             RowKey = a.Id,
             QuestionId = a.QuestionId,
+            UserId = a.UserId,
             Text = a.Text,
             CreationDate = a.CreationDate,
             IsFinal = a.IsFinal,
