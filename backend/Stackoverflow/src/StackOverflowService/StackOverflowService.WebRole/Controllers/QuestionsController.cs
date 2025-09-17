@@ -64,7 +64,11 @@ namespace StackOverflowService.WebRole.Controllers
         [RequireJwtAuth]
         public async Task<IHttpActionResult> GetById(string id, CancellationToken cancellationToken)
         {
-            var command = new GetQuestionByIdQuery(id);
+            var principal = User as ClaimsPrincipal;
+            var userId = principal?.FindFirst("sub")?.Value
+                      ?? principal?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var command = new GetQuestionByIdQuery(id, userId);
 
             var result = await _mediator.Send(command, cancellationToken);
 

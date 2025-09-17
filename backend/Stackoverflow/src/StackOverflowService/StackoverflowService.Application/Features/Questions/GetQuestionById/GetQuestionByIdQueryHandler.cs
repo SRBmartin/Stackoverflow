@@ -10,6 +10,7 @@ using StackoverflowService.Application.DTOs.Users;
 using System.Linq;
 using StackoverflowService.Application.DTOs.Answers;
 using System.Collections.Generic;
+using StackoverflowService.Domain.Entities;
 
 namespace StackoverflowService.Application.Features.Questions.GetQuestionById
 {
@@ -43,6 +44,13 @@ namespace StackoverflowService.Application.Features.Questions.GetQuestionById
             var (qUp, qDown) = await _voteRepository.CountByQuestionAsync(question.Id, cancellationToken);
             var totalScore = qUp - qDown;
 
+            Vote? myQuestionVote = null;
+            if (!string.IsNullOrEmpty(query.CurrentUserId))
+            {
+                myQuestionVote = await _voteRepository.GetUserVoteForQuestionAsync(
+                    question.Id, query.CurrentUserId!, cancellationToken);
+            }
+
             var answers = await _answerRepository.ListByQuestionAsync(question.Id, take: 0, cancellationToken);
             var countTasks = answers.ToDictionary(
                 a => a.Id,
@@ -51,11 +59,27 @@ namespace StackoverflowService.Application.Features.Questions.GetQuestionById
 
             await Task.WhenAll(countTasks.Values);
 
+            Dictionary<string, Task<Vote?>> myVoteTasks = null!;
+            if (!string.IsNullOrEmpty(query.CurrentUserId))
+            {
+                myVoteTasks = answers.ToDictionary(
+                    a => a.Id,
+                    a => _voteRepository.GetUserVoteForAnswerAsync(a.Id, query.CurrentUserId!, cancellationToken)
+                );
+            }
+
+            if (myVoteTasks != null)
+                await Task.WhenAll(myVoteTasks.Values);
+
             var answerDtos = new List<AnswerDto>(answers.Count);
             foreach (var a in answers)
             {
                 var (up, down) = countTasks[a.Id].Result;
                 var score = up - down;
+
+                var myAnsVoteType = (VoteType?)null;
+                if (myVoteTasks != null)
+                    myAnsVoteType = myVoteTasks[a.Id].Result?.Type;
 
                 answerDtos.Add(new AnswerDto
                 {
@@ -68,7 +92,8 @@ namespace StackoverflowService.Application.Features.Questions.GetQuestionById
                     IsDeleted = a.IsDeleted,
                     UpVotes = up,
                     DownVotes = down,
-                    VoteScore = score
+                    VoteScore = score,
+                    MyVote = myAnsVoteType
                 });
             }
 
@@ -85,6 +110,7 @@ namespace StackoverflowService.Application.Features.Questions.GetQuestionById
                 IsDeleted = question.IsDeleted,
 
                 VoteScore = totalScore,
+                MyVote = myQuestionVote?.Type,
 
                 User = new UserPreviewDto
                 {

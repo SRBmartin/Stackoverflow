@@ -1,4 +1,7 @@
-﻿using System;
+﻿using StackoverflowService.Domain.Enums;
+using System;
+
+#nullable enable
 
 namespace StackoverflowService.Application.DTOs.Answers
 {
@@ -16,5 +19,6 @@ namespace StackoverflowService.Application.DTOs.Answers
         public int UpVotes { get; set; }
         public int DownVotes { get; set; }
         public int VoteScore { get; set; }
+        public VoteType? MyVote { get; set; }
     }
 }
