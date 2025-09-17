@@ -1,0 +1,122 @@
+button {
+  border: none;
+  cursor: pointer;
+  font-weight: 500 !important;
+
+  &.btn {
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+
+    &-primary {
+      background-color: var(--primary-color);
+
+      &:hover {
+        background-color: #96a397;
+        transform: scale(1.02);
+      }
+    }
+
+    &-secondary {
+      background-color: var(--secondary-color);
+
+      &:hover {
+        background-color: #041921;
+        transform: scale(1.02);
+      }
+    }
+
+    &-tercial {
+      background-color: var(--tercial-color);
+      color: var(--white-color);
+
+      &:hover {
+        background-color: #37525c;
+        transform: scale(1.02);
+      }
+    }
+
+    &-accent {
+      background-color: var(--accent-color);
+      color: var(--white-color);
+
+      &:hover {
+        background-color: #6a8038;
+        transform: scale(1.02);
+      }
+    }
+
+    &-dark {
+      background-color: var(--dark-color);
+      color: var(--white-color);
+
+      &:hover {
+        background-color: #405d69;
+        transform: scale(1.02);
+      }
+    }
+
+    &-light {
+      background-color: var(--light-color);
+      color: var(--black-color);
+
+      &:hover {
+        background-color: #c1c7b3;
+        transform: scale(1.02);
+      }
+    }
+
+    &-black {
+      background-color: var(--black-color);
+      color: var(--white-color);
+
+      &:hover {
+        background-color: #3d3d3d;
+        transform: scale(1.02);
+      }
+    }
+
+    &-white {
+      background-color: var(--white-color);
+
+      &:hover {
+        background-color: #e6e6e6;
+        transform: scale(1.02);
+      }
+    }
+
+    &-sm {
+      font-size: 14px;
+      min-width: 90px;
+    }
+
+    &-md {
+      font-size: 14px;
+      min-width: 130px;
+    }
+
+    &-lg {
+      font-size: 20px;
+      min-width: 250px;
+    }
+
+    &-logo {
+      width: 50px;
+      height: 100%;
+      aspect-ratio: 1/1;
+      background-size: contain !important;
+      background-repeat: no-repeat;
+      background-position: center center;
+    }
+
+    &-icon {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 50% !important;
+        padding: 5px;
+    }
+  }
+}
