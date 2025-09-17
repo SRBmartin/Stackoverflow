@@ -6,6 +6,7 @@ import { AuthService } from '../../../core/auth/services/auth.service';
 import { UserService } from '../../../core/services/user.service';
 import { catchError, switchMap, of } from 'rxjs';
 import { LoaderService } from '../../../common/ui/loader/loader.service';
+import { ToastServer } from '../../../common/ui/toast/toast.service';
 
 @Component({
   selector: 'app-register',
@@ -25,7 +26,8 @@ export class RegisterComponent {
     private authService: AuthService,
     private userService: UserService,
     private router: Router,
-    private loaderService: LoaderService
+    private loaderService: LoaderService,
+    private toastServer : ToastServer
   ) {
     this.registerForm = this.fb.group({
       name: ['', Validators.required],
@@ -70,7 +72,10 @@ export class RegisterComponent {
 
   onSubmit(): void {
     this.registerForm.markAllAsTouched();
-    if (this.registerForm.invalid) return;
+    if (this.registerForm.invalid) {
+      this.toastServer.showToast('Please fill all required fields correctly.', 'warning');
+      return;
+    }
   
     const formValue = this.registerForm.value;
   
@@ -91,26 +96,30 @@ export class RegisterComponent {
         switchMap(() => this.authService.login({ email: request.email, password: request.password })),
         switchMap(loginRes => {
           localStorage.setItem('token', loginRes.AccessToken);
-  
           return this.photoFile ? this.userService.uploadPhoto(this.photoFile) : of(null);
         }),
         catchError(err => {
           console.error('Registration or photo upload failed:', err);
+          this.toastServer.showToast('Registration failed. Please try again.', 'error');  
+          this.loaderService.hide();
           return of(null); 
         })
       )
       .subscribe({
         next: () => {
           console.log('Registration successful');
+          this.toastServer.showToast('Registration successful! Welcome!', 'success');  
           this.router.navigate(['/questions']);
           this.loaderService.hide();
         },
         error: () => {
           console.error('Something went wrong')
+          this.toastServer.showToast('Something went wrong. Please try again.', 'error');  
           this.loaderService.hide();
         }
       });
   }
+  
   
   
 }

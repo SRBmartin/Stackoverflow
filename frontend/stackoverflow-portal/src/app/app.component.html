@@ -2,3 +2,9 @@
 <router-outlet />
 <app-footer />
 <app-loader/>
+<app-toast 
+  *ngIf="toast$ | async as toast" 
+  [message]="toast.message" 
+  [type]="toast.type" 
+  [visible]="true">
+</app-toast>

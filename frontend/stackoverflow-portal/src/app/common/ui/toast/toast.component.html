@@ -1,0 +1,15 @@
+<div class="toast" [ngClass]="type" *ngIf="visible">
+    <div class="toast-content">
+      <div class="toast-icon">
+        <span *ngIf="type==='success'">✅</span>
+        <span *ngIf="type==='error'">❌</span>
+        <span *ngIf="type==='info'">ℹ️</span>
+        <span *ngIf="type==='warning'">⚠️</span>
+      </div>
+      <div class="toast-text">
+        <div class="toast-type">{{ type.toUpperCase() }}</div>
+        <div class="toast-message">{{ message }}</div>
+      </div>
+    </div>
+  </div>
+  
