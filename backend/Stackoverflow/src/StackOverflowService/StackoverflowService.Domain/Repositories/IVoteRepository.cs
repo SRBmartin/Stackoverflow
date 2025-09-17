@@ -14,5 +14,6 @@ namespace StackoverflowService.Domain.Repositories
         Task<IReadOnlyList<Vote>> ListByAnswerAsync(string answerId, int take, CancellationToken cancellationToken);
         Task<Vote?> GetUserVoteForAnswerAsync(string answerId, string userId, CancellationToken cancellationToken);
         Task UpsertAsync(Vote vote, CancellationToken cancellationToken);
+        Task<(int Up, int Down)> CountByAnswerAsync(string answerId, CancellationToken cancellationToken);
     }
 }

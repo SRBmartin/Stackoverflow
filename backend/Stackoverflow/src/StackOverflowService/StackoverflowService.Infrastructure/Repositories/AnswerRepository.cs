@@ -33,7 +33,7 @@ namespace StackoverflowService.Infrastructure.Repositories
 
         public async Task<IReadOnlyList<Answer>> ListByQuestionAsync(string questionId, int take, CancellationToken cancellationToken)
         {
-            var filter = TableClient.CreateQueryFilter<AnswerEntity>(e => e.PartitionKey == questionId);
+            var filter = TableClient.CreateQueryFilter<AnswerEntity>(e => e.PartitionKey == questionId && e.IsDeleted == false);
             var list = new List<Answer>(capacity: take > 0 ? take : 16);
             await foreach (var e in _answers.QueryAsync<AnswerEntity>(filter, cancellationToken: cancellationToken))
             {

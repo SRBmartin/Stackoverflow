@@ -7,6 +7,9 @@ using System.Threading;
 using StackoverflowService.Application.Common;
 using StackoverflowService.Domain.Enums;
 using StackoverflowService.Application.DTOs.Users;
+using System.Linq;
+using StackoverflowService.Application.DTOs.Answers;
+using System.Collections.Generic;
 
 namespace StackoverflowService.Application.Features.Questions.GetQuestionById
 {
@@ -40,16 +43,36 @@ namespace StackoverflowService.Application.Features.Questions.GetQuestionById
             var user = await _userRepository.GetAsync(question.UserId, cancellationToken);
 
             var answers = await _answerRepository.ListByQuestionAsync(question.Id, take: 0, cancellationToken);
+
+            var countTasks = answers.ToDictionary(
+                a => a.Id,
+                a => _voteRepository.CountByAnswerAsync(a.Id, cancellationToken)
+            );
+
+            await Task.WhenAll(countTasks.Values);
+
+            var answerDtos = new List<AnswerDto>(answers.Count);
             var voteScore = 0;
 
             foreach (var a in answers)
             {
-                var votes = await _voteRepository.ListByAnswerAsync(a.Id, take: 0, cancellationToken);
-                foreach (var v in votes)
+                var (up, down) = countTasks[a.Id].Result;
+                var score = up - down;
+
+                voteScore += score;
+
+                answerDtos.Add(new AnswerDto
                 {
-                    if (v.Type == VoteType.Up) voteScore += 1;
-                    else if (v.Type == VoteType.Down) voteScore -= 1;
-                }
+                    Id = a.Id,
+                    QuestionId = a.QuestionId,
+                    Text = a.Text,
+                    CreationDate = a.CreationDate,
+                    IsFinal = a.IsFinal,
+                    IsDeleted = a.IsDeleted,
+                    UpVotes = up,
+                    DownVotes = down,
+                    VoteScore = score
+                });
             }
 
             var dto = new QuestionDto
@@ -72,7 +95,8 @@ namespace StackoverflowService.Application.Features.Questions.GetQuestionById
                         Email = user.Email,
                         PhotoBlobName = user.Photo?.BlobName,
                         PhotoContainer = user.Photo?.Container
-                    }
+                    },
+                Answers = answerDtos
             };
 
             return Result.Ok(dto);

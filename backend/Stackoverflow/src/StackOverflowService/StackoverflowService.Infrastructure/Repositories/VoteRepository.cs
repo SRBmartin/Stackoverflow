@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using StackoverflowService.Infrastructure.Mapping;
 using StackoverflowService.Domain.Repositories;
+using StackoverflowService.Domain.Enums;
 
 #nullable enable
 
@@ -56,5 +57,20 @@ namespace StackoverflowService.Infrastructure.Repositories
 
         public async Task UpsertAsync(Vote v, CancellationToken cancellationToken)
             => await _votes.UpsertEntityAsync(v.ToTable(), TableUpdateMode.Replace, cancellationToken);
+
+        public async Task<(int Up, int Down)> CountByAnswerAsync(string answerId, CancellationToken cancellationToken)
+        {
+            var filter = TableClient.CreateQueryFilter<VoteEntity>(e => e.PartitionKey == answerId);
+            int up = 0, down = 0;
+
+            await foreach (var e in _votes.QueryAsync<VoteEntity>(filter, cancellationToken: cancellationToken))
+            {
+                if (e.Type == "+") up++;
+                else if (e.Type == "-") down++;
+            }
+
+            return (up, down);
+        }
+
     }
 }

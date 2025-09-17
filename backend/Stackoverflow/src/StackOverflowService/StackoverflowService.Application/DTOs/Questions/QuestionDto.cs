@@ -1,5 +1,7 @@
-﻿using StackoverflowService.Application.DTOs.Users;
+﻿using StackoverflowService.Application.DTOs.Answers;
+using StackoverflowService.Application.DTOs.Users;
 using System;
+using System.Collections.Generic;
 
 namespace StackoverflowService.Application.DTOs.Questions
 {
@@ -17,6 +19,7 @@ namespace StackoverflowService.Application.DTOs.Questions
         
         //Agregation and navigation fields
         public UserPreviewDto User { get; set; } = new UserPreviewDto();
+        public List<AnswerDto> Answers { get; set; } = new List<AnswerDto>();
         public int VoteScore { get; set; } = default!;
     }
 }
