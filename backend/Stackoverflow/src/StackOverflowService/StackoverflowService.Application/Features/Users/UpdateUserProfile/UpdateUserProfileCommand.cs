@@ -1,14 +1,10 @@
 ﻿using MediatR;
 using StackoverflowService.Application.Common.Results;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using StackoverflowService.Application.DTOs.Users;
 
 namespace StackoverflowService.Application.Features.Users.UpdateUserProfile
 {
-    public sealed class UpdateUserProfileCommand : IRequest<Result>
+    public sealed class UpdateUserProfileCommand : IRequest<Result<UserDto>>
     {
         public string UserId { get; }
         public string Name { get; }

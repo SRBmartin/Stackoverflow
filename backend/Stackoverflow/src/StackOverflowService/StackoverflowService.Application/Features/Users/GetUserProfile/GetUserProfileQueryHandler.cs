@@ -5,6 +5,7 @@ using StackoverflowService.Application.DTOs.Users;
 using StackoverflowService.Domain.Repositories;
 using System.Threading;
 using System.Threading.Tasks;
+using StackoverflowService.Domain.Enums;
 
 namespace StackoverflowService.Application.Features.Users.GetUserProfile
 {
@@ -32,7 +33,7 @@ namespace StackoverflowService.Application.Features.Users.GetUserProfile
                 Name = user.Name,
                 Lastname = user.Lastname,
                 Email = user.Email,
-                Gender = user.Gender == Domain.Enums.Gender.Male ? "M" : "F",
+                Gender = user.Gender == Gender.Male ? "M" : "F",
                 State = user.State,
                 City = user.City,
                 Address = user.Address,
