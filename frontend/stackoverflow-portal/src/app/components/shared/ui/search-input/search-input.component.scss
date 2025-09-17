@@ -1,0 +1,49 @@
+:host {
+    display: block;
+  }
+  
+  .search-input-wrapper {
+    position: relative;
+    display: block;
+  }
+  
+  .search-input-wrapper input.form-control {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+    background-color: #fff;
+    color: #212529;
+    border-color: var(--secondary-color);
+    transition: border-color 0.3s;
+  }
+  
+  .search-input-wrapper input.form-control:focus {
+    border-color: var(--tercial-color);
+    box-shadow: 0 0 0 0.2rem rgba(61, 194, 236, 0.25);
+  }
+  
+  .search-input-wrapper input.form-control:not(:placeholder-shown) {
+    border-color: var(--primary-color);
+  }
+  
+  .search-input-wrapper input.form-control:disabled {
+    cursor: not-allowed;
+  }
+  
+  .search-icon {
+    position: absolute;
+    top: 50%;
+    left: 0.75rem;
+    transform: translateY(-50%);
+  }
+  
+  .clear-btn {
+    position: absolute;
+    top: 50%;
+    right: 0.75rem;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    padding: 0;
+    font-size: 1rem;
+    cursor: pointer;
+  }
