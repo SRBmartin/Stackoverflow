@@ -1,6 +1,6 @@
 .toast {
-  position: fixed;
-  bottom: 20px;
+  position: fixed !important;
+  bottom: 600px !important;
   right: 20px;
   min-width: 350px;
   max-width: 450px;
@@ -11,7 +11,7 @@
   font-weight: 500;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
   opacity: 0.95;
-  z-index: 1000;
+  z-index: 9999 !important;
   min-height: 80px;
 
   &.success { background-color: #4caf50; }

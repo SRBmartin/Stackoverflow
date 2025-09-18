@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { HeaderComponent } from "./components/shared/ui/header/header.component";
-import { FooterComponent } from "./components/shared/ui/footer/footer.component";
 import { CommonModule } from '@angular/common';
+import { HeaderComponent } from './components/shared/ui/header/header.component';
+import { FooterComponent } from './components/shared/ui/footer/footer.component';
 import { LoaderComponent } from './common/ui/loader/loader.component';
 import { ToastComponent } from './common/ui/toast/toast.component';
-import { ToastServer } from './common/ui/toast/toast.service';
+import { ToastServer, ToastData } from './common/ui/toast/toast.service';
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -14,9 +15,8 @@ import { ToastServer } from './common/ui/toast/toast.service';
     RouterOutlet,
     HeaderComponent,
     FooterComponent,
-    LoaderComponent, 
+    LoaderComponent,
     ToastComponent
-    
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
@@ -24,5 +24,10 @@ import { ToastServer } from './common/ui/toast/toast.service';
 export class AppComponent {
   toast$ = this.toastServer.toastState$;
 
-  constructor(private toastServer: ToastServer) {}
+  constructor(private toastServer: ToastServer) {
+    
+    this.toast$.subscribe((t: ToastData | null) => {
+      console.log('Toast emitted:', t);
+    });
+  }
 }

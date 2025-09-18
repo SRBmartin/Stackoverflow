@@ -12,4 +12,6 @@ export class ToastComponent {
   @Input() message: string = '';
   @Input() type: 'success' | 'error' | 'info' | 'warning' = 'info';
   @Input() visible: boolean = false;
+  
 }
+

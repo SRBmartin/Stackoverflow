@@ -16,7 +16,6 @@ export class ToastServer {
   showToast(message: string, type: 'success' | 'error' | 'info' | 'warning' = 'info') {
     this.toastSubject.next({ message, type });
 
-    // Automatski sakrij toast posle 3s
     setTimeout(() => this.clearToast(), 3000);
   }
 
