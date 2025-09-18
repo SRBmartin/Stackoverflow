@@ -28,12 +28,21 @@ namespace StackoverflowService.Infrastructure.Repositories
             catch (Azure.RequestFailedException) { return null; }
         }
 
+        public async Task<Answer?> GetFinalByQuestionAsync(string questionId, CancellationToken cancellationToken)
+        {
+            var filter = TableClient.CreateQueryFilter<AnswerEntity>(e => e.PartitionKey == questionId && e.IsFinal == true && e.IsDeleted == false);
+            await foreach (var e in _answers.QueryAsync<AnswerEntity>(filter, maxPerPage: 1, cancellationToken: cancellationToken))
+                return e.ToDomain();
+
+            return null;
+        }
+
         public async Task AddAsync(Answer a, CancellationToken cancellationToken)
             => await _answers.AddEntityAsync(a.ToTable(), cancellationToken);
 
         public async Task<IReadOnlyList<Answer>> ListByQuestionAsync(string questionId, int take, CancellationToken cancellationToken)
         {
-            var filter = TableClient.CreateQueryFilter<AnswerEntity>(e => e.PartitionKey == questionId);
+            var filter = TableClient.CreateQueryFilter<AnswerEntity>(e => e.PartitionKey == questionId && e.IsDeleted == false);
             var list = new List<Answer>(capacity: take > 0 ? take : 16);
             await foreach (var e in _answers.QueryAsync<AnswerEntity>(filter, cancellationToken: cancellationToken))
             {

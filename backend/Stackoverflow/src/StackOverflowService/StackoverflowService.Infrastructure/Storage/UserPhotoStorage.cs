@@ -50,7 +50,7 @@ namespace StackoverflowService.Infrastructure.Storage
             using (var ms = new MemoryStream(content, writable: false))
             {
                 var options = new BlobUploadOptions { HttpHeaders = headers };
-                await blob.UploadAsync(ms, options, cancellationToken).ConfigureAwait(false);
+                await blob.UploadAsync(ms, options, cancellationToken);
             }
 
             return new PhotoRef(blobName, _containerName);

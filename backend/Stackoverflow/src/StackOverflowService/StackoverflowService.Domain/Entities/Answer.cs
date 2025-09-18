@@ -6,16 +6,18 @@ namespace StackoverflowService.Domain.Entities
     {
         public string Id { get; }
         public string QuestionId { get; }
+        public string UserId { get; }
         public string Text { get; private set; }
         public DateTimeOffset CreationDate { get; private set; }
         public bool IsFinal { get; private set; }
         public bool IsDeleted { get; private set; }
 
-        public Answer(string id, string questionId, string text,
+        public Answer(string id, string questionId, string userId, string text,
                       DateTimeOffset? created = null, bool isFinal = false, bool isDeleted = false)
         {
             Id = id;
             QuestionId = questionId;
+            UserId = userId;
             Text = text ?? "";
             CreationDate = created ?? DateTimeOffset.UtcNow;
             IsFinal = isFinal;
