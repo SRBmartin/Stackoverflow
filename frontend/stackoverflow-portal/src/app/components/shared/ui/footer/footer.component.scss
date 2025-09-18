@@ -1,0 +1,42 @@
+.footer {
+    background-color: var(--dark-color);
+    color: var(--white-color);
+    padding: 40px 0;;
+
+    &-menu {
+        list-style: none;
+        padding: 0;
+        
+        &-item {
+            margin-bottom: 6px;
+
+            a {
+                color: var(--white-color);
+                text-decoration: none;
+                
+            }
+        }
+    }
+
+    &-text {
+        font-weight: 400;
+        color: var(--grey-color);
+    }
+
+    &-link-holder {
+        a {
+            margin-right: 10px;
+            text-decoration: none;
+        }
+    }
+}
+
+app-button {
+    margin-bottom: 20px;
+}
+
+p {
+    font-weight: 700;
+    color: var(--white-color);
+}
+
