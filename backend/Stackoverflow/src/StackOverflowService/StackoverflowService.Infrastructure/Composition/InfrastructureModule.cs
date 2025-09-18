@@ -22,6 +22,14 @@ namespace StackoverflowService.Infrastructure.Composition
                 .As<IPhotoStorage>()
                 .SingleInstance();
 
+            builder.RegisterType<QuestionPhotoStorage>()
+                .As<IQuestionPhotoStorage>()
+                .SingleInstance();
+
+            builder.RegisterType<PhotoReader>()
+                .As<IPhotoReader>()
+                .SingleInstance();
+
             builder.RegisterType<PasswordHasherPbkdf2>()
                 .As<IPasswordHasher>()
                 .SingleInstance();

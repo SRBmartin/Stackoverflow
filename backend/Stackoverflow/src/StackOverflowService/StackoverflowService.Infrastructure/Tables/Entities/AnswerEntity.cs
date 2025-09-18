@@ -10,6 +10,7 @@ namespace StackoverflowService.Infrastructure.Tables.Entities
         public string RowKey { get; set; } = default; // answerId
 
         public string QuestionId { get; set; } = default;
+        public string UserId { get; set; } = default;
         public string Text { get; set; } = default;
         public DateTimeOffset CreationDate { get; set; }
         public bool IsFinal { get; set; }

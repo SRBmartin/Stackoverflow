@@ -39,5 +39,13 @@ namespace StackoverflowService.Domain.Entities
 
         public void SetPhoto(PhotoRef photo) => Photo = photo;
 
+        public void UpdateProfile(string name, string lastname, string state, string city, string address)
+        {
+            Name = name?.Trim() ?? "";
+            Lastname = lastname?.Trim() ?? "";
+            State = state?.Trim() ?? "";
+            City = city?.Trim() ?? "";
+            Address = address?.Trim() ?? "";
+        }
     }
 }
