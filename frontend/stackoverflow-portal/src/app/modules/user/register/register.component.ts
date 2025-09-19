@@ -7,11 +7,16 @@ import { UserService } from '../../../core/services/user.service';
 import { catchError, switchMap, of } from 'rxjs';
 import { LoaderService } from '../../../common/ui/loader/loader.service';
 import { ToastServer } from '../../../common/ui/toast/toast.service';
+import { BasicButtonComponent } from '../../../components/shared/ui/button/basic-button.component';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [
+    CommonModule, 
+    ReactiveFormsModule,
+    BasicButtonComponent
+  ],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })

@@ -1,39 +1,4 @@
-<nav class="navbar navbar-guest" *ngIf="!isLoggedIn()">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-2 header-logo-holder">
-                <a href="#" class="header-logo">
-                    <img src="assets/images/logo.png" class="img-fluid">
-                </a>
-            </div>
-            <div class="col-md-8">
-
-                        <app-search-input (searchChanged)="onSearch($event)"></app-search-input>
-            </div>
-            <div class="col-md-2 btn-holder">
-                <app-button
-                    type="button"
-                    label="Log in"
-                    class="btn-sm btn-accent"
-                    routerLink="/login"
-                    routerLinkActive="active"
-                    (clickEvent)="onLogin()"
-                ></app-button>
-
-                <app-button
-                    type="button"
-                    label="Sign up"
-                    class="btn-sm btn-accent"
-                    routerLink="/register"
-                    routerLinkActive="active"
-                    (clickEvent)="onSignup()"
-                ></app-button>
-            </div>
-        </div>
-    </div>
-</nav>
-
-<nav class="navbar navbar-user" *ngIf="isLoggedIn()">
+<nav class="navbar navbar-guest">
     <div class="container">
         <div class="row">
             <div class="col-md-2">
@@ -44,11 +9,30 @@
                 </div>
             </div>
             <div class="col-md-8">
-                <div class="header-search-holder">
+                <div class="header-search-holder" *ngIf="isLoggedIn()">
                     <app-search-input (searchChanged)="onSearch($event)"></app-search-input>
                 </div>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-2" *ngIf="!isLoggedIn()">
+                <div class="header-btn-holder">
+                    <app-button
+                        type="button"
+                        label="Log in"
+                        class="btn-sm btn-accent"
+                        routerLink="/login"
+                        routerLinkActive="active"
+                    ></app-button>
+
+                    <app-button
+                        type="button"
+                        label="Sign up"
+                        class="btn-sm btn-accent"
+                        routerLink="/register"
+                        routerLinkActive="active"
+                    ></app-button>
+                </div>
+            </div>
+            <div class="col-md-2" *ngIf="isLoggedIn()">
                 <div class="header-btn-holder">
                     <app-button
                         type="button"
@@ -56,7 +40,6 @@
                         routerLink="/profile"
                         routerLinkActive="active"
                         backgroundImage="assets/images/user-profile.svg"
-                        (clickEvent)="onProfile()"
                     ></app-button>
 
                     <app-button
@@ -65,7 +48,6 @@
                         label="Ask Question"
                         routerLink="/ask-question"
                         routerLinkActive="active"
-                        (clickEvent)="onAskQuestion()"
                     ></app-button>
                 </div>
             </div>

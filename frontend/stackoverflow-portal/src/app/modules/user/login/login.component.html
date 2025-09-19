@@ -61,10 +61,17 @@
       <div *ngIf="errorMessage" class="login-error">
         {{ errorMessage }}
       </div>
-      
-      <button type="submit" class="login-btn">Log in</button>
-
-     
+     <div class="row">
+      <div class="col-md-12">
+        <div class="btn-holder">
+          <app-button
+            label="Log in"
+            class="btn btn-tercial"
+            type="submit"
+          ></app-button>
+        </div>
+      </div>
+     </div>
 
     </form>
   </div>
@@ -72,7 +79,7 @@
   <div class="below-box">
     <p class="sign-up-text">
       Don’t have an account?
-      <a href="http://localhost:4200/register">Sign up</a>
+      <a routerLink="/register" routerLinkActive="active">Sign up</a>
     </p>
   </div>
 </div>

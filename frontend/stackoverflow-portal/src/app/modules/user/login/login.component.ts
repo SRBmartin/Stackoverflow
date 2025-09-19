@@ -1,16 +1,22 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/auth/services/auth.service';
 import { LoginUserRequest } from '../../../core/auth/dto/login-user-request';
 import { LoaderService} from '../../../common/ui/loader/loader.service';
 import { ToastServer } from '../../../common/ui/toast/toast.service';
+import { BasicButtonComponent } from '../../../components/shared/ui/button/basic-button.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule, 
+    FormsModule,
+    RouterModule,
+    BasicButtonComponent
+  ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })

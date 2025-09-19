@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BasicButtonComponent } from '../button/basic-button.component';
 import { SearchInputComponent } from '../search-input/search-input.component';
+import { getToken, isJwtExpired } from '../../../../core/auth/utils/jwt.utils'
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -11,32 +13,19 @@ import { SearchInputComponent } from '../search-input/search-input.component';
   imports: [
     CommonModule, 
     BasicButtonComponent, 
-    SearchInputComponent
+    SearchInputComponent,
+    RouterModule
   ]
 })
 export class HeaderComponent {
   isLoggedIn(): boolean {
-    return true;
-  }
-
-  onLogin() {
-    console.log('Login clicked');
-  }
-
-  onSignup() {
-    console.log('Signup clicked');
+    const token = getToken();
+    if (!token) return false;
+    return !isJwtExpired(token);
   }
 
   onSearch(query: string) {
     console.log('Search query:', query);
-  }
-
-  onProfile() {
-    console.log('Profile clicked');
-  }
-
-  onAskQuestion() {
-    console.log('Ask question clicked');
   }
 }
 

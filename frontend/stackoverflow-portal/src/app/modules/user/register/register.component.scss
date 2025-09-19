@@ -139,29 +139,14 @@ h2 {
   min-height: 8px;
 }
 
-.btn-primary {
-  margin-top: 20px;
-  width: 50%;
-  padding: 14px;
-  background: #3399ff;
-  color: white;
-  font-weight: 600;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  transition: 0.3s background;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
+.btn-holder {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 
-.btn-primary:hover:not(:disabled) {
-  background: #287acc;
-}
-
-.btn-primary:disabled {
-  background: #ccc;
-  cursor: not-allowed;
+  app-button {
+    margin-top: 40px;
+  }
 }
 
 @media (max-width: 768px) {
