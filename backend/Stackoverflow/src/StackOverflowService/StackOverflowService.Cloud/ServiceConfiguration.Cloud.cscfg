@@ -4,10 +4,19 @@
     <Instances count="1" />
     <ConfigurationSettings />
   </Role>
+  <Role name="NotificationService">
+    <Instances count="3" />
+    <ConfigurationSettings />
+  </Role>
   <NetworkConfiguration>
     <VirtualNetworkSite name="stackoverflowservice.cloudVNet" />
     <AddressAssignments>
       <InstanceAddress roleName="StackOverflowService.WebRole">
+        <Subnets>
+          <Subnet name="WebTier" />
+        </Subnets>
+      </InstanceAddress>
+      <InstanceAddress roleName="NotificationService">
         <Subnets>
           <Subnet name="WebTier" />
         </Subnets>

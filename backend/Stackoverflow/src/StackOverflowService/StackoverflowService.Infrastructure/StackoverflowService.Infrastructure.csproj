@@ -149,7 +149,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Composition\InfrastructureModule.cs" />
+    <Compile Include="Configuration\EmailApiOptions.cs" />
+    <Compile Include="Email\EmailClient.cs" />
+    <Compile Include="Email\IEmailClient.cs" />
     <Compile Include="Mapping\TableMappers.cs" />
+    <Compile Include="Queues\Context\QueueContext.cs" />
+    <Compile Include="Queues\Interfaces\IQueueContext.cs" />
+    <Compile Include="Queues\QueueNames.cs" />
+    <Compile Include="Queues\Services\FinalAnswerQueue.cs" />
     <Compile Include="Repositories\AnswerRepository.cs" />
     <Compile Include="Repositories\QuestionRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
@@ -184,5 +191,9 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Email\Templates\FinalAnswer.html" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

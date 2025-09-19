@@ -1,0 +1,139 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Final answer for "{{QuestionTitle}}"</title>
+    <style>
+        .container {
+            width: 100%;
+            background: #f6f7f9;
+            padding: 24px 0;
+        }
+
+        .card {
+            width: 600px;
+            max-width: 100%;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 8px;
+            border: 1px solid #e6e8eb;
+        }
+
+        .header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #eef0f2;
+        }
+
+        .brand {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #2f3b52;
+        }
+
+        .content {
+            padding: 20px 24px;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #2f3b52;
+        }
+
+        .h1 {
+            font-size: 18px;
+            margin: 0 0 12px 0;
+        }
+
+        .muted {
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        .pill {
+            display: inline-block;
+            background: #e6f4ea;
+            color: #137333;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 999px;
+            vertical-align: middle;
+        }
+
+        .answer {
+            margin-top: 16px;
+            padding: 16px;
+            background: #fbfbfc;
+            border: 1px solid #eef0f2;
+            border-radius: 6px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+
+        .footer {
+            padding: 16px 24px 22px;
+            border-top: 1px solid #eef0f2;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #6b7280;
+            font-size: 12px;
+        }
+
+        .cta {
+            margin-top: 16px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 16px;
+            background: #1f6feb;
+            color: #ffffff !important;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        a {
+            color: #1f6feb;
+        }
+    </style>
+</head>
+<body style="margin:0; padding:0; background:#f6f7f9;">
+    <div class="container">
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" class="card">
+            <tr>
+                <td class="header">
+                    <div class="brand">StackOverflow</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="content">
+                    <div class="pill">Closed</div>
+                    <h1 class="h1">Final answer posted for: “{{QuestionTitle}}”</h1>
+
+                    <p style="margin:0 0 8px 0;">
+                        The question <strong>“{{QuestionTitle}}”</strong> has a final answer and is now <strong>closed</strong>.
+                    </p>
+                    <p class="muted" style="margin:0 0 16px 0;">
+                        Answered by <strong>{{AnsweredBy}}</strong>.
+                    </p>
+
+                    <div class="answer">
+                        {{FinalAnswer}}
+                    </div>
+
+                    <!-- Optional deep link back to the question (bind if available) -->
+                    <div class="cta">
+                        <a href="{{QuestionUrl}}" class="btn">View question</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="footer">
+                    You’re receiving this message because you’re subscribed to updates on this question.
+                    If you no longer wish to receive these notifications, you can adjust your preferences in your account settings.
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

@@ -39,6 +39,14 @@
     <ServiceConfiguration Include="ServiceConfiguration.Cloud.cscfg" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\NotificationService\NotificationService.csproj">
+      <Name>NotificationService</Name>
+      <Project>{6c434fce-9459-4550-83a9-b28866ac9849}</Project>
+      <Private>True</Private>
+      <RoleType>Worker</RoleType>
+      <RoleName>NotificationService</RoleName>
+      <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
+    </ProjectReference>
     <ProjectReference Include="..\StackOverflowService.WebRole\StackOverflowService.WebRole.csproj">
       <Name>StackOverflowService.WebRole</Name>
       <Project>{bee7bd5d-2a1e-4f51-b625-61bbd82e45c8}</Project>
@@ -49,9 +57,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="NotificationServiceContent\" />
     <Folder Include="StackOverflowService.WebRoleContent\" />
   </ItemGroup>
   <ItemGroup>
+    <DiagnosticsConfiguration Include="NotificationServiceContent\diagnostics.wadcfgx" />
     <DiagnosticsConfiguration Include="StackOverflowService.WebRoleContent\diagnostics.wadcfgx" />
   </ItemGroup>
   <!-- Import the target files for this project template -->
