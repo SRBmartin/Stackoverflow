@@ -1,0 +1,24 @@
+<div class="search-input-wrapper">
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Search"
+      [value]="searchQuery"
+      (input)="onInputChange($event)"
+    />
+    <img
+      src="assets/images/search-icon.svg"
+      alt="Search Icon"
+      width="16"
+      height="16"
+      class="search-icon"
+    />
+    <button
+      *ngIf="searchQuery"
+      type="button"
+      class="clear-btn"
+      (click)="clearSearch()"
+    >
+      X
+    </button>
+  </div>

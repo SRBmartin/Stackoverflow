@@ -1,0 +1,56 @@
+.custom-toast {
+  border-radius: 12px;
+  padding: 16px;
+  min-width: 320px;
+  max-width: 420px;
+  animation: slideIn 0.4s ease, fadeOut 0.4s ease 2.8s forwards;
+
+  .toast-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .toast-icon {
+    font-size: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+  }
+
+  .toast-text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .toast-type {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+
+  .toast-message {
+    font-size: 14px;
+    line-height: 1.4;
+    opacity: 0.95;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+}

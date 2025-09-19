@@ -1,0 +1,29 @@
+<div class="toast-container position-fixed bottom-0 end-0 p-3" *ngIf="visible">
+  <div class="toast show border-0 shadow-lg custom-toast bg-{{ bootstrapType }} text-white" role="alert">
+    <div class="toast-content d-flex">
+      
+     
+      <div class="toast-icon me-3">
+        <ng-container [ngSwitch]="type">
+          <i *ngSwitchCase="'success'" class="bi bi-check-circle-fill"></i>
+          <i *ngSwitchCase="'error'" class="bi bi-x-circle-fill"></i>
+          <i *ngSwitchCase="'info'" class="bi bi-info-circle-fill"></i>
+          <i *ngSwitchCase="'warning'" class="bi bi-exclamation-triangle-fill"></i>
+        </ng-container>
+      </div>
+
+      
+      <div class="toast-text flex-grow-1">
+        <div class="toast-type text-uppercase fw-bold">{{ type }}</div>
+        <div class="toast-message">{{ message }}</div>
+      </div>
+
+      
+      <button type="button"
+              class="btn-close btn-close-white ms-3"
+              aria-label="Close"
+              (click)="visible = false">
+      </button>
+    </div>
+  </div>
+</div>
