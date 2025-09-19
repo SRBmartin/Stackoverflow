@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.WindowsAzure;
-using Microsoft.WindowsAzure.Diagnostics;
 using Microsoft.WindowsAzure.ServiceRuntime;
 
 namespace NotificationService
@@ -22,7 +17,7 @@ namespace NotificationService
 
             try
             {
-                this.RunAsync(this.cancellationTokenSource.Token).Wait();
+                RunAsync(this.cancellationTokenSource.Token).Wait();
             }
             finally
             {
@@ -62,12 +57,9 @@ namespace NotificationService
 
         private async Task RunAsync(CancellationToken cancellationToken)
         {
-            // TODO: Replace the following with your own logic.
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                Trace.TraceInformation("Working");
-                await Task.Delay(1000);
-            }
+            var task = new QueueDequeueService();
+
+            await task.RunAsync(cancellationToken);
         }
     }
 }
