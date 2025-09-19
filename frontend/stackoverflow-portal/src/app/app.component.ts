@@ -27,7 +27,7 @@ export class AppComponent {
   constructor(private toastServer: ToastServer) {
     
     this.toast$.subscribe((t: ToastData | null) => {
-      console.log('Toast emitted:', t);
+      
     });
   }
 }

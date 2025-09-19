@@ -19,24 +19,19 @@ export class HeaderComponent {
     return true;
   }
 
-  onLogin() {
-    console.log('Login clicked');
+  onLogin() { 
   }
 
   onSignup() {
-    console.log('Signup clicked');
   }
 
   onSearch(query: string) {
-    console.log('Search query:', query);
   }
 
-  onProfile() {
-    console.log('Profile clicked');
+  onProfile() { 
   }
 
-  onAskQuestion() {
-    console.log('Ask question clicked');
+  onAskQuestion() {  
   }
 }
 
