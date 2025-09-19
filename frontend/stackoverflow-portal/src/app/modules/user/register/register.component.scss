@@ -3,33 +3,33 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #e0f0ff, #f8f9fa);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, var(--light-color), var(--bg-color));
+  font-family: var(--font-quicksand);
 }
 
 .register-box {
-  background: #ffffff;
-  padding: 40px 50px;
-  border-radius: 16px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.12);
-  width: 720px;
+  background: var(--white-color);
+  padding: 1.8rem 2rem; 
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+  width: 600px; 
   max-width: 95%;
-  margin-top: 30px;
-  margin-bottom: 30px;
+  margin: 20px 0;
 }
 
 h2 {
   text-align: center;
-  margin-bottom: 30px;
-  color: #222;
+  margin-bottom: 20px;
+  color: var(--secondary-color);
   font-weight: 600;
+  font-size: 1.4rem; 
 }
 
 .top-section {
   display: grid;
-  grid-template-columns: 220px 1fr;
-  gap: 30px;
-  margin-bottom: 25px;
+  grid-template-columns: 180px 1fr; 
+  gap: 20px;
+  margin-bottom: 20px;
   align-items: start;
 }
 
@@ -37,53 +37,65 @@ h2 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
+}
+
+.photo-wrapper {
+  position: relative;
+  margin-top: 25px;
+  width: 120px; 
+  height: 120px;
+  margin-bottom: 12px;
 }
 
 .photo-preview-wrapper {
-  width: 100px;
-  height: 100px;
-  border: 2px solid #3399ff;
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
   overflow: hidden;
-  margin-bottom: 8px;
 }
 
 .photo-preview {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+
+.photo-wrapper .remove-photo-btn {
+  top: -4px;
+  right: -4px;
+  width: 24px;
+  height: 24px;
+  font-size: 16px;
+  border-radius: 50%;
 }
 
 .photo-drop-zone {
-  width: 200px;
-  height: 120px;
-  border: 2px dashed #3399ff;
-  border-radius: 10px;
+  width: 160px; 
+  height: 100px;
+  border: 2px dashed var(--secondary-color);
+  border-radius: 8px;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
   cursor: pointer;
   transition: 0.3s background, 0.3s margin-top;
   text-align: center;
-  font-size: 14px;
-  color: #555;
-  margin-top: 25%;
-}
-
-.photo-preview-wrapper + .photo-drop-zone {
-  margin-top: 10%;
+  font-size: 12px; 
+  color: var(--dark-color);
+  margin-top: 20%;
 }
 
 .photo-drop-zone.dragging {
-  background: rgba(51,153,255,0.1);
+  background: rgba(18, 69, 89, 0.08);
 }
 
 .photo-drop-zone input[type="file"] {
   position: absolute;
-  width: 100%;
-  height: 100%;
+  width: 10%;
+  height: 10%;
   opacity: 0;
   cursor: pointer;
 }
@@ -91,54 +103,51 @@ h2 {
 .name-fields {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   flex: 1;
 }
 
 .form-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
+  gap: 16px;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  min-height: 20px; 
+  min-height: 18px;
 }
 
 .form-group label {
   font-weight: 600;
-  margin-bottom: 6px;
+  margin-bottom: 5px;
+  color: var(--dark-color);
+  font-size: 0.85rem;
 }
 
 .form-group input,
 .form-group select {
-  padding: 10px 12px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 14px;
-  transition: 0.2s border-color, 0.2s background;
+  padding: 8px 10px; 
+  border-radius: 6px;
+  border: 1px solid var(--grey-color);
+  font-size: 13px; 
 }
 
 .form-group input:focus,
 .form-group select:focus {
-  border-color: #3399ff;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(174, 195, 176, 0.2);
   outline: none;
 }
 
-.invalid-input {
-  border: 1px solid #c83f30 !important;
-  background: #fff5f5;
-}
-
 .error-message {
-  margin-top: 4px;
   color: #c83f30;
-  font-size: 13px;
-  min-height: 8px;
+  font-size: 12px;
+  max-height: 8px;
 }
 
+<<<<<<< HEAD
 .btn-holder {
   display: flex;
   flex-direction: row;
@@ -147,6 +156,32 @@ h2 {
   app-button {
     margin-top: 40px;
   }
+=======
+.btn-primary {
+  margin-top: 15px;
+  width: 130px; 
+  padding: 10px 12px;
+  background: var(--secondary-color);
+  color: var(--white-color);
+  font-weight: 600;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s background;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 0.95rem;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: rgba(18, 69, 89, 0.9);
+}
+
+.btn-primary:disabled {
+  background: var(--grey-color);
+  cursor: not-allowed;
+>>>>>>> 1cdf89c1a7db7cdc7ff128811bed67364fcb01ef
 }
 
 @media (max-width: 768px) {
@@ -162,7 +197,7 @@ h2 {
 
   .photo-drop-zone {
     width: 100%;
-    height: 150px;
+    height: 120px;
     margin-top: 0;
   }
 

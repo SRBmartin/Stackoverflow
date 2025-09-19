@@ -47,8 +47,8 @@ export class LoginComponent {
     this.authService.login(request).subscribe({
       next: () => {
         this.loaderService.hide(); 
-        this.toastServer.showToast('Login successful! Welcome back.', 'success');  
         this.router.navigate(['/questions']);
+        this.toastServer.showToast('Login successful! Welcome back.', 'success');  
       },
       error: (err) => {
         this.loaderService.hide(); 
@@ -57,7 +57,4 @@ export class LoginComponent {
       }
     });
   }
-  
-  
-  
 }

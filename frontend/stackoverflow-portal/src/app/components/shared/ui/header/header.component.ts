@@ -25,7 +25,6 @@ export class HeaderComponent {
   }
 
   onSearch(query: string) {
-    console.log('Search query:', query);
   }
 }
 

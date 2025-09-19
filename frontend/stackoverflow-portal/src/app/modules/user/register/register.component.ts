@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -26,13 +26,15 @@ export class RegisterComponent {
   photoPreview: string | ArrayBuffer | null = null;
   isDragging = false;
 
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+
   constructor(
     private readonly fb: FormBuilder,
     private readonly authService: AuthService,
     private readonly userService: UserService,
     private readonly router: Router,
     private readonly loaderService: LoaderService,
-    private readonly toastServer : ToastServer
+    private readonly toastServer: ToastServer
   ) {
     this.registerForm = this.fb.group({
       name: ['', Validators.required],
@@ -70,12 +72,20 @@ export class RegisterComponent {
     this.isDragging = false;
     if (event.dataTransfer?.files?.length) this.setFile(event.dataTransfer.files[0]);
   }
+
   onFileSelected(event: any) { if (event.target.files?.[0]) this.setFile(event.target.files[0]); }
+
   private setFile(file: File) {
     this.photoFile = file;
     const reader = new FileReader();
-    reader.onload = () => (this.photoPreview = reader.result);
+    reader.onload = () => this.photoPreview = reader.result;
     reader.readAsDataURL(file);
+  }
+
+  removePhoto() {
+    this.photoFile = null;
+    this.photoPreview = null;
+    if (this.fileInput) this.fileInput.nativeElement.value = '';
   }
 
   onSubmit(): void {
@@ -85,9 +95,8 @@ export class RegisterComponent {
       this.toastServer.showToast('Please fill all required fields correctly.', 'warning');
       return;
     }
-  
+
     const formValue = this.registerForm.value;
-  
     const request = {
       name: formValue.name,
       lastname: formValue.lastname,
@@ -98,14 +107,12 @@ export class RegisterComponent {
       city: formValue.city,
       address: formValue.address
     };
-  
+
     this.loaderService.show();
     this.authService.register(request)
       .pipe(
         switchMap(() => this.authService.login({ email: request.email, password: request.password })),
-        switchMap(loginRes => {
-          return this.photoFile ? this.userService.uploadPhoto(this.photoFile) : of(null);
-        }),
+        switchMap(() => this.photoFile ? this.userService.uploadPhoto(this.photoFile) : of(null)),
         catchError(err => {
           console.error('Registration or photo upload failed:', err);
           this.toastServer.showToast('Registration failed. Please try again.', 'error');  
@@ -115,13 +122,11 @@ export class RegisterComponent {
       )
       .subscribe({
         next: () => {
-          console.log('Registration successful');
           this.toastServer.showToast('Registration successful! Welcome!', 'success');  
           this.router.navigate(['/questions']);
           this.loaderService.hide();
         },
         error: () => {
-          console.error('Something went wrong')
           this.toastServer.showToast('Something went wrong. Please try again.', 'error');  
           this.loaderService.hide();
         }

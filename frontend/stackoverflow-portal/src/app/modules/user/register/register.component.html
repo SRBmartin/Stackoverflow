@@ -5,33 +5,43 @@
 
       <div class="top-section">
         <div class="left-col">
-          <div class="photo-preview-wrapper" *ngIf="photoPreview">
-            <img [src]="photoPreview" class="photo-preview" />
+
+          <div class="photo-wrapper" *ngIf="photoPreview">
+            <div class="photo-preview-wrapper">
+              <img [src]="photoPreview" class="photo-preview" />
+            </div>
+            <button type="button" class="remove-photo-btn" (click)="removePhoto()">×</button>
           </div>
+
+          
           <div class="photo-drop-zone"
+               *ngIf="!photoPreview"
                [class.dragging]="isDragging"
                (dragover)="onDragOver($event)"
                (dragleave)="onDragLeave($event)"
                (drop)="onDrop($event)">
-            <p *ngIf="!photoPreview">Click and drop photo</p>
-            <input type="file" (change)="onFileSelected($event)" />
+            <p>Click and drop photo</p>
+            <input type="file" (change)="onFileSelected($event)" #fileInput />
           </div>
+
           <div class="error-message" *ngIf="!photoFile && registerForm.touched">
             This field is required
           </div>
+
         </div>
 
+        
         <div class="name-fields">
           <div class="form-group">
             <label for="name">Name *</label>
-            <input id="name" type="text" formControlName="name" placeholder="John"
+            <input id="name" type="text" formControlName="name" placeholder="Name"
                    [ngClass]="{'invalid-input': name?.invalid && name?.touched}" />
             <div class="error-message" *ngIf="name?.invalid && name?.touched">This field is required</div>
           </div>
 
           <div class="form-group">
             <label for="lastname">Surname *</label>
-            <input id="lastname" type="text" formControlName="lastname" placeholder="Doe"
+            <input id="lastname" type="text" formControlName="lastname" placeholder="Lastname"
                    [ngClass]="{'invalid-input': lastname?.invalid && lastname?.touched}" />
             <div class="error-message" *ngIf="lastname?.invalid && lastname?.touched">This field is required</div>
           </div>
@@ -49,6 +59,7 @@
         </div>
       </div>
 
+      
       <div class="form-grid">
         <div class="form-group">
           <label for="email">Email *</label>
@@ -92,8 +103,8 @@
           <input id="confirmPassword" type="password" formControlName="confirmPassword" placeholder="••••••••"
           [ngClass]="{'invalid-input': (confirmPassword?.invalid && confirmPassword?.touched) 
           || (registerForm.errors?.['passwordMismatch'] && confirmPassword?.touched)}" />
-            <div class="error-message" *ngIf="confirmPassword?.touched && confirmPassword?.errors?.['required']">This field is required</div>
-            <div class="error-message" *ngIf="confirmPassword?.touched && registerForm.errors?.['passwordMismatch']">
+          <div class="error-message" *ngIf="confirmPassword?.touched && confirmPassword?.errors?.['required']">This field is required</div>
+          <div class="error-message" *ngIf="confirmPassword?.touched && registerForm.errors?.['passwordMismatch']">
             Passwords do not match
           </div>
         </div>
