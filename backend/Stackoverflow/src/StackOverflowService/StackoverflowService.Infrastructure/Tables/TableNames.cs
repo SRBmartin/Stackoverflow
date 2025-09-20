@@ -6,5 +6,6 @@
         public const string Questions = "questions";
         public const string Answers = "answers";
         public const string Votes = "votes";
+        public const string FinalEmails = "finalemails";
     }
 }

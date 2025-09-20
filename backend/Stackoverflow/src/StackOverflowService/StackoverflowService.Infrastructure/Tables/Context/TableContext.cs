@@ -11,6 +11,7 @@ namespace StackoverflowService.Infrastructure.Tables.Context
         public TableClient Questions { get; }
         public TableClient Answers { get; }
         public TableClient Votes { get; }
+        public TableClient FinalEmails { get; }
 
         public TableContext()
         {
@@ -20,11 +21,13 @@ namespace StackoverflowService.Infrastructure.Tables.Context
             Questions = _svc.GetTableClient(TableNames.Questions);
             Answers = _svc.GetTableClient(TableNames.Answers);
             Votes = _svc.GetTableClient(TableNames.Votes);
+            FinalEmails = _svc.GetTableClient(TableNames.FinalEmails);
 
             Users.CreateIfNotExists();
             Questions.CreateIfNotExists();
             Answers.CreateIfNotExists();
             Votes.CreateIfNotExists();
+            FinalEmails.CreateIfNotExists();
         }
 
     }
