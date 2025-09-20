@@ -2,10 +2,10 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../env/environment';
 import { Observable } from 'rxjs';
-import { QuestionResponseDto } from '../dto/questions/question-response-dto';
+import { QuestionResponseDto, QuestionDto } from '../dto/questions/question-response-dto';
 import { QuestionsSortBy } from '../../modules/questions/list-questions/const/questions-sort-by';
 import { SortDirection } from '../../modules/questions/list-questions/const/sort-direction';
-
+import { map } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
@@ -21,5 +21,19 @@ export class QuestionService {
       .set('direction', direction.toString().toLowerCase());
 
     return this.httpClient.get<QuestionResponseDto>(this.questionsUrl, { params });
+  }
+
+  getQuestionById(id: string): Observable<QuestionDto> {
+    return this.httpClient.get<QuestionDto>(`${this.questionsUrl}/${id}`);
+  }
+
+  // Slika pitanja
+  getQuestionPhoto(id: string): Observable<Blob> {
+    return this.httpClient.get(`${this.questionsUrl}/${id}/photo`, { responseType: 'blob' });
+  }
+
+  // Slika korisnika
+  getUserPhoto(userId: string): Observable<Blob> {
+    return this.httpClient.get(`${environment.apiUrl}/users/${userId}/photo`, { responseType: 'blob' });
   }
 }

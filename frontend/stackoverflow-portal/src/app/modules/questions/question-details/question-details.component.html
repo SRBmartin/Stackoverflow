@@ -1,1 +1,78 @@
-<p>works!</p>
+<!-- Loading i fallback -->
+<div *ngIf="loading" class="loading">Loading...</div>
+<div *ngIf="!loading && !question" class="not-found">Question not found.</div>
+
+<!-- Glavni prikaz pitanja -->
+<div *ngIf="question" class="question-details">
+
+  <!-- Naslov i vreme -->
+  <div class="header">
+    <h1 class="title">{{ question.Title }}</h1>
+    <div class="meta">Asked: {{ getTimeAgo(question.CreationDate) }}</div>
+  </div>
+
+  <!-- Telo (glasanje levo, sadržaj desno) -->
+  <div class="body">
+
+    <!-- Glasanje -->
+    <div class="votes">
+      <div class="vote-button-wrapper">
+        <button
+          class="vote-button up"
+          [class.active]="question.MyVote === 1"
+          (click)="vote(1)">
+          ▲
+        </button>
+        <div class="vote-tooltip">This question shows research effort; 
+            it is useful and clear.</div>
+      </div>
+
+      <div class="score">{{ question.VoteScore }}</div>
+
+      <div class="vote-button-wrapper">
+        <button
+          class="vote-button down"
+          [class.active]="question.MyVote === -1"
+          (click)="vote(-1)">
+          ▼
+        </button>
+        <div class="vote-tooltip">This question does not show any research effort; 
+            it is unclear or not useful</div>
+      </div>
+    </div>
+
+    <!-- Sadržaj -->
+    <div class="content">
+      <p class="description">{{ question.Description }}</p>
+
+      <div *ngIf="questionPhotoUrl" class="question-photo-wrapper">
+        <img [src]="questionPhotoUrl" alt="" />
+      </div>
+      
+      
+
+      <div class="actions">
+        <a href="#" class="action-link">EDIT</a>
+        <a href="#" class="action-link">DELETE</a>
+      </div>
+      
+      <div class="user-info-container">
+        <div class="user-photo-wrapper">
+          <img
+            *ngIf="userPhotoUrl"
+            [src]="userPhotoUrl"
+            alt="User photo"
+            class="user-photo"
+          />
+        </div>
+        <div class="user-details">
+          <div class="user-meta">
+            {{ question.User.Name }} {{ question.User.Lastname }}
+          </div>
+          <div class="asked-time">Asked: {{ getTimeAgo(question.CreationDate) }}</div>
+        </div>
+      </div>
+      
+      </div>
+    </div>
+ </div>
