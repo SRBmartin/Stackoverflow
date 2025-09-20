@@ -1,1 +1,53 @@
-<p>list-questions works!</p>
+<!-- frontend\stackoverflow-portal\src\app\modules\questions\list-questions\list-questions.component.html -->
+<div class="questions-container">
+  <div class="welcome-text">
+    <h1>All Questions</h1>
+    <p>Ask questions, get answers, no distractions</p>
+  </div>
+
+  <div class="search-container">
+    <app-search-input [placeholder]="'Search by title...'" (searchChanged)="onSearchTermChanged($event)"></app-search-input>
+    <div class="sort-controls">
+      <select [(ngModel)]="sortBy" (ngModelChange)="onSortChange()">
+        <option *ngFor="let option of sortByOptions" [value]="option">
+          Sort by {{ option }}
+        </option>
+      </select>
+      <select [(ngModel)]="direction" (ngModelChange)="onSortChange()">
+        <option *ngFor="let option of directionOptions" [value]="option">
+          {{ option }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <div class="questions-table">
+    <div class="question-row" *ngFor="let question of questions?.Items">
+      <div class="vote-section">
+        <span [ngClass]="{'negative-vote': question.VoteScore < 0}">{{ question.VoteScore }} score</span>
+      </div>
+      <div class="content-section">
+        <a [routerLink]="['/questions', question.Id]" class="question-title">{{ question.Title }}</a>
+        <p class="question-description">{{ question.Description | slice:0:150 }}{{ question.Description.length > 150 ? '...' : '' }}</p>
+        <div class="meta">
+          <span>asked by {{ question.User.Name }} {{ question.User.Lastname }}</span>
+          <span class="date">{{ question.CreationDate | date:'medium' }}</span>
+        </div>
+        <div class="answers" [ngClass]="{'closed': question.IsClosed && question.Answers.length > 0}">
+          {{ getAnswersText(question.Answers.length) }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pagination" *ngIf="questions && totalPages > 1">
+    <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 1">Previous</button>
+    <ng-container *ngFor="let page of getPageArray()">
+      <button *ngIf="page !== '...'" [ngClass]="{'active': page === currentPage}" (click)="onPageChange(page)">
+        {{ page }}
+      </button>
+      <span *ngIf="page === '...'">...</span>
+    </ng-container>
+    <button (click)="onPageChange(currentPage + 1)" [disabled]="currentPage === totalPages">Next</button>
+  </div>
+</div>
