@@ -37,6 +37,20 @@ namespace StackoverflowService.Infrastructure.Repositories
             return null;
         }
 
+        public async Task<int> CountByQuestionAsync(string questionId, CancellationToken cancellationToken)
+        {
+            var filter = TableClient.CreateQueryFilter<AnswerEntity>(
+                e => e.PartitionKey == questionId && e.IsDeleted == false);
+
+            int count = 0;
+            await foreach (var _ in _answers.QueryAsync<AnswerEntity>(filter, cancellationToken: cancellationToken))
+            {
+                count++;
+            }
+
+            return count;
+        }
+
         public async Task AddAsync(Answer a, CancellationToken cancellationToken)
             => await _answers.AddEntityAsync(a.ToTable(), cancellationToken);
 

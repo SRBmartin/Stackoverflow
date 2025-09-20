@@ -24,6 +24,7 @@ namespace StackoverflowService.Application.DTOs.Questions
         public UserPreviewDto User { get; set; } = new UserPreviewDto();
         public List<AnswerDto> Answers { get; set; } = new List<AnswerDto>();
         public int VoteScore { get; set; } = default!;
+        public int? AnswersCount { get; set; } = default!;
         public VoteType? MyVote { get; set; }
     }
 }
