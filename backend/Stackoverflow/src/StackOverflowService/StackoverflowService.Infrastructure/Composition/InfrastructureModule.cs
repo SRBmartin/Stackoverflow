@@ -60,6 +60,7 @@ namespace StackoverflowService.Infrastructure.Composition
             builder.RegisterType<QuestionRepository>().As<IQuestionRepository>().InstancePerLifetimeScope();
             builder.RegisterType<AnswerRepository>().As<IAnswerRepository>().InstancePerLifetimeScope();
             builder.RegisterType<VoteRepository>().As<IVoteRepository>().InstancePerLifetimeScope();
+            builder.RegisterType<FinalEmailRepository>().As<IFinalEmailRepository>().InstancePerLifetimeScope();
 
             builder.RegisterType<FinalAnswerQueue>()
                 .As<IFinalAnswerQueue>()

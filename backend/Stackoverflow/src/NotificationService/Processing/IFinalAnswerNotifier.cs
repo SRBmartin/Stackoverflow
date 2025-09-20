@@ -1,10 +1,11 @@
-﻿using System.Threading;
+﻿using NotificationService.DTOs;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace NotificationService.Processing
 {
     public interface IFinalAnswerNotifier
     {
-        Task<bool> NotifyContributorsAsync(string questionId, CancellationToken cancellationToken);
+        Task<FinalAnswerNotifyResult> NotifyContributorsAsync(string questionId, CancellationToken cancellationToken);
     }
 }

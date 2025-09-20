@@ -100,15 +100,14 @@ namespace NotificationService
             {
                 Trace.TraceInformation($"[Queue][{_instanceId}] Processing questionId='{questionId}' (DequeueCount={msg.DequeueCount})");
 
-                var allOk = await _notifier.NotifyContributorsAsync(questionId, cancellationToken);
+                var result = await _notifier.NotifyContributorsAsync(questionId, cancellationToken);
 
-                if (allOk)
+                if (!result.AllSucceeded)
                 {
-                    await SafeDeleteAsync(msg, cancellationToken);
-                    return;
+                    throw new InvalidOperationException("One or more email sends failed.");
                 }
 
-                throw new InvalidOperationException("One or more email sends failed.");
+                await SafeDeleteAsync(msg, cancellationToken);
             }
             catch (Exception ex)
             {

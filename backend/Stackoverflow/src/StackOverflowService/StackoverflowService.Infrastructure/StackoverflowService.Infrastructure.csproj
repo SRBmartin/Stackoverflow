@@ -158,6 +158,7 @@
     <Compile Include="Queues\QueueNames.cs" />
     <Compile Include="Queues\Services\FinalAnswerQueue.cs" />
     <Compile Include="Repositories\AnswerRepository.cs" />
+    <Compile Include="Repositories\FinalEmailRepository.cs" />
     <Compile Include="Repositories\QuestionRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="Repositories\VoteRepository.cs" />
@@ -168,6 +169,7 @@
     <Compile Include="Storage\QuestionPhotoStorage.cs" />
     <Compile Include="Storage\UserPhotoStorage.cs" />
     <Compile Include="Tables\Context\TableContext.cs" />
+    <Compile Include="Tables\Entities\FinalEmailEntity.cs" />
     <Compile Include="Tables\Interfaces\ITableContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Storage\StorageConnection.cs" />

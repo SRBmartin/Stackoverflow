@@ -103,6 +103,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Composition\NotificationModule.cs" />
+    <Compile Include="DTOs\FinalAnswerNotifyResult.cs" />
     <Compile Include="Processing\FinalAnswerNotifier.cs" />
     <Compile Include="Processing\IFinalAnswerNotifier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
