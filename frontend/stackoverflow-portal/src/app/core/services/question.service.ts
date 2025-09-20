@@ -29,11 +29,29 @@ export class QuestionService {
 
   // Slika pitanja
   getQuestionPhoto(id: string): Observable<Blob> {
-    return this.httpClient.get(`${this.questionsUrl}/${id}/photo`, { responseType: 'blob' });
+    return this.httpClient.get(`${environment.apiUrl}/questions/${id}/photo`, { responseType: 'blob' });
   }
 
   // Slika korisnika
   getUserPhoto(userId: string): Observable<Blob> {
     return this.httpClient.get(`${environment.apiUrl}/users/${userId}/photo`, { responseType: 'blob' });
   }
+
+  updateQuestion(id: string, title: string, description: string): Observable<QuestionDto> {
+    return this.httpClient.put<QuestionDto>(`${this.questionsUrl}/${id}`, { title, description });
+  }
+  
+  deleteQuestion(id: string): Observable<void> {
+    return this.httpClient.delete<void>(`${this.questionsUrl}/${id}`);
+  }
+  uploadQuestionPhoto(id: string, file: File): Observable<void> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.httpClient.post<void>(`${this.questionsUrl}/${id}/photo`, formData);
+  }
+
+  deleteQuestionPhoto(id: string): Observable<void> {
+    return this.httpClient.delete<void>(`${this.questionsUrl}/${id}/photo`);
+  }
+  
 }

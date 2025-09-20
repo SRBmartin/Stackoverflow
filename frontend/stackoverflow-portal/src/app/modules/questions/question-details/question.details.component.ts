@@ -6,41 +6,60 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { QuestionResponseDto, QuestionDto } from '../../../core/dto/questions/question-response-dto';
 import { AuthService } from '../../../core/auth/services/auth.service';
 import { QuestionService } from '../../../core/services/question.service';
+import { FormsModule } from '@angular/forms';
+import { LoaderService } from '../../../common/ui/loader/loader.service';
+import { ToastServer } from '../../../common/ui/toast/toast.service';
+
 @Component({
   selector: 'app-question-details',
   standalone: true,
-  imports: [CommonModule, HttpClientModule],
+  imports: [CommonModule, HttpClientModule, FormsModule],
   templateUrl: './question-details.component.html',
   styleUrls: ['./question-details.component.scss']
 })
 export class QuestionDetailsComponent implements OnInit {
   question: QuestionDto | null = null; // jedno pitanje
   loading = true;
+  originalPhotoUrl: SafeUrl | null = null;
 
   questionPhotoUrl: SafeUrl | null = null;
   userPhotoUrl: SafeUrl | null = null;
+
+  editMode = false;
+  editedTitle = '';
+  editedDescription = '';
+
+  editedPhotoFile: File | null = null;
+  editedPhotoUrl: SafeUrl | null = null;
 
   constructor(
     private route: ActivatedRoute,
     private http: HttpClient,
     private sanitizer: DomSanitizer, 
-    private authService :AuthService, 
-    private questionService : QuestionService
+    private authService: AuthService, 
+    private questionService: QuestionService,
+    private loadService: LoaderService,
+    private toastServer: ToastServer
   ) {}
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
+      this.loadService.show();
       this.questionService.getQuestionById(id).subscribe({
         next: (data) => {
           this.question = data;
-          this.loadQuestionPhoto(this.question.Id);
-          this.loadUserPhoto(this.question.User.Id);
+          this.loadQuestionPhoto(this.question?.Id ?? '');
+          this.loadUserPhoto(this.question?.User?.Id ?? '');
           this.loading = false;
+          this.loadService.hide();
+          this.toastServer.showToast('Question loaded successfully');
         },
         error: (err) => {
           console.error('Error fetching question:', err);
           this.loading = false;
+          this.loadService.hide();
+          this.toastServer.showToast('Failed to load question');
         }
       });
     }
@@ -48,22 +67,29 @@ export class QuestionDetailsComponent implements OnInit {
   
 
   loadQuestionPhoto(id: string) {
-    this.http.get(`/api/questions/${id}/photo`, { responseType: 'blob' }).subscribe({
+    if (!id) {
+      this.questionPhotoUrl = null;
+      return;
+    }
+    this.questionService.getQuestionPhoto(id).subscribe({
       next: (blob) => {
         if (blob && blob.size > 0) {
           this.questionPhotoUrl = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(blob));
         } else {
-          this.questionPhotoUrl = null;  // nema slike
+          this.questionPhotoUrl = null;
         }
       },
       error: () => {
-        this.questionPhotoUrl = null;  // greška pri učitavanju - nema slike
+        this.questionPhotoUrl = null;
       }
     });
   }
-  
 
   loadUserPhoto(userId: string) {
+    if (!userId) {
+      this.userPhotoUrl = null;
+      return;
+    }
     this.questionService.getUserPhoto(userId).subscribe({
       next: (blob) => {
         if (blob && blob.size > 0) {
@@ -77,8 +103,7 @@ export class QuestionDetailsComponent implements OnInit {
       }
     });
   }
-  
-  
+
   formatDate(date: string): string {
     return new Date(date).toLocaleString();
   }
@@ -93,17 +118,17 @@ export class QuestionDetailsComponent implements OnInit {
     const date = new Date(dateString);
     const now = new Date();
     const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-  
+
     let interval = Math.floor(seconds / 31536000);
     if (interval >= 1) {
       return interval === 1 ? "asked 1 year ago" : `${interval} years ago`;
     }
-  
+
     interval = Math.floor(seconds / 2592000);
     if (interval >= 1) {
       return interval === 1 ? "asked 1 month ago" : `${interval} months ago`;
     }
-  
+
     interval = Math.floor(seconds / 86400);
     if (interval >= 1) {
       if (interval === 1) return "asked yesterday";
@@ -111,43 +136,160 @@ export class QuestionDetailsComponent implements OnInit {
       const weeks = Math.floor(interval / 7);
       return weeks === 1 ? "asked 1 week ago" : `${weeks} weeks ago`;
     }
-  
+
     interval = Math.floor(seconds / 3600);
     if (interval >= 1) {
       return interval === 1 ? "asked 1 hour ago" : `${interval} hours ago`;
     }
-  
+
     interval = Math.floor(seconds / 60);
     if (interval >= 1) {
       return interval === 1 ? "asked 1 minute ago" : `${interval} minutes ago`;
     }
-  
+
     return "just now";
   }
 
   vote(value: 1 | -1) {
     if (!this.question) return;
-  
+
     const currentVote = this.question.MyVote;
-  
+
     if (currentVote === value) {
-      // Kliknuto na isto dugme: poništi glas
+      
       this.question.MyVote = null;
       this.question.VoteScore -= value;
     } else {
-      // Ako je već glasano suprotno, ukloni stari glas
+      
       if (currentVote) {
         this.question.VoteScore -= currentVote;
       }
-      // Dodaj novi glas
+      
       this.question.MyVote = value;
       this.question.VoteScore += value;
     }
-  
-    // Ovde možeš dodati poziv API-ja da sačuva glas na serveru
-    // npr. this.questionService.vote(this.question.Id, value).subscribe();
+
+    //  this.questionService.vote(this.question.Id, value).subscribe();
+  }
+  cancelEdit() {
+    this.editMode = false;
+    
+    this.editedTitle = '';
+    this.editedDescription = '';
+    this.editedPhotoFile = null;
+    this.editedPhotoUrl = this.originalPhotoUrl;
   }
   
+  onPhotoSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.editedPhotoFile = input.files[0];
+      this.editedPhotoUrl = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(this.editedPhotoFile));
+    }
+  }
+
+  removePhoto() {
+    this.editedPhotoFile = null;
+    this.editedPhotoUrl = null;
+    this.questionPhotoUrl = null;
+  }
+
+  startEdit() {
+    if (!this.question) return;
+    this.editMode = true;
+    this.editedTitle = this.question.Title;
+    this.editedDescription = this.question.Description;
+
+    this.editedPhotoFile = null;
+    this.editedPhotoUrl = this.questionPhotoUrl;
+    this.originalPhotoUrl = this.questionPhotoUrl;
+  }
+
+    titleError = false;
+    descriptionError = false;
+    photoError = false;
   
+    saveEdit() {
+      this.titleError = false;
+      this.descriptionError = false;
+      this.photoError = false;
+    
+      let valid = true;
+      if (!this.editedTitle || this.editedTitle.trim() === '') {
+        this.titleError = true;
+        valid = false;
+      }
+      if (!this.editedDescription || this.editedDescription.trim() === '') {
+        this.descriptionError = true;
+        valid = false;
+      }
+      if (!this.editedPhotoUrl) {
+        this.photoError = true;
+        valid = false;
+      }
+    
+      if (!valid) return;
+    
+      if (!this.question) return;
+    
+      this.loadService.show();
+    
+      this.questionService.updateQuestion(this.question.Id, this.editedTitle, this.editedDescription).subscribe({
+        next: updatedQuestion => {
+          this.question = updatedQuestion;
+          this.editMode = false;
+    
+          if (this.editedPhotoFile) {
+            this.questionService.uploadQuestionPhoto(this.question.Id, this.editedPhotoFile).subscribe({
+              next: () => {
+                this.loadQuestionPhoto(this.question?.Id ?? '');
+                this.loadService.hide();
+                this.toastServer.showToast('Question and photo updated successfully');
+              },
+              error: (err) => {
+                this.loadService.hide();
+                this.toastServer.showToast('Failed to upload photo');
+                console.error('Failed to upload photo', err);
+              }
+            });
+          } else if (this.editedPhotoUrl === null) {
+            this.questionPhotoUrl = null;
+            this.loadService.hide();
+            this.toastServer.showToast('Question updated and photo removed successfully');
+          } else {
+            this.loadQuestionPhoto(this.question?.Id ?? '');
+            this.loadService.hide();
+            this.toastServer.showToast('Question updated successfully');
+          }
+        },
+        error: err => {
+          this.loadService.hide();
+          this.toastServer.showToast('Failed to update question');
+          console.error('Failed to update question', err);
+        }
+      });
+    }
+    
+    deleteQuestion() {
+      if (!this.question) return;
+    
+      if (!confirm('Are you sure you want to delete this question?')) return;
+    
+      this.loadService.show();
+    
+      this.questionService.deleteQuestion(this.question.Id).subscribe({
+        next: () => {
+          this.loadService.hide();
+          this.toastServer.showToast('Question deleted successfully');
+          window.location.href = '/questions';
+        },
+        error: err => {
+          this.loadService.hide();
+          this.toastServer.showToast('Failed to delete question');
+          console.error('Failed to delete question', err);
+        }
+      });
+    }
+    
 
 }

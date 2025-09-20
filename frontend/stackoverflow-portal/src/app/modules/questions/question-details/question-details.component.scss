@@ -1,3 +1,23 @@
+
+.back-link {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    color: var(--grey-color);
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    z-index: 100;
+    transition: text-decoration 0.3s ease;
+    margin-top: 50px;
+  }
+  
+  .back-link:hover {
+    text-decoration: none;
+    color: var(--accent-color);
+  }
+  
+
 .question-details {
     max-width: 900px;
     margin: 40px auto;
@@ -5,190 +25,404 @@
     border-radius: 8px;
     box-shadow: 0 8px 20px rgba(44, 62, 80, 0.1);
     padding: 28px;
+  }
   
-    .header {
-      margin-bottom: 16px;
+  .question-details .header {
+    margin-bottom: 16px;
+  }
   
-      .title {
-        font-size: 32px;
-        font-weight: 700;
-        margin-bottom: 6px;
-        color: var(--dark-color);
-        letter-spacing: 0.03em;
-      }
+  .question-details .header .title {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: var(--dark-color);
+    letter-spacing: 0.03em;
+  }
   
-      .meta {
-        font-size: 14px;
-        color: var(--dark-color);
-      }
-    }
+  .question-details .header .meta {
+    font-size: 14px;
+    color: var(--dark-color);
+  }
   
-    .body {
-      display: flex;
-      align-items: flex-start;
-      gap: 24px;
+  .question-details .body {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+  }
   
-      .votes {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 6px;
-        user-select: none;
-        min-width: 70px;
+  .question-details .body .votes {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    user-select: none;
+    min-width: 70px;
+  }
   
-        .vote-button-wrapper {
-          position: relative;
+  .question-details .body .votes .vote-button-wrapper {
+    position: relative;
+  }
   
-          .vote-button {
-            background: none;
-            border: none;
-            font-size: 26px;
-            color: var(--grey-color);
-            cursor: pointer;
-            transition: color 0.3s ease;
+  .question-details .body .votes .vote-button-wrapper .vote-button {
+    background-color: var(--white-color);
+    border: 3px solid var(--grey-color);
+    color: var(--grey-color);
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
   
-            &.active {
-              color: var(--accent-color);
-            }
   
-            &:hover {
-              color: var(--accent-color);
-            }
-          }
+.question-details .body .votes .vote-button-wrapper .vote-button:hover,
+.question-details .body .votes .vote-button-wrapper .vote-button.active {
+  background-color: #fef1e6; 
+  color: #e7700d; 
+  border-color: #e7700d; 
+}
+
   
-          .vote-tooltip {
-            position: absolute;
-            top: 50%;
-            right: 100%;
-            margin-right: 12px;
-            transform: translateY(-50%);
-            background: var(--light-color);
-            padding: 8px 14px;
-            border-radius: 6px;
-            font-size: 13px;
-            color: var(--dark-color);
-            box-shadow: 0 6px 15px rgba(44, 62, 80, 0.15);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.25s ease;
-            z-index: 20;
-            min-width: 220px;
-            white-space: normal;
-            overflow-wrap: break-word;
+  .question-details .body .votes .vote-button-wrapper .vote-tooltip {
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    margin-right: 12px;
+    transform: translateY(-50%);
+    background: var(--light-color);
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    color: var(--dark-color);
+    box-shadow: 0 6px 15px rgba(44, 62, 80, 0.15);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    z-index: 20;
+    min-width: 220px;
+    white-space: normal;
+    overflow-wrap: break-word;
+  }
   
-            &::after {
-              content: "";
-              position: absolute;
-              top: 50%;
-              left: 100%;
-              transform: translateY(-50%);
-              border: 7px solid transparent;
-              border-right-color: var(--light-color);
-            }
-          }
+  .question-details .body .votes .vote-button-wrapper .vote-tooltip::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    transform: translateY(-50%);
+    border: 7px solid transparent;
+    border-right-color: var(--light-color);
+  }
   
-          &:hover .vote-tooltip {
-            opacity: 1;
-            pointer-events: auto;
-          }
-        }
+  .question-details .body .votes .vote-button-wrapper:hover .vote-tooltip {
+    opacity: 1;
+    pointer-events: auto;
+  }
   
-        .score {
-          font-size: 22px;
-          font-weight: 700;
-          color: var(--dark-color);
-        }
-      }
+  .question-details .body .votes .score {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--dark-color);
+  }
   
-      .content {
-        flex: 1;
+  .question-details .body .content {
+    flex: 1;
+  }
   
-        .description {
-          font-size: 18px;
-          color: var(--dark-color);
-          margin-bottom: 20px;
-          line-height: 1.7;
-        }
+  .question-details .body .content .description {
+    font-size: 18px;
+    color: var(--dark-color);
+    margin-bottom: 20px;
+    line-height: 1.7;
+  }
   
-        .question-photo-wrapper img {
-          width: 100%;
-          max-height: 420px;
-          object-fit: contain;
-          border-radius: 8px;
-          display: block;
-          margin: 0 auto;
-          box-shadow: 0 4px 14px rgba(44, 62, 80, 0.08);
-        }
+  .question-details .body .content .question-photo-wrapper img {
+    width: 100%;
+    max-height: 300px;
+    object-fit: contain;
+    border-radius: 8px;
+    display: block;
+    margin: 0 auto;
+    box-shadow: 0 4px 14px rgba(44, 62, 80, 0.08);
+    margin-bottom: 15px;
+    margin-top: 0 px;
+    outline: var(--grey-color);
+  }
   
-        .actions {
-            display: flex;
-            gap: 2px; /* mali razmak između linkova */
-          }
-          
-          .action-link {
-            color: var(--grey-color);
-            font-weight: 600;
-            text-decoration: none;
-            cursor: pointer;
-            font-size: 13px;
-            padding: 6px 12px; /* ako želiš malo "dugme" osećaj */
-            border-radius: 6px;
-            transition: background-color 0.3s ease, color 0.3s ease;
-          }
-          
-          .action-link:hover {
-            color: var(--accent-color);
-            text-decoration: none;
-          }
-          
-          .action-link:active {
-            background-color: rgba(18, 69, 89, 0.8);
-          }
-          
+  .question-details .body .content .actions {
+    display: flex;
+    gap: 8px;
+  }
   
-        .user-info-container {
-          display: flex;
-          align-items: center;
-          gap: 14px;
-          max-width: 320px;
-          margin-left: auto;
-          padding: 12px 20px;
-          background-color: rgba(236, 233, 189, 0.15); /* tamnija, ali transparentna nijansa */
-          border-radius: 10px;
-          box-shadow: 0 6px 16px rgba(19, 29, 39, 0.1);
-          outline: var(--grey-color);
+  .question-details .body .content .action-link {
+    background: none;
+    color: var(--grey-color); 
+    font-weight: 600;
+    font-size: 14px;
+    padding: 0;
+    border: none;
+    outline: none;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
   
-          .user-photo-wrapper {
-            flex-shrink: 0;
+  .question-details .body .content .action-link:hover {
+    color: var(--accent-color)
+  }
   
-            .user-photo {
-              width: 56px;
-              height: 56px;
-              border-radius: 20%;
-              object-fit: cover;
-              display: block;
-              box-shadow: 0 2px 8px rgba(44, 62, 80, 0.15);
-            }
-          }
   
-          .user-details {
-            display: flex;
-            flex-direction: column;
-        
+  .question-details .body .content .action-link:active {
+    background-color: rgba(18, 69, 89, 0.8);
+    color: var(--white-color);
+  }
   
-            .user-meta {
-              font-weight: 700;
-              color: var(--secondary-color);
-              font-size: 15px;
-              margin-bottom: 6px;
-            }
+  .question-details .body .content .user-info-container {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    max-width: 320px;
+    margin-left: auto;
+    padding: 12px 20px;
+    background-color: rgba(236, 233, 189, 0.15);
+    border-radius: 10px;
+    box-shadow: 0 6px 16px rgba(19, 29, 39, 0.1);
+    outline: var(--grey-color);
+  }
   
-            .asked-time {
-              font-size: 13px;
-              color: var(--tercial-color);
-            }
-          }
-        }
+  .question-details .body .content .user-photo-wrapper {
+    flex-shrink: 0;
+  }
+  
+  .question-details .body .content .user-photo-wrapper .user-photo {
+    width: 56px;
+    height: 56px;
+    border-radius: 20%;
+    object-fit: cover;
+    display: block;
+    box-shadow: 0 2px 8px rgba(44, 62, 80, 0.15);
+  }
+  
+  .question-details .body .content .user-details {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .question-details .body .content .user-meta {
+    font-weight: 700;
+    color: var(--dark-color);
+    font-size: 15px;
+    margin-bottom: 6px;
+  }
+  
+  .question-details .body .content .asked-time {
+    font-size: 13px;
+    color: var(--tercial-color);
+  }
+  
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1000;
+  }
+  
+  .modal-edit {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--white-color);
+    padding: 24px 32px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    max-width: 500px;
+    width: 90vw;
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .modal-edit h2 {
+    margin: 0 0 12px;
+    font-size: 24px;
+    color: var(--dark-color);
+  }
+  
+  .modal-edit input[type="text"],
+  .modal-edit textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1.5px solid var(--grey-color);
+    border-radius: 8px;
+    font-size: 16px;
+    font-family: inherit;
+    color: var(--dark-color);
+    resize: vertical;
+    transition: border-color 0.3s ease;
+  }
+  
+  .modal-edit input[type="text"]:focus,
+  .modal-edit textarea:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 8px var(--accent-color);
+  }
+  
+  .modal-edit textarea {
+    min-height: 140px;
+  }
+  
+  .modal-edit .button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+  }
+  
+  .modal-edit .button-group button {
+    padding: 10px 22px;
+    font-weight: 600;
+    font-size: 14px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .modal-edit .button-group button:first-of-type {
+    background-color: var(--accent-color);
+    color: var(--white-color);
+  }
+  
+  .modal-edit .button-group button:first-of-type:hover {
+    background-color: var(--white-color);
+    color: var(--accent-color); 
+  }
+  
+  .modal-edit .button-group button:last-of-type {
+    background-color: transparent;
+    color: var(--grey-color);
+    border: 1.5px solid var(--grey-color);
+  }
+  
+  .modal-edit .button-group button:last-of-type:hover {
+    background-color: var(--grey-color);
+    color: var(--white-color);
+  }
+  .photo-upload-container {
+    margin-top: 16px;
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  /* Preview slike sa dugmetom X */
+  .photo-preview-wrapper {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(44, 62, 80, 0.08);
+    max-height: 300px;
+  }
+  
+  .photo-preview-wrapper img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+    border-radius: 8px;
+  }
+  
+  /* Dugme za uklanjanje slike - X u levom gornjem uglu */
+  .remove-photo-btn {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: rgba(0,0,0,0.6);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    font-size: 18px;
+    line-height: 24px;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+  }
+  
+  .remove-photo-btn:hover {
+    background: rgba(0,0,0,0.9);
+  }
+  
+  .upload-dropzone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed var(--accent-color);
+    border-radius: 8px;
+    height: 150px;
+    cursor: pointer;
+    color: var(--accent-color);
+    font-weight: 600;
+    font-size: 16px;
+    user-select: none;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    text-align: center;
+    padding: 16px;
+  }
+  
+  .upload-dropzone:hover,
+  .upload-dropzone:focus {
+    border-color: var(--dark-color);
+    outline: none;
+  }
+  
+  .form-group {
+    margin-bottom: 16px;
+  
+    input,
+    textarea {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+      font-family: inherit;
+      box-sizing: border-box;
+      transition: border-color 0.3s ease;
+  
+      &.invalid {
+        border-color: #c83f30;
       }
     }
   }
+  
+  .error-message {
+    color: #c83f30;
+    font-size: 14px;
+    margin-top: 4px;
+    font-weight: 600;
+  }
+  
+  .upload-dropzone.invalid {
+    border-color: #c83f30;
+    color: #c83f30;
+  }
+  

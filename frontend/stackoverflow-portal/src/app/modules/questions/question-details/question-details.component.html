@@ -1,20 +1,18 @@
-<!-- Loading i fallback -->
+
+<a href="http://localhost:4200/questions" class="back-link"> ◁ Back to All Questions</a>
 <div *ngIf="loading" class="loading">Loading...</div>
 <div *ngIf="!loading && !question" class="not-found">Question not found.</div>
 
-<!-- Glavni prikaz pitanja -->
 <div *ngIf="question" class="question-details">
 
-  <!-- Naslov i vreme -->
+  
   <div class="header">
     <h1 class="title">{{ question.Title }}</h1>
     <div class="meta">Asked: {{ getTimeAgo(question.CreationDate) }}</div>
   </div>
 
-  <!-- Telo (glasanje levo, sadržaj desno) -->
   <div class="body">
 
-    <!-- Glasanje -->
     <div class="votes">
       <div class="vote-button-wrapper">
         <button
@@ -41,21 +39,84 @@
       </div>
     </div>
 
-    <!-- Sadržaj -->
+    
     <div class="content">
       <p class="description">{{ question.Description }}</p>
 
       <div *ngIf="questionPhotoUrl" class="question-photo-wrapper">
         <img [src]="questionPhotoUrl" alt="" />
       </div>
-      
-      
 
-      <div class="actions">
-        <a href="#" class="action-link">EDIT</a>
-        <a href="#" class="action-link">DELETE</a>
+      <div class="actions" *ngIf="isCurrentUserAuthor() && !editMode">
+        <button type="button" class="action-link" (click)="startEdit()">EDIT</button>
+        <button type="button" class="action-link" (click)="deleteQuestion()">DELETE</button>
       </div>
+
       
+      <div *ngIf="editMode" class="modal-overlay" (click)="cancelEdit()"></div>
+
+      
+      <div *ngIf="editMode" class="modal-edit" (click)="$event.stopPropagation()">
+
+        <div *ngIf="editMode" class="modal-edit" (click)="$event.stopPropagation()">
+        <h2>Edit Question</h2>
+
+        <div class="form-group">
+            <input
+            type="text"
+            [(ngModel)]="editedTitle"
+            placeholder="Title"
+            [class.invalid]="titleError"
+            />
+            <div *ngIf="titleError" class="error-message">This field is required</div>
+        </div>
+
+        <div class="form-group">
+            <textarea
+            [(ngModel)]="editedDescription"
+            placeholder="Description"
+            [class.invalid]="descriptionError"
+            ></textarea>
+            <div *ngIf="descriptionError" class="error-message">This field is required</div>
+        </div>
+
+        <div class="photo-upload-container">
+            <div *ngIf="editedPhotoUrl; else uploadZone" class="photo-preview-wrapper">
+            <button type="button" class="remove-photo-btn" (click)="removePhoto()">✕</button>
+            <img [src]="editedPhotoUrl" alt="Selected photo preview" />
+            </div>
+
+            <ng-template #uploadZone>
+            <label
+                for="photoInput"
+                class="upload-dropzone"
+                tabindex="0"
+                (keydown.enter)="$event.preventDefault(); photoInput.click()"
+                (keydown.space)="$event.preventDefault(); photoInput.click()"
+                [class.invalid]="photoError"
+            >
+                <div class="upload-text">CLICK TO UPLOAD PHOTO</div>
+                <input
+                id="photoInput"
+                type="file"
+                accept="image/*"
+                (change)="onPhotoSelected($event)"
+                #photoInput
+                hidden
+                />
+            </label>
+            <div *ngIf="photoError" class="error-message">This field is required</div>
+            </ng-template>
+        </div>
+
+        <div class="button-group">
+            <button (click)="saveEdit()">SAVE</button>
+            <button (click)="cancelEdit()">CANCEL</button>
+        </div>
+        </div>
+
+      </div>
+
       <div class="user-info-container">
         <div class="user-photo-wrapper">
           <img
@@ -72,7 +133,7 @@
           <div class="asked-time">Asked: {{ getTimeAgo(question.CreationDate) }}</div>
         </div>
       </div>
-      
-      </div>
+
     </div>
- </div>
+  </div>
+</div>
