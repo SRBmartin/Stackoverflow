@@ -103,7 +103,7 @@ namespace StackoverflowService.Infrastructure.Composition
 
                 if (!string.IsNullOrWhiteSpace(opts.Token))
                 {
-                    http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", opts.Token);
+                    http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(opts.Token);
                 }
 
                 return http;

@@ -1,27 +1,38 @@
+using System;
 using System.Diagnostics;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Autofac;
 using Microsoft.WindowsAzure.ServiceRuntime;
+using NotificationService.Composition;
+using StackoverflowService.Infrastructure.Composition;
 
 namespace NotificationService
 {
     public class WorkerRole : RoleEntryPoint
     {
-        private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+        private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
         private readonly ManualResetEvent runCompleteEvent = new ManualResetEvent(false);
+
+        private IContainer _container;
 
         public override void Run()
         {
-            Trace.TraceInformation("NotificationService is running");
-
+            cancellationTokenSource = new CancellationTokenSource();
             try
             {
-                RunAsync(this.cancellationTokenSource.Token).Wait();
+                using (var scope = _container.BeginLifetimeScope())
+                {
+                    var svc = scope.Resolve<QueueDequeueService>();
+                    svc.RunAsync(cancellationTokenSource.Token).GetAwaiter().GetResult();
+                }
             }
-            finally
+            catch (OperationCanceledException) when (cancellationTokenSource.IsCancellationRequested) { }
+            catch (Exception ex)
             {
-                this.runCompleteEvent.Set();
+                Trace.TraceError($"[Notification Service]: WorkerRole.Run fatal error: {ex}");
+                throw;
             }
         }
 
@@ -35,6 +46,13 @@ namespace NotificationService
 
             // For information on handling configuration changes
             // see the MSDN topic at https://go.microsoft.com/fwlink/?LinkId=166357.
+
+            var cb = new ContainerBuilder();
+
+            cb.RegisterModule(new InfrastructureModule());
+            cb.RegisterModule(new NotificationModule());
+
+            _container = cb.Build();
 
             bool result = base.OnStart();
 
@@ -55,11 +73,5 @@ namespace NotificationService
             Trace.TraceInformation("NotificationService has stopped");
         }
 
-        private async Task RunAsync(CancellationToken cancellationToken)
-        {
-            var task = new QueueDequeueService();
-
-            await task.RunAsync(cancellationToken);
-        }
     }
 }

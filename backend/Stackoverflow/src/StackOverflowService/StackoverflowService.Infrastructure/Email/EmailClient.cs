@@ -83,7 +83,7 @@ namespace StackoverflowService.Infrastructure.Email
             var asm = typeof(EmailClient).Assembly;
             var resourceName = asm
                 .GetManifestResourceNames()
-                .FirstOrDefault(n => n.EndsWith("Email.Templates.FinalAnswerEmail.html", StringComparison.OrdinalIgnoreCase));
+                .FirstOrDefault(n => n.EndsWith("Email.Templates.FinalAnswer.html", StringComparison.OrdinalIgnoreCase));
 
             if (resourceName == null)
             {

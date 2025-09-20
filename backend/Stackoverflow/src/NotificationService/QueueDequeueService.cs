@@ -1,14 +1,12 @@
 ﻿using Azure;
-using Azure.Storage.Queues;
 using Azure.Storage.Queues.Models;
-using StackoverflowService.Infrastructure.Queues;
-using StackoverflowService.Infrastructure.Storage;
 using Microsoft.WindowsAzure.ServiceRuntime;
 using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using NotificationService.Processing;
+using NotificationService.Queues;
 
 namespace NotificationService
 {
@@ -20,33 +18,17 @@ namespace NotificationService
         private static readonly TimeSpan MaxBackoff = TimeSpan.FromSeconds(10);
         private const int PoisonThreshold = 5;
 
-        private readonly QueueClient _queue;
-        private readonly QueueClient _poisonQueue;
+        private readonly FinalAnswersQueues _queues;
+        private readonly IFinalAnswerNotifier _notifier;
         private readonly string _instanceId;
 
-        public QueueDequeueService()
+        public QueueDequeueService(FinalAnswersQueues queues, IFinalAnswerNotifier notifier)
         {
+            _queues = queues;
+            _notifier = notifier;
             _instanceId = GetInstanceId();
 
-            var cs = StorageConnection.Get();
-
-            var mainQueueName = QueueNames.FinalAnswers;
-            _queue = new QueueClient(cs, mainQueueName);
-
-            var poisonName = $"{mainQueueName}-poison";
-            _poisonQueue = new QueueClient(cs, poisonName);
-
-            try
-            {
-                _queue.CreateIfNotExists();
-                _poisonQueue.CreateIfNotExists();
-            }
-            catch (RequestFailedException)
-            {
-                //ignore azurite races/transients
-            }
-
-            Trace.TraceInformation($"[Queue][{_instanceId}] Initialized. main='{_queue.Name}', poison='{_poisonQueue.Name}'.");
+            Trace.TraceInformation($"[Queue][{_instanceId}] Initialized. main='{_queues.Main.Name}', poison='{_queues.Poison.Name}'.");
         }
 
         public async Task RunAsync(CancellationToken cancellationToken)
@@ -57,20 +39,23 @@ namespace NotificationService
             {
                 try
                 {
-                    QueueMessage[] messages = Array.Empty<QueueMessage>();
+                    QueueMessage[] messages;
 
                     try
                     {
-                        var response = await _queue.ReceiveMessagesAsync(maxMessages: MaxBatch, visibilityTimeout: VisibilityTimeout, cancellationToken: cancellationToken);
+                        var response = await _queues.Main.ReceiveMessagesAsync(
+                            maxMessages: MaxBatch,
+                            visibilityTimeout: VisibilityTimeout,
+                            cancellationToken: cancellationToken
+                        );
 
                         messages = response.Value ?? Array.Empty<QueueMessage>();
                         if (messages.Length > 0)
                             Trace.TraceInformation($"[Queue][{_instanceId}] Received {messages.Length} message(s).");
-
                     }
                     catch (RequestFailedException ex)
                     {
-                        Trace.TraceWarning($"[Queue] Receive failed: {ex.Message}");
+                        Trace.TraceWarning($"[Queue][{_instanceId}] Receive failed: {ex.Message}");
                         messages = Array.Empty<QueueMessage>();
                     }
 
@@ -83,7 +68,10 @@ namespace NotificationService
 
                     backoff = MinBackoff;
 
-                    await Task.WhenAll(messages.Select(m => ProcessOneAsync(m, cancellationToken)));
+                    foreach (var m in messages)
+                    {
+                        await ProcessOneAsync(m, cancellationToken);
+                    }
                 }
                 catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
                 {
@@ -91,58 +79,54 @@ namespace NotificationService
                 }
                 catch (Exception ex)
                 {
-                    Trace.TraceError($"[Queue] Fatal loop error: {ex}");
+                    Trace.TraceError($"[Queue][{_instanceId}] Fatal loop error: {ex}");
                     await Task.Delay(TimeSpan.FromSeconds(2), cancellationToken);
                 }
             }
-
         }
 
-        #region Helpers
-
-        private async Task ProcessOneAsync(QueueMessage msg, CancellationToken ct)
+        private async Task ProcessOneAsync(QueueMessage msg, CancellationToken cancellationToken)
         {
-            // message text is the questionId (SDK base64-decodes for us)
             var questionId = (msg.MessageText ?? string.Empty).Trim();
+
             if (string.IsNullOrWhiteSpace(questionId))
             {
-                await SafeDeleteAsync(msg, ct);
-                Trace.TraceWarning("[Queue] Deleted empty/whitespace message.");
+                await SafeDeleteAsync(msg, cancellationToken);
+                Trace.TraceWarning($"[Queue][{_instanceId}] Deleted empty/whitespace message.");
                 return;
             }
 
             try
             {
-                // TODO: Put your real processing here (e.g., publish a domain notification, call EmailClient, etc.)
-                // For now, just trace:
-                Trace.TraceInformation($"[Queue] Processing questionId='{questionId}' (DequeueCount={msg.DequeueCount})");
+                Trace.TraceInformation($"[Queue][{_instanceId}] Processing questionId='{questionId}' (DequeueCount={msg.DequeueCount})");
 
-                // If long processing is expected, you can extend visibility:
-                // await _queue.UpdateMessageAsync(msg.MessageId, msg.PopReceipt, msg.MessageText, VisibilityTimeout, ct);
+                var allOk = await _notifier.NotifyContributorsAsync(questionId, cancellationToken);
 
-                // If successful, delete it
-                await SafeDeleteAsync(msg, ct);
+                if (allOk)
+                {
+                    await SafeDeleteAsync(msg, cancellationToken);
+                    return;
+                }
+
+                throw new InvalidOperationException("One or more email sends failed.");
             }
             catch (Exception ex)
             {
-                Trace.TraceError($"[Queue] Processing failed for questionId='{questionId}': {ex.Message}");
+                Trace.TraceError($"[Queue][{_instanceId}] Processing failed for questionId='{questionId}': {ex.Message}");
 
-                // Poison after repeated failures
-                if (msg.DequeueCount >= PoisonThreshold)
+                if (msg.DequeueCount + 1 >= PoisonThreshold)
                 {
                     try
                     {
-                        await _poisonQueue.SendMessageAsync(msg.MessageText, ct);
-                        await SafeDeleteAsync(msg, ct);
-                        Trace.TraceWarning($"[Queue] Moved to poison queue after {msg.DequeueCount} attempts: {questionId}");
+                        await _queues.Poison.SendMessageAsync(msg.MessageText, cancellationToken);
+                        await SafeDeleteAsync(msg, cancellationToken);
+                        Trace.TraceWarning($"[Queue][{_instanceId}] Moved to poison after {msg.DequeueCount + 1} attempts: {questionId}");
                     }
                     catch (Exception pex)
                     {
-                        Trace.TraceError($"[Queue] Poison handling failed: {pex}");
-                        // let it reappear after visibility timeout
+                        Trace.TraceError($"[Queue][{_instanceId}] Poison handling failed: {pex}");
                     }
                 }
-                // else: let it reappear after visibility timeout for retry
             }
         }
 
@@ -150,12 +134,11 @@ namespace NotificationService
         {
             try
             {
-                await _queue.DeleteMessageAsync(msg.MessageId, msg.PopReceipt, ct);
+                await _queues.Main.DeleteMessageAsync(msg.MessageId, msg.PopReceipt, ct);
             }
             catch (RequestFailedException ex)
             {
-                // benign race if another instance deleted it
-                Trace.TraceWarning($"[Queue] Delete failed (likely race): {ex.Message}");
+                Trace.TraceWarning($"[Queue][{_instanceId}] Delete failed (likely race): {ex.Message}");
             }
         }
 
@@ -172,9 +155,5 @@ namespace NotificationService
                 return Environment.MachineName;
             }
         }
-
-        #endregion
-
     }
-
 }
