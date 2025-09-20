@@ -9,3 +9,6 @@ After successful install you need to run Azurite with command `azurite --silent`
 ### Frontend
 * Inside **frontend** folder there is **stackoverflow-portal** folder with created Angular project. Position yourself inside the project and run `npm i`.
 * After the successful installation of packages, you can start frontend project with `npm start`.
+
+### Docker
+* Open CMD in ./docker folder and run `docker-compose -p so-services up -d`.
