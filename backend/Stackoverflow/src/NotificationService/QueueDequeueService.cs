@@ -3,6 +3,7 @@ using Azure.Storage.Queues;
 using Azure.Storage.Queues.Models;
 using StackoverflowService.Infrastructure.Queues;
 using StackoverflowService.Infrastructure.Storage;
+using Microsoft.WindowsAzure.ServiceRuntime;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -21,9 +22,12 @@ namespace NotificationService
 
         private readonly QueueClient _queue;
         private readonly QueueClient _poisonQueue;
+        private readonly string _instanceId;
 
         public QueueDequeueService()
         {
+            _instanceId = GetInstanceId();
+
             var cs = StorageConnection.Get();
 
             var mainQueueName = QueueNames.FinalAnswers;
@@ -41,6 +45,8 @@ namespace NotificationService
             {
                 //ignore azurite races/transients
             }
+
+            Trace.TraceInformation($"[Queue][{_instanceId}] Initialized. main='{_queue.Name}', poison='{_poisonQueue.Name}'.");
         }
 
         public async Task RunAsync(CancellationToken cancellationToken)
@@ -56,6 +62,11 @@ namespace NotificationService
                     try
                     {
                         var response = await _queue.ReceiveMessagesAsync(maxMessages: MaxBatch, visibilityTimeout: VisibilityTimeout, cancellationToken: cancellationToken);
+
+                        messages = response.Value ?? Array.Empty<QueueMessage>();
+                        if (messages.Length > 0)
+                            Trace.TraceInformation($"[Queue][{_instanceId}] Received {messages.Length} message(s).");
+
                     }
                     catch (RequestFailedException ex)
                     {
@@ -145,6 +156,20 @@ namespace NotificationService
             {
                 // benign race if another instance deleted it
                 Trace.TraceWarning($"[Queue] Delete failed (likely race): {ex.Message}");
+            }
+        }
+
+        private static string GetInstanceId()
+        {
+            try
+            {
+                return RoleEnvironment.IsAvailable
+                    ? RoleEnvironment.CurrentRoleInstance.Id
+                    : Environment.MachineName;
+            }
+            catch
+            {
+                return Environment.MachineName;
             }
         }
 
