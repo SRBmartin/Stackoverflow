@@ -1,4 +1,6 @@
 ﻿using Autofac;
+using HealthMonitoringService.Infrastructure.Tables.Context;
+using HealthMonitoringService.Infrastructure.Tables.Interfaces;
 
 namespace HealthMonitoringService.Infrastructure.Composition
 {
@@ -6,7 +8,11 @@ namespace HealthMonitoringService.Infrastructure.Composition
     {
         protected override void Load(ContainerBuilder builder)
         {
-            
+            builder.RegisterType<TableContext>()
+                .As<ITableContext>()
+                .SingleInstance()
+                .AutoActivate();
+
         }
     }
 }
