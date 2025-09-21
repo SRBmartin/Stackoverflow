@@ -81,6 +81,8 @@ namespace StackoverflowService.Application.Features.Questions.GetQuestionById
                 if (myVoteTasks != null)
                     myAnsVoteType = myVoteTasks[a.Id].Result?.Type;
 
+                var aUser = await _userRepository.GetAsync(a.UserId, cancellationToken);
+
                 answerDtos.Add(new AnswerDto
                 {
                     Id = a.Id,
@@ -93,7 +95,16 @@ namespace StackoverflowService.Application.Features.Questions.GetQuestionById
                     UpVotes = up,
                     DownVotes = down,
                     VoteScore = score,
-                    MyVote = myAnsVoteType
+                    MyVote = myAnsVoteType,
+                    User = new UserPreviewDto
+                    {
+                        Id = aUser.Id,
+                        Name = aUser.Name,
+                        Lastname = aUser.Lastname,
+                        Email = aUser.Email,
+                        PhotoBlobName = aUser.Photo?.BlobName,
+                        PhotoContainer = aUser.Photo?.Container
+                    }
                 });
             }
 
