@@ -6,6 +6,7 @@ import { QuestionResponseDto, QuestionDto } from '../dto/questions/question-resp
 import { QuestionsSortBy } from '../../modules/questions/list-questions/const/questions-sort-by';
 import { SortDirection } from '../../modules/questions/list-questions/const/sort-direction';
 import { map } from 'rxjs/operators';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -27,12 +28,10 @@ export class QuestionService {
     return this.httpClient.get<QuestionDto>(`${this.questionsUrl}/${id}`);
   }
 
-  // Slika pitanja
   getQuestionPhoto(id: string): Observable<Blob> {
     return this.httpClient.get(`${environment.apiUrl}/questions/${id}/photo`, { responseType: 'blob' });
   }
 
-  // Slika korisnika
   getUserPhoto(userId: string): Observable<Blob> {
     return this.httpClient.get(`${environment.apiUrl}/users/${userId}/photo`, { responseType: 'blob' });
   }
@@ -52,6 +51,5 @@ export class QuestionService {
 
   deleteQuestionPhoto(id: string): Observable<void> {
     return this.httpClient.delete<void>(`${this.questionsUrl}/${id}/photo`);
-  }
-  
+  } 
 }
