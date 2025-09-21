@@ -63,13 +63,13 @@ export class QuestionDetailsComponent implements OnInit {
 
           this.loading = false;
           this.loadService.hide();
-          this.toastServer.showToast('Question loaded successfully');
+          this.toastServer.showToast('Question loaded successfully',"success");
         },
         error: (err) => {
           console.error('Error fetching question:', err);
           this.loading = false;
           this.loadService.hide();
-          this.toastServer.showToast('Failed to load question');
+          this.toastServer.showToast('Failed to load question', "error");
         }
       });
     }
@@ -78,22 +78,17 @@ export class QuestionDetailsComponent implements OnInit {
   selectFinalAnswer(answer: any) {
     if (!this.question || !this.isCurrentUserAuthor() || this.question.IsClosed) return;
   
-    // Ako question i Answers nisu null
     this.question.Answers?.forEach(a => a.IsFinal = false);
   
-    // Oznaci izabrani odgovor kao final
     answer.IsFinal = true;
-  
-    // Zatvori pitanje za dalje glasanje
     this.question.IsClosed = true;
   
-    // Pozovi backend ako postoji endpoint
     if (this.question.Id && answer.Id) {
       this.questionService.markFinalAnswer(this.question.Id, answer.Id).subscribe({
-        next: () => this.toastServer.showToast('Final answer selected successfully'),
+        next: () => this.toastServer.showToast('Final answer selected successfully', "success"),
         error: (err) => {
           console.error('Error marking final answer:', err);
-          this.toastServer.showToast('Failed to select final answer');
+          this.toastServer.showToast('Failed marking final answer', "error");
         }
       });
     }
@@ -176,44 +171,43 @@ export class QuestionDetailsComponent implements OnInit {
 
     let interval = Math.floor(seconds / 31536000);
     if (interval >= 1) {
-      return interval === 1 ? "asked 1 year ago" : `${interval} years ago`;
+      return interval === 1 ? " 1 year ago" : `${interval} years ago`;
     }
 
     interval = Math.floor(seconds / 2592000);
     if (interval >= 1) {
-      return interval === 1 ? "asked 1 month ago" : `${interval} months ago`;
+      return interval === 1 ? "1 month ago" : `${interval} months ago`;
     }
 
     interval = Math.floor(seconds / 86400);
     if (interval >= 1) {
-      if (interval === 1) return "asked yesterday";
-      if (interval < 7) return `asked ${interval} days ago`;
+      if (interval === 1) return " yesterday";
+      if (interval < 7) return `${interval} days ago`;
       const weeks = Math.floor(interval / 7);
-      return weeks === 1 ? "asked 1 week ago" : `${weeks} weeks ago`;
+      return weeks === 1 ? "1 week ago" : `${weeks} weeks ago`;
     }
 
     interval = Math.floor(seconds / 3600);
     if (interval >= 1) {
-      return interval === 1 ? "asked 1 hour ago" : `${interval} hours ago`;
+      return interval === 1 ? "1 hour ago" : `${interval} hours ago`;
     }
 
     interval = Math.floor(seconds / 60);
     if (interval >= 1) {
-      return interval === 1 ? "asked 1 minute ago" : `${interval} minutes ago`;
+      return interval === 1 ? "1 minute ago" : `${interval} minutes ago`;
     }
 
     return "just now";
   }
 
 
-  
   cancelEdit() {
     this.editMode = false;
-    
     this.editedTitle = '';
     this.editedDescription = '';
     this.editedPhotoFile = null;
     this.editedPhotoUrl = this.originalPhotoUrl;
+    this.questionPhotoUrl = this.originalPhotoUrl; 
   }
   
   onPhotoSelected(event: Event) {
@@ -271,8 +265,11 @@ export class QuestionDetailsComponent implements OnInit {
       this.loadService.show();
     
       this.questionService.updateQuestion(this.question.Id, this.editedTitle, this.editedDescription).subscribe({
-        next: updatedQuestion => {
-          this.question = updatedQuestion;
+        next: (updatedQuestion) => {
+          this.question = {
+            ...updatedQuestion,
+            Answers: this.question?.Answers || [] 
+          };
           this.editMode = false;
     
           if (this.editedPhotoFile) {
@@ -280,28 +277,26 @@ export class QuestionDetailsComponent implements OnInit {
               next: () => {
                 this.loadQuestionPhoto(this.question?.Id ?? '');
                 this.loadService.hide();
-                this.toastServer.showToast('Question and photo updated successfully');
+                this.toastServer.showToast('Question and photo updated successfully', "success");
               },
               error: (err) => {
                 this.loadService.hide();
-                this.toastServer.showToast('Failed to upload photo');
-                console.error('Failed to upload photo', err);
+                this.toastServer.showToast('Failed to upload photo',"error");
               }
             });
           } else if (this.editedPhotoUrl === null) {
             this.questionPhotoUrl = null;
             this.loadService.hide();
-            this.toastServer.showToast('Question updated and photo removed successfully');
+            this.toastServer.showToast('Question updated and photo removed successfully', "success");
           } else {
             this.loadQuestionPhoto(this.question?.Id ?? '');
             this.loadService.hide();
-            this.toastServer.showToast('Question updated successfully');
+            this.toastServer.showToast('Question updated successfully', "success");
           }
         },
-        error: err => {
+        error: (err) => {
           this.loadService.hide();
-          this.toastServer.showToast('Failed to update question');
-          console.error('Failed to update question', err);
+          this.toastServer.showToast('Failed to update question', "error");
         }
       });
     }
@@ -316,13 +311,12 @@ export class QuestionDetailsComponent implements OnInit {
       this.questionService.deleteQuestion(this.question.Id).subscribe({
         next: () => {
           this.loadService.hide();
-          this.toastServer.showToast('Question deleted successfully');
+          this.toastServer.showToast('Question deleted successfully', "success");
           window.location.href = '/questions';
         },
         error: err => {
           this.loadService.hide();
-          this.toastServer.showToast('Failed to delete question');
-          console.error('Failed to delete question', err);
+          this.toastServer.showToast('Failed to delete question', "error");
         }
       });
     }
@@ -342,7 +336,6 @@ export class QuestionDetailsComponent implements OnInit {
       const originalVote = q.MyVote;
       const originalScore = q.VoteScore ?? 0;
     
-      // Instant UI update
       if (originalVote === value) {
         q.MyVote = null;
         q.VoteScore = originalScore - value;
@@ -351,17 +344,14 @@ export class QuestionDetailsComponent implements OnInit {
         q.VoteScore = originalScore - (originalVote ?? 0) + value;
       }
     
-      // Mapiramo za backend
       const type: '+' | '-' = value === 1 ? '+' : '-';
     
       this.questionService.vote(q.Id, type).subscribe({
-        next: () => this.toastServer.showToast('Vote submitted successfully'),
+        next: () => this.toastServer.showToast('Vote submitted successfully', "success"),
         error: (err) => {
-          console.error('Failed to submit vote', err);
-          // Rollback
           q.MyVote = originalVote;
           q.VoteScore = originalScore;
-          this.toastServer.showToast('Failed to submit vote');
+          this.toastServer.showToast('Failed to submit vote, you can not vote on your question!', "error");
         }
       });
     }
@@ -372,7 +362,7 @@ export class QuestionDetailsComponent implements OnInit {
       const originalVote = answer.MyVote as number | null;
       const originalScore = answer.VoteScore ?? 0;
     
-      // Instant UI update
+      
       if (originalVote === value) {
         answer.MyVote = null;
         answer.VoteScore = originalScore - value;
@@ -383,18 +373,54 @@ export class QuestionDetailsComponent implements OnInit {
     
       const type: '+' | '-' = value === 1 ? '+' : '-';
     
-      // Prosledjujemo i QuestionId i AnswerId
+      
       this.questionService.voteAnswer(this.question.Id, answer.Id, type).subscribe({
-        next: () => this.toastServer.showToast('Vote submitted successfully'),
+        next: () => this.toastServer.showToast('Vote submitted successfully', "success"),
         error: (err) => {
-          console.error('Failed to submit answer vote', err);
-          // Rollback
           answer.MyVote = originalVote;
           answer.VoteScore = originalScore;
-          this.toastServer.showToast('Failed to submit vote');
+          this.toastServer.showToast('Failed to submit vote', "error");
         }
       });
     }
-    
+  
+    answerModalOpen = false;
+    newAnswerText = '';
 
+  openAnswerModal() {
+    if (!this.question?.IsClosed) {
+      this.answerModalOpen = true;
+    }
+  }
+
+  closeAnswerModal() {
+    this.answerModalOpen = false;
+    this.newAnswerText = '';
+  }
+
+  submitAttempted = false;
+
+  submitAnswer() {
+    this.submitAttempted = true;
+  
+    if (!this.newAnswerText || !this.newAnswerText.trim() || !this.question?.Id) return;
+  
+    this.loadService.show();
+  
+    this.questionService.submitAnswer(this.question.Id, this.newAnswerText.trim()).subscribe({
+      next: (response) => {        
+        this.toastServer.showToast('Answer submitted successfully', "success");
+        this.newAnswerText = '';
+        this.answerModalOpen = false;
+        this.submitAttempted = false;
+        this.loadService.hide();
+      },
+      error: (err) => {
+        console.error('Failed to submit answer', err);
+        this.toastServer.showToast('Failed to submit answer', "error");
+        this.loadService.hide();
+      }
+    });
+  }
+  
 }

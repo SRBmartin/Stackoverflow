@@ -25,7 +25,7 @@ export interface QuestionDto {
     PhotoBlobName: string | null;
     PhotoContainer: string | null;
   };
-  Answers: AnswerDto[]; // Adjust type based on actual AnswerDto if available
+  Answers: AnswerDto[]; 
   VoteScore: number;
   MyVote: number | null;
 }

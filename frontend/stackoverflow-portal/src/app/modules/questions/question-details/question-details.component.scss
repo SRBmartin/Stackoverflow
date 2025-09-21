@@ -162,20 +162,19 @@
   }
   
   .question-details .body .content .action-link {
-    background: none;
-    color: var(--grey-color); 
+    padding: 12px 28px;
+    font-size: 16px;
     font-weight: 600;
-    font-size: 14px;
-    padding: 0;
     border: none;
-    outline: none;
-    text-decoration: none;
+    border-radius: 8px;
+    background-color: var(--accent-color);
+    color: var(--white-color);
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: background-color 0.3s ease
   }
   
   .question-details .body .content .action-link:hover {
-    color: var(--accent-color)
+    background-color: #6a8038;
   }
   
   
@@ -224,7 +223,7 @@
   
   .question-details .body .content .asked-time {
     font-size: 13px;
-    color: var(--tercial-color);
+    color: var(--grey-color);
   }
   
   .modal-overlay {
@@ -321,7 +320,7 @@
     color: var(--white-color);
   }
   .photo-upload-container {
-    margin-top: 16px;
+    margin-top: 8px;
     position: relative;
     width: 100%;
     max-width: 400px;
@@ -329,13 +328,14 @@
     margin-right: auto;
   }
   
-  /* Preview slike sa dugmetom X */
   .photo-preview-wrapper {
     position: relative;
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 4px 14px rgba(44, 62, 80, 0.08);
-    max-height: 300px;
+    max-height: 250px;
+    max-width: 250px;
+    margin-left: 80px;
   }
   
   .photo-preview-wrapper img {
@@ -346,11 +346,10 @@
     border-radius: 8px;
   }
   
-  /* Dugme za uklanjanje slike - X u levom gornjem uglu */
   .remove-photo-btn {
     position: absolute;
-    top: 8px;
-    left: 8px;
+    top: 4px;
+    left: 4px;
     background: rgba(0,0,0,0.6);
     color: white;
     border: none;
@@ -440,7 +439,6 @@
     margin: 20px 0 10px;
   }
   
- /* Kontejner odgovora */
 .answer-item {
   border: 1px solid #ddd;
   border-radius: 12px;
@@ -454,7 +452,7 @@
     align-items: flex-start;
   }
 
-  /* Glasanje i final button */
+
   .votes {
     display: flex;
     flex-direction: column;
@@ -515,15 +513,15 @@
       }
     }
 
-    /* Final answer button ispod glasanja */
+    
     .final-btn {
       margin-top: 0px;
       padding: 6px 16px;
       font-size: 14px;
       font-weight: 600;
       color: var(--accent-color);
-      background-color: transparent; // nema pozadine
-      border: none; // nema outline/ivice
+      background-color: transparent;
+      border: none; 
       border-radius: 0;
       cursor: pointer;
       display: flex;
@@ -560,7 +558,7 @@
     }
   }
 
-  /* Sadržaj odgovora */
+  
   .content {
     flex: 1;
 
@@ -571,7 +569,7 @@
       margin-bottom: 12px;
     }
 
-    /* User info ispod odgovora */
+    
     .answer-user-info {
       display: flex;
       align-items: center;
@@ -581,8 +579,9 @@
       border-radius: 8px;
       min-width: 250px;
       max-width: 300px;
-      margin-top: 12px;
+      margin-top: 70px;
       margin-left: auto;
+      
 
       .user-photo {
         width: 36px;
@@ -595,7 +594,8 @@
       .user-details {
         display: flex;
         flex-direction: column;
-
+        
+        
         .user-meta {
           font-weight: 600;
           font-size: 14px;
@@ -610,3 +610,77 @@
     }
   }
 }
+
+.answer-action-container {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.answer-btn {
+  padding: 12px 28px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--accent-color);
+  color: var(--white-color);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover:not(:disabled) {
+    background-color: #6a8038;
+
+  }
+
+  &:disabled {
+    background-color: #a5bc6d;
+    cursor: not-allowed;
+  }
+}
+
+
+.modal-edit h2 {
+  margin-bottom: 16px;
+}
+
+.modal-edit textarea {
+  min-height: 120px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1.5px solid var(--grey-color);
+  resize: vertical;
+  font-size: 16px;
+  font-family: inherit;
+}
+
+.modal-edit .button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+
+  button:first-of-type {
+    background-color: var(--accent-color);
+    color: var(--white-color);
+
+    &:hover {
+      background-color: var(--white-color);
+      color: var(--accent-color);
+    }
+  }
+
+  button:last-of-type {
+    background-color: transparent;
+    color: var(--grey-color);
+    border: 1.5px solid var(--grey-color);
+
+    &:hover {
+      background-color: var(--grey-color);
+      color: var(--white-color);
+    }
+  }
+}
+textarea.invalid {
+  border:#c83f30;
+  outline: none; 
+}
+

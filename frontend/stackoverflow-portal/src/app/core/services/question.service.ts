@@ -77,4 +77,12 @@ export class QuestionService {
       Type: type
     });
   }
+
+  submitAnswer(questionId: string, text: string) {
+    return this.httpClient.post(`${environment.apiUrl}/answers`, {
+      QuestionId: questionId,
+      Text: text
+    });
+  }
+  
 }
