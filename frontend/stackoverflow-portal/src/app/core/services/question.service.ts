@@ -52,4 +52,29 @@ export class QuestionService {
   deleteQuestionPhoto(id: string): Observable<void> {
     return this.httpClient.delete<void>(`${this.questionsUrl}/${id}/photo`);
   } 
+
+  markFinalAnswer(questionId: string, answerId: string) {
+    return this.httpClient.post(
+      `${environment.apiUrl}/answers/final`,
+      {
+        QuestionId: questionId,
+        AnswerId: answerId
+      }
+    );
+  }
+
+  vote(questionId: string, type: '+' | '-') {
+    return this.httpClient.post(`${environment.apiUrl}/votes`, {
+      QuestionId: questionId,
+      Type: type
+    });
+  }
+  
+  voteAnswer(questionId:string ,answerId: string, type: '+' | '-') {
+    return this.httpClient.post(`${environment.apiUrl}/votes`, {
+      QuestionId :questionId,
+      AnswerId: answerId,
+      Type: type
+    });
+  }
 }

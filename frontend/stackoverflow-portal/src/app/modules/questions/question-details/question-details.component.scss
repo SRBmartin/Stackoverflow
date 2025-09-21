@@ -426,3 +426,187 @@
     color: #c83f30;
   }
   
+  .answers-header {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 20px;
+    font-weight: 600;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+  }
+  .answers-header {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 20px 0 10px;
+  }
+  
+ /* Kontejner odgovora */
+.answer-item {
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  background: #fafafa;
+  padding: 16px;
+  margin-bottom: 20px;
+
+  .body {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  /* Glasanje i final button */
+  .votes {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    min-width: 60px;
+    user-select: none;
+
+    .vote-button-wrapper {
+      position: relative;
+
+      .vote-button {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 2px solid var(--grey-color);
+        background: var(--white-color);
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover,
+        &.active {
+          background-color: #fef1e6;
+          color: #e7700d;
+          border-color: #e7700d;
+        }
+      }
+
+      .score {
+        font-weight: 700;
+        font-size: 16px;
+        color: var(--dark-color);
+      }
+
+      .vote-tooltip {
+        position: absolute;
+        right: 100%;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: var(--light-color);
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 13px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s ease;
+        min-width: 180px;
+        box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+      }
+
+      &:hover .vote-tooltip {
+        opacity: 1;
+        pointer-events: auto;
+      }
+    }
+
+    /* Final answer button ispod glasanja */
+    .final-btn {
+      margin-top: 0px;
+      padding: 6px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--accent-color);
+      background-color: transparent; // nema pozadine
+      border: none; // nema outline/ivice
+      border-radius: 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.3s ease;
+      font-size: 30px;
+      &::before {
+        margin-right: 6px;
+      }
+
+      &:hover {
+        color: #2a672d;
+      }
+
+      &.selected {
+        
+        color: #2a672d;
+      
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    }
+
+    .final-answer {
+      margin-top: 8px;
+      font-weight: 700;
+      color: #2a672d;
+      font-size: 30px;
+    }
+  }
+
+  /* Sadržaj odgovora */
+  .content {
+    flex: 1;
+
+    .description {
+      font-size: 16px;
+      color: var(--dark-color);
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    /* User info ispod odgovora */
+    .answer-user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 12px;
+      background-color: rgba(236, 233, 189, 0.15);
+      border-radius: 8px;
+      min-width: 250px;
+      max-width: 300px;
+      margin-top: 12px;
+      margin-left: auto;
+
+      .user-photo {
+        width: 36px;
+        height: 36px;
+        border-radius: 12px;
+        object-fit: cover;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      }
+
+      .user-details {
+        display: flex;
+        flex-direction: column;
+
+        .user-meta {
+          font-weight: 600;
+          font-size: 14px;
+          color: var(--dark-color);
+        }
+
+        .asked-time {
+          font-size: 12px;
+          color: var(--grey-color);
+        }
+      }
+    }
+  }
+}

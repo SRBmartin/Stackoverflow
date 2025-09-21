@@ -10,6 +10,9 @@ import { FormsModule } from '@angular/forms';
 import { LoaderService } from '../../../common/ui/loader/loader.service';
 import { ToastServer } from '../../../common/ui/toast/toast.service';
 
+
+type VoteValue = '+' | '-' | null;
+
 @Component({
   selector: 'app-question-details',
   standalone: true,
@@ -32,6 +35,8 @@ export class QuestionDetailsComponent implements OnInit {
   editedPhotoFile: File | null = null;
   editedPhotoUrl: SafeUrl | null = null;
 
+  answerUserPhotos: { [userId: string]: SafeUrl | null } = {};
+
   constructor(
     private route: ActivatedRoute,
     private http: HttpClient,
@@ -51,6 +56,11 @@ export class QuestionDetailsComponent implements OnInit {
           this.question = data;
           this.loadQuestionPhoto(this.question?.Id ?? '');
           this.loadUserPhoto(this.question?.User?.Id ?? '');
+
+          this.question?.Answers?.forEach(answer => {
+            this.loadAnswerUserPhoto(answer.User.Id);
+          });
+
           this.loading = false;
           this.loadService.hide();
           this.toastServer.showToast('Question loaded successfully');
@@ -60,6 +70,30 @@ export class QuestionDetailsComponent implements OnInit {
           this.loading = false;
           this.loadService.hide();
           this.toastServer.showToast('Failed to load question');
+        }
+      });
+    }
+  }
+
+  selectFinalAnswer(answer: any) {
+    if (!this.question || !this.isCurrentUserAuthor() || this.question.IsClosed) return;
+  
+    // Ako question i Answers nisu null
+    this.question.Answers?.forEach(a => a.IsFinal = false);
+  
+    // Oznaci izabrani odgovor kao final
+    answer.IsFinal = true;
+  
+    // Zatvori pitanje za dalje glasanje
+    this.question.IsClosed = true;
+  
+    // Pozovi backend ako postoji endpoint
+    if (this.question.Id && answer.Id) {
+      this.questionService.markFinalAnswer(this.question.Id, answer.Id).subscribe({
+        next: () => this.toastServer.showToast('Final answer selected successfully'),
+        error: (err) => {
+          console.error('Error marking final answer:', err);
+          this.toastServer.showToast('Failed to select final answer');
         }
       });
     }
@@ -103,6 +137,27 @@ export class QuestionDetailsComponent implements OnInit {
       }
     });
   }
+  
+  loadAnswerUserPhoto(userId: string) {
+    if (!userId) {
+      this.answerUserPhotos[userId] = null;
+      return;
+    }
+  
+    this.questionService.getUserPhoto(userId).subscribe({
+      next: (blob) => {
+        if (blob && blob.size > 0) {
+          this.answerUserPhotos[userId] = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(blob));
+        } else {
+          this.answerUserPhotos[userId] = null;
+        }
+      },
+      error: () => {
+        this.answerUserPhotos[userId] = null;
+      }
+    });
+  }
+  
 
   formatDate(date: string): string {
     return new Date(date).toLocaleString();
@@ -150,27 +205,8 @@ export class QuestionDetailsComponent implements OnInit {
     return "just now";
   }
 
-  vote(value: 1 | -1) {
-    if (!this.question) return;
 
-    const currentVote = this.question.MyVote;
-
-    if (currentVote === value) {
-      
-      this.question.MyVote = null;
-      this.question.VoteScore -= value;
-    } else {
-      
-      if (currentVote) {
-        this.question.VoteScore -= currentVote;
-      }
-      
-      this.question.MyVote = value;
-      this.question.VoteScore += value;
-    }
-
-    //  this.questionService.vote(this.question.Id, value).subscribe();
-  }
+  
   cancelEdit() {
     this.editMode = false;
     
@@ -287,6 +323,75 @@ export class QuestionDetailsComponent implements OnInit {
           this.loadService.hide();
           this.toastServer.showToast('Failed to delete question');
           console.error('Failed to delete question', err);
+        }
+      });
+    }
+    
+
+    isUpvoted(vote: number | null) {
+      return vote === 1;
+    }
+    
+    isDownvoted(vote: number | null) {
+      return vote === -1;
+    }
+    vote(value: 1 | -1) {
+      if (!this.question || !this.question.Id) return;
+    
+      const q = this.question;
+      const originalVote = q.MyVote;
+      const originalScore = q.VoteScore ?? 0;
+    
+      // Instant UI update
+      if (originalVote === value) {
+        q.MyVote = null;
+        q.VoteScore = originalScore - value;
+      } else {
+        q.MyVote = value;
+        q.VoteScore = originalScore - (originalVote ?? 0) + value;
+      }
+    
+      // Mapiramo za backend
+      const type: '+' | '-' = value === 1 ? '+' : '-';
+    
+      this.questionService.vote(q.Id, type).subscribe({
+        next: () => this.toastServer.showToast('Vote submitted successfully'),
+        error: (err) => {
+          console.error('Failed to submit vote', err);
+          // Rollback
+          q.MyVote = originalVote;
+          q.VoteScore = originalScore;
+          this.toastServer.showToast('Failed to submit vote');
+        }
+      });
+    }
+    
+    voteAnswer(answer: any, value: 1 | -1) {
+      if (!this.question || !answer || !answer.Id) return;
+    
+      const originalVote = answer.MyVote as number | null;
+      const originalScore = answer.VoteScore ?? 0;
+    
+      // Instant UI update
+      if (originalVote === value) {
+        answer.MyVote = null;
+        answer.VoteScore = originalScore - value;
+      } else {
+        answer.MyVote = value;
+        answer.VoteScore = originalScore - (originalVote ?? 0) + value;
+      }
+    
+      const type: '+' | '-' = value === 1 ? '+' : '-';
+    
+      // Prosledjujemo i QuestionId i AnswerId
+      this.questionService.voteAnswer(this.question.Id, answer.Id, type).subscribe({
+        next: () => this.toastServer.showToast('Vote submitted successfully'),
+        error: (err) => {
+          console.error('Failed to submit answer vote', err);
+          // Rollback
+          answer.MyVote = originalVote;
+          answer.VoteScore = originalScore;
+          this.toastServer.showToast('Failed to submit vote');
         }
       });
     }
