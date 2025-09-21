@@ -8,5 +8,6 @@ namespace StackoverflowService.Infrastructure.Tables.Interfaces
         TableClient Questions { get; }
         TableClient Answers { get; }
         TableClient Votes { get; }
+        TableClient FinalEmails { get; }
     }
 }

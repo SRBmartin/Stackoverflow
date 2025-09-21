@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  mailservice:
+    build:
+      context: ../backend/mail-service/project
+      dockerfile: Dockerfile
+    container_name: so-mail-service
+    restart: always
+    ports:
+      - "5569:8080"
+    networks:
+      - so-net
+
+networks:
+  so-net:
+    driver: bridge

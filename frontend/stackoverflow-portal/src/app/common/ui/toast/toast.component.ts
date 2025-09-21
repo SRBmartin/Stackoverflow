@@ -12,4 +12,14 @@ export class ToastComponent {
   @Input() message: string = '';
   @Input() type: 'success' | 'error' | 'info' | 'warning' = 'info';
   @Input() visible: boolean = false;
+
+  get bootstrapType(): string {
+    switch (this.type) {
+      case 'success': return 'success';   
+      case 'error':   return 'danger';    
+      case 'info':    return 'info';      
+      case 'warning': return 'warning';   
+      default: return 'secondary';
+    }
+  }
 }
