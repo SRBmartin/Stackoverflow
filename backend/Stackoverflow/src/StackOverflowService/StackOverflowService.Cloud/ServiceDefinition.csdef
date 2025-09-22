@@ -20,7 +20,7 @@
       <Setting name="StorageConnectionString" />
     </ConfigurationSettings>
 	  <Endpoints>
-		  <InputEndpoint name="Health" protocol="http" port="8081" />
+		  <InternalEndpoint name="Health" protocol="http" port="8081" />
 	  </Endpoints>
   </WorkerRole>
 </ServiceDefinition>

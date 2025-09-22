@@ -4,6 +4,9 @@
 	<ConfigurationSettings>
 		<Setting name="StorageConnectionString" />
 	</ConfigurationSettings>
+	  <Endpoints>
+		  <InputEndpoint name="AlertApi" protocol="http" port="8086" />
+	  </Endpoints>
   </WorkerRole>
   <WebRole name="HealthMonitoringService.WebRole" vmsize="Standard_D1_v2">
     <Sites>

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Autofac;
 using HealthMonitoringService.Infrastructure.Composition;
 using HealthMonitoringService.Worker.Composition;
+using HealthMonitoringService.Worker.Endpoints;
 using HealthMonitoringService.Worker.Monitoring.Interfaces;
 using Microsoft.WindowsAzure.ServiceRuntime;
 
@@ -17,6 +18,8 @@ namespace HealthMonitoringService.Worker
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
         private IContainer _container;
+
+        private AlertEmailHttpServer _alertApi;
 
         public override void Run()
         {
@@ -61,6 +64,8 @@ namespace HealthMonitoringService.Worker
 
             _container = containerBuilder.Build();
 
+            StartAlertApiEndpoint();
+
             bool result = base.OnStart();
 
             Trace.TraceInformation("HealthMonitoringService.Worker has started.");
@@ -81,6 +86,13 @@ namespace HealthMonitoringService.Worker
             base.OnStop();
 
             Trace.TraceInformation("HealthMonitoringService.Worker has stopped.");
+        }
+
+        private void StartAlertApiEndpoint()
+        {
+            var endpoint = RoleEnvironment.CurrentRoleInstance.InstanceEndpoints["AlertApi"].IPEndpoint;
+            _alertApi = new AlertEmailHttpServer(_container);
+            _alertApi.Start(endpoint);
         }
 
     }
