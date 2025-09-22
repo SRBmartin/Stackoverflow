@@ -6,11 +6,10 @@ import { QuestionResponseDto } from '../../../core/dto/questions/question-respon
 import { QuestionService } from '../../../core/services/question.service';
 import { ToastServer } from '../../../common/ui/toast/toast.service';
 import { LoaderService } from '../../../common/ui/loader/loader.service';
-import { SearchInputComponent } from '../../../components/shared/ui/search-input/search-input.component';
 import { QuestionsSortBy } from './const/questions-sort-by';
 import { SortDirection } from './const/sort-direction';
 import { SearchService } from '../../../core/services/shared/search.service';
-import { debounceTime, distinct, distinctUntilChanged, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-list-questions',
@@ -18,8 +17,7 @@ import { debounceTime, distinct, distinctUntilChanged, Subscription } from 'rxjs
   imports: [
     CommonModule,
     RouterModule,
-    FormsModule,
-    SearchInputComponent
+    FormsModule
   ],
   templateUrl: './list-questions.component.html',
   styleUrl: './list-questions.component.scss'
@@ -32,7 +30,6 @@ export class ListQuestionsComponent implements OnInit, OnDestroy {
   direction: SortDirection = SortDirection.Desc;
   totalPages: number = 1;
 
-  // Expose enum values as arrays
   sortByOptions: string[] = Object.values(QuestionsSortBy);
   directionOptions: string[] = Object.values(SortDirection);
 
@@ -81,7 +78,8 @@ export class ListQuestionsComponent implements OnInit, OnDestroy {
         this.loaderService.hide();
       },
       error: (err) => {
-        this.toastService.showToast('Failed to load questions. Please try again.', 'error');
+        let errorMessage = err?.error?.message || 'Failed to load questions. Please try again.';
+        this.toastService.showToast(errorMessage, 'error');
         this.loaderService.hide();
       }
     });
