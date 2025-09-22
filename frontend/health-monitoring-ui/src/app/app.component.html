@@ -45,6 +45,17 @@
 
   <section class="card">
     <div class="card-header">
+      <h2>Success vs Failure</h2>
+      <div class="state" *ngIf="loading">Loading…</div>
+      <div class="state error" *ngIf="!loading && error">{{ error }}</div>
+    </div>
+    <div class="chart-wrap">
+      <canvas #rateChart></canvas>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-header">
       <h2>Latest health checks (last 3 hours)</h2>
       <div class="state" *ngIf="loading">Loading…</div>
       <div class="state error" *ngIf="!loading && error">{{ error }}</div>
