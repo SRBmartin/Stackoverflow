@@ -22,11 +22,11 @@ import { SearchService } from '../../../../core/services/shared/search.service';
   ]
 })
 export class HeaderComponent {
-  constructor(private searchService: SearchService) {}
 
   showAskDialog = false;
 
   constructor(
+    private searchService: SearchService,
     private questionService: QuestionService,
     private router: Router, 
     private toast: ToastServer, 
