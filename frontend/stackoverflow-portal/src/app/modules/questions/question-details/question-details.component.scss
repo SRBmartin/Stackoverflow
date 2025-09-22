@@ -79,15 +79,24 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
     margin-top: 5px;
     margin-bottom: 5px;
+    &:hover:not(:disabled),
+    &.active {
+        background-color: #fef1e6;
+        color: #e7700d;
+        border-color: #e7700d;
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        background-color: var(--white-color);
+        color: var(--grey-color);
+        border-color: var(--grey-color);
+    }
   }
   
   
-.question-details .body .votes .vote-button-wrapper .vote-button:hover,
-.question-details .body .votes .vote-button-wrapper .vote-button.active {
-  background-color: #fef1e6; 
-  color: #e7700d; 
-  border-color: #e7700d; 
-}
+
 
   
   .question-details .body .votes .vote-button-wrapper .vote-tooltip {
@@ -121,10 +130,10 @@
     border-right-color: var(--light-color);
   }
   
-  .question-details .body .votes .vote-button-wrapper:hover .vote-tooltip {
+  .question-details .body .votes .vote-button-wrapper .vote-button:not(:disabled):hover + .vote-tooltip {
     opacity: 1;
     pointer-events: auto;
-  }
+}
   
   .question-details .body .votes .score {
     font-size: 20px;
@@ -477,12 +486,22 @@
         cursor: pointer;
         transition: all 0.2s ease;
 
-        &:hover,
+        &:hover:not(:disabled),
         &.active {
           background-color: #fef1e6;
           color: #e7700d;
           border-color: #e7700d;
         }
+
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+          background-color: var(--white-color);
+          color: var(--grey-color);
+          border-color: var(--grey-color);
+        }
+
+        
       }
 
       .score {
@@ -507,7 +526,7 @@
         box-shadow: 0 6px 15px rgba(0,0,0,0.15);
       }
 
-      &:hover .vote-tooltip {
+      .vote-button:not(:disabled):hover + .vote-tooltip {
         opacity: 1;
         pointer-events: auto;
       }
