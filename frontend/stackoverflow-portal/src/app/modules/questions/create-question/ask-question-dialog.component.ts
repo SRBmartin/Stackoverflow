@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ToastServer } from '../../../common/ui/toast/toast.service';
+import { LoaderService } from '../../../common/ui/loader/loader.service';
 
 @Component({
   selector: 'app-ask-question-dialog',
@@ -19,10 +21,14 @@ export class AskQuestionDialogComponent {
   filePreviewUrl: string | null = null;
   loading: boolean = false;
 
-  
   titleError: string | null = null;
   descriptionError: string | null = null;
   fileError: string | null = null;
+
+  constructor(
+    private toast: ToastServer,
+    private loader: LoaderService
+  ) {}
 
   close() {
     if (this.loading) return;
@@ -33,33 +39,36 @@ export class AskQuestionDialogComponent {
     this.titleError = null;
     this.descriptionError = null;
     this.fileError = null;
-
+  
     let hasError = false;
-
+  
     if (!this.title?.trim()) {
       this.titleError = 'This field is required';
       hasError = true;
     }
-
+  
     if (!this.description?.trim()) {
       this.descriptionError = 'This field is required';
       hasError = true;
     }
-
+  
     if (!this.file) {
       this.fileError = 'This field is required';
       hasError = true;
     }
-
+  
     if (hasError) return;
-
+  
     this.loading = true;
+    this.loader.show();
+  
     this.submitted.emit({
       title: this.title.trim(),
       description: this.description.trim(),
       file: this.file ?? undefined
     });
   }
+  
 
   onFileSelected(event: any) {
     const file = event.target.files ? event.target.files[0] : event.dataTransfer?.files[0];

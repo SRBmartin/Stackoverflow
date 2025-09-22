@@ -5,6 +5,8 @@ import { SearchInputComponent } from '../search-input/search-input.component';
 import { QuestionService } from '../../../../core/services/question.service';
 import { Router } from '@angular/router';
 import { AskQuestionDialogComponent } from '../../../../modules/questions/create-question/ask-question-dialog.component';
+import { ToastServer } from '../../../../common/ui/toast/toast.service';
+import { LoaderService } from '../../../../common/ui/loader/loader.service';
 
 @Component({
   selector: 'app-header',
@@ -21,59 +23,77 @@ import { AskQuestionDialogComponent } from '../../../../modules/questions/create
 export class HeaderComponent {
   showAskDialog = false;
 
-  constructor(private questionService: QuestionService, private router: Router) {}
+  constructor(
+    private questionService: QuestionService,
+    private router: Router, 
+    private toast: ToastServer, 
+    private loader: LoaderService
+  ) {}
 
   isLoggedIn(): boolean {
     return true;
   }
 
-  onLogin() { 
+  onLogin() { }
+  onSignup() { }
+  onSearch(query: string) { }
+  onProfile() { }
+
+  onAskQuestion() { 
+    this.showAskDialog = true; 
   }
 
-  onSignup() {
+  onDialogClosed() { 
+    this.showAskDialog = false; 
   }
-
-  onSearch(query: string) {
-  }
-
-  onProfile() { 
-  }
-
-  onAskQuestion() { this.showAskDialog = true; }
-
-  onDialogClosed() { this.showAskDialog = false; }
 
   onDialogSubmitted(data: { title: string; description: string; file?: File }) {
+    this.loader.show();
+    this.showAskDialog = false; // odmah zatvori dialog
+    
     this.questionService.createQuestion(data.title, data.description).subscribe({
       next: (q) => {
-        const questionId = (q && ((q as any).id || (q as any).Id || (q as any).ID)) ?? (q && q?.Id) ?? null;
-        const id = questionId ?? (q && q?.Id) ?? (q && q?.id);
-
-        if (!id) {
-          console.error('Ne mogu dobiti id iz odgovora:', q);
-          this.showAskDialog = false;
+        const questionId = q?.id ?? q?.Id ?? q?.ID;
+        if (!questionId) {
+          this.toast.showToast('Failed to get question ID', 'error');
+          this.loader.hide();
           return;
         }
 
+        const navigateToQuestion = () => {
+          this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+          this.router.onSameUrlNavigation = 'reload';
+        
+          this.router.navigate(['/questions', questionId]).then(() => {
+            this.router.routeReuseStrategy.shouldReuseRoute = () => true;
+          });
+        };
+        
+
         if (data.file) {
-          this.questionService.uploadQuestionPhoto(id, data.file).subscribe({
-            next: () => this.router.navigate(['/questions', id]),
-            error: (err) => {
-              console.error('Upload photo failed', err);
-              this.router.navigate(['/questions', id]);
+          this.questionService.uploadQuestionPhoto(questionId, data.file).subscribe({
+            next: () => {
+              this.toast.showToast('Your question has been posted successfully', 'success');
+              navigateToQuestion();
+            },
+            error: () => {
+              this.toast.showToast('Photo upload failed, but question was created', 'warning');
+              navigateToQuestion();
+            },
+            complete: () => {
+              this.loader.hide();
             }
           });
         } else {
-          this.router.navigate(['/questions', id]);
+          this.toast.showToast('Your question has been posted successfully', 'success');
+          navigateToQuestion();
+          this.loader.hide();
         }
-
-        this.showAskDialog = false;
       },
-      error: (err) => {
-        console.error('Create question failed', err);
-        this.showAskDialog = false;
+      error: () => {
+        this.toast.showToast('Failed to post your question', 'error');
+        this.loader.hide();
       }
     });
   }
 }
-

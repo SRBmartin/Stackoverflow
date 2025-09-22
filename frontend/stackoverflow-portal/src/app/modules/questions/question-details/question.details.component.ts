@@ -9,6 +9,8 @@ import { QuestionService } from '../../../core/services/question.service';
 import { FormsModule } from '@angular/forms';
 import { LoaderService } from '../../../common/ui/loader/loader.service';
 import { ToastServer } from '../../../common/ui/toast/toast.service';
+import { AnswerService } from '../../../core/services/answer.service';
+import { VoteService } from '../../../core/services/vote.service';
 
 
 type VoteValue = '+' | '-' | null;
@@ -44,7 +46,9 @@ export class QuestionDetailsComponent implements OnInit {
     private authService: AuthService, 
     private questionService: QuestionService,
     private loadService: LoaderService,
-    private toastServer: ToastServer
+    private toastServer: ToastServer, 
+    private answerService : AnswerService,
+    private voteService : VoteService
   ) {}
 
   ngOnInit(): void {
@@ -84,7 +88,7 @@ export class QuestionDetailsComponent implements OnInit {
     this.question.IsClosed = true;
   
     if (this.question.Id && answer.Id) {
-      this.questionService.markFinalAnswer(this.question.Id, answer.Id).subscribe({
+      this.answerService.markFinalAnswer(this.question.Id, answer.Id).subscribe({
         next: () => this.toastServer.showToast('Final answer selected successfully', "success"),
         error: (err) => {
           console.error('Error marking final answer:', err);
@@ -119,6 +123,7 @@ export class QuestionDetailsComponent implements OnInit {
       this.userPhotoUrl = null;
       return;
     }
+
     this.questionService.getUserPhoto(userId).subscribe({
       next: (blob) => {
         if (blob && blob.size > 0) {
@@ -329,6 +334,7 @@ export class QuestionDetailsComponent implements OnInit {
     isDownvoted(vote: number | null) {
       return vote === -1;
     }
+
     vote(value: 1 | -1) {
       if (!this.question || !this.question.Id) return;
     
@@ -346,7 +352,7 @@ export class QuestionDetailsComponent implements OnInit {
     
       const type: '+' | '-' = value === 1 ? '+' : '-';
     
-      this.questionService.vote(q.Id, type).subscribe({
+      this.voteService.voteQuestion(q.Id, type).subscribe({
         next: () => this.toastServer.showToast('Vote submitted successfully', "success"),
         error: (err) => {
           q.MyVote = originalVote;
@@ -374,7 +380,7 @@ export class QuestionDetailsComponent implements OnInit {
       const type: '+' | '-' = value === 1 ? '+' : '-';
     
       
-      this.questionService.voteAnswer(this.question.Id, answer.Id, type).subscribe({
+      this.voteService.voteAnswer(this.question.Id, answer.Id, type).subscribe({
         next: () => this.toastServer.showToast('Vote submitted successfully', "success"),
         error: (err) => {
           answer.MyVote = originalVote;
@@ -407,12 +413,14 @@ export class QuestionDetailsComponent implements OnInit {
   
     this.loadService.show();
   
-    this.questionService.submitAnswer(this.question.Id, this.newAnswerText.trim()).subscribe({
+    this.answerService.submitAnswer(this.question.Id, this.newAnswerText.trim()).subscribe({
       next: (response) => {        
         this.toastServer.showToast('Answer submitted successfully', "success");
         this.newAnswerText = '';
         this.answerModalOpen = false;
         this.submitAttempted = false;
+        this.reloadQuestion();
+
         this.loadService.hide();
       },
       error: (err) => {
@@ -420,6 +428,21 @@ export class QuestionDetailsComponent implements OnInit {
         this.toastServer.showToast('Failed to submit answer', "error");
         this.loadService.hide();
       }
+    });
+  }
+
+  reloadQuestion() {
+    if (!this.question?.Id) return;
+    this.loadService.show();
+    this.questionService.getQuestionById(this.question.Id).subscribe({
+      next: (data) => {
+        this.question = data;
+        this.loadQuestionPhoto(this.question?.Id ?? '');
+        this.loadUserPhoto(this.question?.User?.Id ?? '');
+        this.question?.Answers?.forEach(answer => this.loadAnswerUserPhoto(answer.User.Id));
+        this.loadService.hide();
+      },
+      error: () => this.loadService.hide()
     });
   }
   

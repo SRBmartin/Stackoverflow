@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 import { QuestionResponseDto, QuestionDto } from '../dto/questions/question-response-dto';
 import { QuestionsSortBy } from '../../modules/questions/list-questions/const/questions-sort-by';
 import { SortDirection } from '../../modules/questions/list-questions/const/sort-direction';
-import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -53,38 +52,6 @@ export class QuestionService {
     return this.httpClient.delete<void>(`${this.questionsUrl}/${id}/photo`);
   } 
 
-  markFinalAnswer(questionId: string, answerId: string) {
-    return this.httpClient.post(
-      `${environment.apiUrl}/answers/final`,
-      {
-        QuestionId: questionId,
-        AnswerId: answerId
-      }
-    );
-  }
-
-  vote(questionId: string, type: '+' | '-') {
-    return this.httpClient.post(`${environment.apiUrl}/votes`, {
-      QuestionId: questionId,
-      Type: type
-    });
-  }
-  
-  voteAnswer(questionId:string ,answerId: string, type: '+' | '-') {
-    return this.httpClient.post(`${environment.apiUrl}/votes`, {
-      QuestionId :questionId,
-      AnswerId: answerId,
-      Type: type
-    });
-  }
-
-  submitAnswer(questionId: string, text: string) {
-    return this.httpClient.post(`${environment.apiUrl}/answers`, {
-      QuestionId: questionId,
-      Text: text
-    });
-  }
-  
 createQuestion(title: string, description: string) {
   return this.httpClient.post<any>(this.questionsUrl, {
     Title: title,
