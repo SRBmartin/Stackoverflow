@@ -70,10 +70,10 @@ export class QuestionDetailsComponent implements OnInit {
           this.toastServer.showToast('Question loaded successfully',"success");
         },
         error: (err) => {
-          console.error('Error fetching question:', err);
+          let errorMessage = err?.error?.message || 'Failed to load question';
           this.loading = false;
           this.loadService.hide();
-          this.toastServer.showToast('Failed to load question', "error");
+          this.toastServer.showToast(errorMessage, "error");
         }
       });
     }
@@ -91,8 +91,8 @@ export class QuestionDetailsComponent implements OnInit {
       this.answerService.markFinalAnswer(this.question.Id, answer.Id).subscribe({
         next: () => this.toastServer.showToast('Final answer selected successfully', "success"),
         error: (err) => {
-          console.error('Error marking final answer:', err);
-          this.toastServer.showToast('Failed marking final answer', "error");
+          let errorMessage = err?.error?.message || 'Failed marking final answer';
+          this.toastServer.showToast(errorMessage, "error");
         }
       });
     }
@@ -285,8 +285,9 @@ export class QuestionDetailsComponent implements OnInit {
                 this.toastServer.showToast('Question and photo updated successfully', "success");
               },
               error: (err) => {
+                let errorMessage = err?.error?.message || 'Failed to upload photo';
                 this.loadService.hide();
-                this.toastServer.showToast('Failed to upload photo',"error");
+                this.toastServer.showToast(errorMessage,"error");
               }
             });
           } else if (this.editedPhotoUrl === null) {
@@ -301,7 +302,8 @@ export class QuestionDetailsComponent implements OnInit {
         },
         error: (err) => {
           this.loadService.hide();
-          this.toastServer.showToast('Failed to update question', "error");
+          let errorMessage = err?.error?.message || 'Failed to update question';
+          this.toastServer.showToast(errorMessage, "error");
         }
       });
     }
@@ -321,7 +323,8 @@ export class QuestionDetailsComponent implements OnInit {
         },
         error: err => {
           this.loadService.hide();
-          this.toastServer.showToast('Failed to delete question', "error");
+          let errorMessage = err?.error?.message || 'Failed to delete question';
+          this.toastServer.showToast(errorMessage, "error");
         }
       });
     }
@@ -357,7 +360,8 @@ export class QuestionDetailsComponent implements OnInit {
         error: (err) => {
           q.MyVote = originalVote;
           q.VoteScore = originalScore;
-          this.toastServer.showToast('Failed to submit vote, you can not vote on your question!', "error");
+          let errorMessage = err?.error?.message || 'Failed to submit vote, you can not vote on your question!';
+          this.toastServer.showToast(errorMessage, "error");
         }
       });
     }
@@ -385,7 +389,8 @@ export class QuestionDetailsComponent implements OnInit {
         error: (err) => {
           answer.MyVote = originalVote;
           answer.VoteScore = originalScore;
-          this.toastServer.showToast('Failed to submit vote, you can not vote on your answer!', "error");
+          let errorMessage = err?.error?.message || 'Failed to submit vote, you can not vote on your answer!';
+          this.toastServer.showToast(errorMessage, "error");
         }
       });
     }
@@ -424,8 +429,8 @@ export class QuestionDetailsComponent implements OnInit {
         this.loadService.hide();
       },
       error: (err) => {
-        console.error('Failed to submit answer', err);
-        this.toastServer.showToast('Failed to submit answer', "error");
+        let errorMessage = err?.error?.message || 'Failed to submit answer'
+        this.toastServer.showToast(errorMessage, "error");
         this.loadService.hide();
       }
     });

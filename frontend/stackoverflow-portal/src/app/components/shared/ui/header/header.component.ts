@@ -49,12 +49,13 @@ export class HeaderComponent {
 
   onDialogSubmitted(data: { title: string; description: string; file?: File }) {
     this.loader.show();
-    this.showAskDialog = false; // odmah zatvori dialog
+    this.showAskDialog = false; 
     
     this.questionService.createQuestion(data.title, data.description).subscribe({
       next: (q) => {
         const questionId = q?.id ?? q?.Id ?? q?.ID;
         if (!questionId) {
+
           this.toast.showToast('Failed to get question ID', 'error');
           this.loader.hide();
           return;
@@ -90,8 +91,9 @@ export class HeaderComponent {
           this.loader.hide();
         }
       },
-      error: () => {
-        this.toast.showToast('Failed to post your question', 'error');
+      error: (err) => {
+        let errorMessage = err?.error?.message ||  'Failed to post your question';
+        this.toast.showToast(errorMessage, 'error');
         this.loader.hide();
       }
     });
