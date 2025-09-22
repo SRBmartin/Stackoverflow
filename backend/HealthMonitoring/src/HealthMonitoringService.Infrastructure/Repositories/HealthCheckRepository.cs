@@ -25,7 +25,7 @@ namespace HealthMonitoringService.Infrastructure.Repositories
         {
             var entity = check.ToTable();
 
-            await _healthChecks.AddEntityAsync(entity, cancellationToken);
+            await _healthChecks.UpsertEntityAsync(entity, TableUpdateMode.Replace, cancellationToken);
         }
 
         public async Task<HealthCheck?> GetLatestAsync(string serviceName, CancellationToken cancellationToken)

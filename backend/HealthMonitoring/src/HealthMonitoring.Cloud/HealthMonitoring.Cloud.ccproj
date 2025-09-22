@@ -14,7 +14,7 @@
     <StartDevelopmentStorage>True</StartDevelopmentStorage>
     <ARMDeployment>True</ARMDeployment>
     <Name>HealthMonitoring.Cloud</Name>
-    <UseWebProjectPorts>False</UseWebProjectPorts>
+    <UseWebProjectPorts>True</UseWebProjectPorts>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

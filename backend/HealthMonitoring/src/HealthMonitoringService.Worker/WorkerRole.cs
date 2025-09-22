@@ -1,33 +1,46 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.WindowsAzure;
-using Microsoft.WindowsAzure.Diagnostics;
+using Autofac;
+using HealthMonitoringService.Infrastructure.Composition;
+using HealthMonitoringService.Worker.Composition;
+using HealthMonitoringService.Worker.Monitoring.Interfaces;
 using Microsoft.WindowsAzure.ServiceRuntime;
 
 namespace HealthMonitoringService.Worker
 {
     public class WorkerRole : RoleEntryPoint
     {
-        private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
         private readonly ManualResetEvent runCompleteEvent = new ManualResetEvent(false);
+
+        private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+        private IContainer _container;
 
         public override void Run()
         {
-            Trace.TraceInformation("HealthMonitoringService.Worker is running");
+            cancellationTokenSource = new CancellationTokenSource();
 
             try
             {
-                this.RunAsync(this.cancellationTokenSource.Token).Wait();
+                using (var scope = _container.BeginLifetimeScope())
+                {
+                    var monitor = scope.Resolve<IMonitoringService>();
+                    monitor.RunAsync(cancellationTokenSource.Token).GetAwaiter().GetResult();
+                }
+            }
+            catch (OperationCanceledException) when (cancellationTokenSource.IsCancellationRequested) { }
+            catch (Exception ex)
+            {
+                Trace.TraceError("[HealthMonitoringService.Worker] Fatal error: " + ex);
+                throw;
             }
             finally
             {
-                this.runCompleteEvent.Set();
+                runCompleteEvent.Set();
             }
+
         }
 
         public override bool OnStart()
@@ -41,33 +54,34 @@ namespace HealthMonitoringService.Worker
             // For information on handling configuration changes
             // see the MSDN topic at https://go.microsoft.com/fwlink/?LinkId=166357.
 
+            var containerBuilder = new ContainerBuilder();
+
+            containerBuilder.RegisterModule(new InfrastructureModule());
+            containerBuilder.RegisterModule(new WorkerModule());
+
+            _container = containerBuilder.Build();
+
             bool result = base.OnStart();
 
-            Trace.TraceInformation("HealthMonitoringService.Worker has been started");
+            Trace.TraceInformation("HealthMonitoringService.Worker has started.");
 
             return result;
         }
 
         public override void OnStop()
         {
-            Trace.TraceInformation("HealthMonitoringService.Worker is stopping");
+            Trace.TraceInformation("HealthMonitoringService.Worker is stopping.");
 
-            this.cancellationTokenSource.Cancel();
-            this.runCompleteEvent.WaitOne();
+            try { cancellationTokenSource?.Cancel(); } catch { }
+
+            runCompleteEvent.WaitOne(TimeSpan.FromSeconds(10));
+
+            _container?.Dispose();
 
             base.OnStop();
 
-            Trace.TraceInformation("HealthMonitoringService.Worker has stopped");
+            Trace.TraceInformation("HealthMonitoringService.Worker has stopped.");
         }
 
-        private async Task RunAsync(CancellationToken cancellationToken)
-        {
-            // TODO: Replace the following with your own logic.
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                Trace.TraceInformation("Working");
-                await Task.Delay(1000);
-            }
-        }
     }
 }
