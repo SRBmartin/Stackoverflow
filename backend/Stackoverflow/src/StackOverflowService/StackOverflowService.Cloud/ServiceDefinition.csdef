@@ -4,7 +4,7 @@
     <Sites>
       <Site name="Web">
         <Bindings>
-          <Binding name="Endpoint1" endpointName="Endpoint1" />
+          <Binding name="WebApi" endpointName="WebApi" />
         </Bindings>
       </Site>
     </Sites>
@@ -12,12 +12,15 @@
       <Setting name="StorageConnectionString" />
     </ConfigurationSettings>
     <Endpoints>
-      <InputEndpoint name="Endpoint1" protocol="http" port="8080" />
+      <InputEndpoint name="WebApi" protocol="http" port="8080" />
     </Endpoints>
   </WebRole>
   <WorkerRole name="NotificationService" vmsize="Standard_D1_v2">
     <ConfigurationSettings>
       <Setting name="StorageConnectionString" />
     </ConfigurationSettings>
+	  <Endpoints>
+		  <InternalEndpoint name="Health" protocol="http" port="8081" />
+	  </Endpoints>
   </WorkerRole>
 </ServiceDefinition>

@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ServiceDefinition name="HealthMonitoring.Cloud" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition" schemaVersion="2015-04.2.6">
+  <WorkerRole name="HealthMonitoringService.Worker" vmsize="Standard_D1_v2">
+	<ConfigurationSettings>
+		<Setting name="StorageConnectionString" />
+	</ConfigurationSettings>
+	  <Endpoints>
+		  <InputEndpoint name="AlertApi" protocol="http" port="8086" />
+	  </Endpoints>
+  </WorkerRole>
+  <WebRole name="HealthMonitoringService.WebRole" vmsize="Standard_D1_v2">
+    <Sites>
+      <Site name="Web">
+        <Bindings>
+          <Binding name="WebApi" endpointName="WebApi" />
+        </Bindings>
+      </Site>
+    </Sites>
+	<ConfigurationSettings>
+		<Setting name="StorageConnectionString" />
+	</ConfigurationSettings>
+    <Endpoints>
+      <InputEndpoint name="WebApi" protocol="http" port="8085" />
+    </Endpoints>
+  </WebRole>
+</ServiceDefinition>

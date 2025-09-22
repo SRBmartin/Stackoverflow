@@ -59,7 +59,7 @@ namespace StackoverflowService.Infrastructure.Email
                 questionTitle: question.Title ?? "",
                 finalAnswerText: finalAnswer.Text ?? "",
                 answeredBy: answeredBy,
-                questionUrl: string.Empty //TODO: Add question URL sometime
+                questionUrl: $"http://localhost:4200/questions/{question.Id}"
             );
 
             var mail = new OutgoingMail
