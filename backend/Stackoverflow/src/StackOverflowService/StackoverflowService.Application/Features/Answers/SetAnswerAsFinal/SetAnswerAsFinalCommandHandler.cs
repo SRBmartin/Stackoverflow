@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using StackoverflowService.Application.Common;
 using StackoverflowService.Application.Common.Results;
+using StackoverflowService.Application.Features.Answers.Events.AnswerMarkerFinal;
 using StackoverflowService.Domain.Repositories;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,13 +12,16 @@ namespace StackoverflowService.Application.Features.Answers.SetAnswerAsFinal
     {
         private readonly IQuestionRepository _questionRepository;
         private readonly IAnswerRepository _answerRepository;
+        private readonly IMediator _mediator;
 
         public SetAnswerAsFinalCommandHandler(
             IQuestionRepository questionRepository,
-            IAnswerRepository answerRepository)
+            IAnswerRepository answerRepository,
+            IMediator mediator)
         {
             _questionRepository = questionRepository;
             _answerRepository = answerRepository;
+            _mediator = mediator;
         }
 
         public async Task<Result<bool>> Handle(SetAnswerAsFinalCommand command, CancellationToken cancellationToken)
@@ -47,7 +51,8 @@ namespace StackoverflowService.Application.Features.Answers.SetAnswerAsFinal
             question.Close();
             await _questionRepository.UpdateAsync(question, cancellationToken);
 
-            // TODO: publish AnswerMarkedFinalEvent to trigger email notification
+            var notification = new AnswerMarkedFinalNotification(command.QuestionId);
+            await _mediator.Publish(notification, cancellationToken);
 
             return Result.Ok(true);
         }

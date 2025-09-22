@@ -125,6 +125,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abstractions\IFinalAnswerQueue.cs" />
     <Compile Include="Abstractions\IIdentityService.cs" />
     <Compile Include="Abstractions\IIdentityValidator.cs" />
     <Compile Include="Abstractions\IPasswordHasher.cs" />
@@ -139,6 +140,7 @@
     <Compile Include="DTOs\Answers\AnswerDto.cs" />
     <Compile Include="DTOs\Auth\AuthResponseDto.cs" />
     <Compile Include="DTOs\Common\PagedResult.cs" />
+    <Compile Include="DTOs\Email\OutgoingMail.cs" />
     <Compile Include="DTOs\File\FileDownloadDto.cs" />
     <Compile Include="DTOs\File\FileUploadDto.cs" />
     <Compile Include="DTOs\Questions\QuestionDto.cs" />
@@ -147,6 +149,8 @@
     <Compile Include="Features\Answers\CreateAnswer\CreateAnswerCommand.cs" />
     <Compile Include="Features\Answers\CreateAnswer\CreateAnswerCommandHandler.cs" />
     <Compile Include="Features\Answers\CreateAnswer\CreateAnswerCommandValidator.cs" />
+    <Compile Include="Features\Answers\Events\AnswerMarkerFinal\AnswerMarkedFinalNotification.cs" />
+    <Compile Include="Features\Answers\Events\AnswerMarkerFinal\AnswerMarkedFinalNotificationHandler.cs" />
     <Compile Include="Features\Answers\SetAnswerAsFinal\SetAnswerAsFinalCommand.cs" />
     <Compile Include="Features\Answers\SetAnswerAsFinal\SetAnswerAsFinalCommandHandler.cs" />
     <Compile Include="Features\Answers\SetAnswerAsFinal\SetAnswerAsFinalCommandValidator.cs" />
