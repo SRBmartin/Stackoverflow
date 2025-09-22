@@ -379,7 +379,7 @@ export class QuestionDetailsComponent implements OnInit {
         error: (err) => {
           answer.MyVote = originalVote;
           answer.VoteScore = originalScore;
-          this.toastServer.showToast('Failed to submit vote', "error");
+          this.toastServer.showToast('Failed to submit vote, you can not vote on your answer!', "error");
         }
       });
     }

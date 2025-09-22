@@ -85,4 +85,11 @@ export class QuestionService {
     });
   }
   
+createQuestion(title: string, description: string) {
+  return this.httpClient.post<any>(this.questionsUrl, {
+    Title: title,
+    Description: description
+  });
+}
+
 }
