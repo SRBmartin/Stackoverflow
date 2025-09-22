@@ -109,6 +109,27 @@ namespace StackoverflowService.Infrastructure.Mapping
             );
         }
 
+        public static FinalEmailEntity ToTable(this FinalEmail src)
+        {
+            long inverted = long.MaxValue - src.CreatedAt.UtcTicks;
+            return new FinalEmailEntity
+            {
+                PartitionKey = src.AnswerId,
+                RowKey = inverted.ToString("D19"),
+                CreatedAtUtc = src.CreatedAt,
+                SentCount = src.SentCount
+            };
+        }
+
+        public static FinalEmail ToDomain(this FinalEmailEntity e)
+        {
+            return new FinalEmail(
+                e.PartitionKey,
+                e.SentCount,
+                e.CreatedAtUtc
+            );
+        }
+
         private static Gender ParseGender(string s)
         {
             switch ((s ?? "").Trim().ToUpperInvariant())

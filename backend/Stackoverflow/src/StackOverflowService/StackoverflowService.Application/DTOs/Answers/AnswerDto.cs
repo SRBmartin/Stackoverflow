@@ -1,4 +1,5 @@
-﻿using StackoverflowService.Domain.Enums;
+﻿using StackoverflowService.Application.DTOs.Users;
+using StackoverflowService.Domain.Enums;
 using System;
 
 #nullable enable
@@ -16,6 +17,7 @@ namespace StackoverflowService.Application.DTOs.Answers
         public bool IsDeleted { get; set; }
 
         //Aggregations
+        public UserPreviewDto? User { get; set; }
         public int UpVotes { get; set; }
         public int DownVotes { get; set; }
         public int VoteScore { get; set; }

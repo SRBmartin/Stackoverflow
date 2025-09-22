@@ -17,6 +17,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StackoverflowService.Applic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StackoverflowService.Infrastructure", "src\StackOverflowService\StackoverflowService.Infrastructure\StackoverflowService.Infrastructure.csproj", "{177748E9-21EE-4769-BC6C-B7D05B1AAA4B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationService", "src\NotificationService\NotificationService.csproj", "{6C434FCE-9459-4550-83A9-B28866AC9849}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NotificationService", "src\NotificationService", "{C5083CB6-D672-4745-A72B-42426529BB7E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +47,10 @@ Global
 		{177748E9-21EE-4769-BC6C-B7D05B1AAA4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{177748E9-21EE-4769-BC6C-B7D05B1AAA4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{177748E9-21EE-4769-BC6C-B7D05B1AAA4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C434FCE-9459-4550-83A9-B28866AC9849}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C434FCE-9459-4550-83A9-B28866AC9849}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C434FCE-9459-4550-83A9-B28866AC9849}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C434FCE-9459-4550-83A9-B28866AC9849}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -54,6 +62,8 @@ Global
 		{2D7466D7-1A52-425E-BA2F-A0F96D628DC2} = {5642D9A5-8A8F-4DDE-8400-E117B87629BD}
 		{67D219F9-5C75-40EA-9825-086EA18B5725} = {5642D9A5-8A8F-4DDE-8400-E117B87629BD}
 		{177748E9-21EE-4769-BC6C-B7D05B1AAA4B} = {5642D9A5-8A8F-4DDE-8400-E117B87629BD}
+		{6C434FCE-9459-4550-83A9-B28866AC9849} = {C5083CB6-D672-4745-A72B-42426529BB7E}
+		{C5083CB6-D672-4745-A72B-42426529BB7E} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BC7462E0-8135-429A-81BF-A401C4307C6B}
