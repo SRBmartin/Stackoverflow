@@ -26,6 +26,6 @@ export interface QuestionDto {
   };
   Answers: any[]; 
   VoteScore: number;
-  AnswerCount: number;
+  AnswersCount: number;
   MyVote: number | null;
 }

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BasicButtonComponent } from '../button/basic-button.component';
 import { SearchInputComponent } from '../search-input/search-input.component';
+import { SearchService } from '../../../../core/services/shared/search.service';
 
 @Component({
   selector: 'app-header',
@@ -15,6 +16,8 @@ import { SearchInputComponent } from '../search-input/search-input.component';
   ]
 })
 export class HeaderComponent {
+  constructor(private searchService: SearchService) {}
+
   isLoggedIn(): boolean {
     return true;
   }
@@ -26,6 +29,7 @@ export class HeaderComponent {
   }
 
   onSearch(query: string) {
+    this.searchService.setSearchTerm(query);
   }
 
   onProfile() { 
