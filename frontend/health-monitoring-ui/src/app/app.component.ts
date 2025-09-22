@@ -22,14 +22,11 @@ export class AppComponent {
   loading = false;
   error: string | null = null;
 
-  // raw data from API
   data: HealthCheckDto[] = [];
 
-  // filters
   serviceFilter: ServiceFilter = 'All';
   statusFilter: StatusFilter = 'All';
 
-  // available service options
   readonly services: ServiceFilter[] = ['All', 'NotificationService', 'Stackoverflow'];
 
   private abortController?: AbortController;
@@ -56,7 +53,7 @@ export class AppComponent {
         this.data = Array.isArray(resp) ? resp : [];
         this.loading = false;
       },
-      error: (err) => {
+      error: () => {
         this.error = 'Failed to load health data.';
         this.loading = false;
       }
@@ -71,12 +68,24 @@ export class AppComponent {
     });
   }
 
+  get healthyPct(): number {
+    const total = this.data.length;
+    if (!total) return 0;
+    const healthy = this.data.filter(x => (x.Status as string) === 'Healthy').length;
+    return Math.round((healthy / total) * 100);
+  }
+
+  get unhealthyPct(): number {
+    const total = this.data.length;
+    if (!total) return 0;
+    return 100 - this.healthyPct;
+  }
+
   trackByRow(_: number, item: HealthCheckDto): string {
     return `${item.ServiceName}|${item.DateTimeUtc}|${item.Status}`;
   }
 
   formatBelgrade(dtIso: string): string {
-    // dates are UTC; display in Europe/Belgrade without AM/PM
     try {
       const d = new Date(dtIso);
       return new Intl.DateTimeFormat('en-US', {

@@ -2,7 +2,13 @@
   <header class="header">
     <div class="title">
       <span class="dot"></span>
-      <h1>{{ title }}</h1>
+      <h1>
+        {{ title }}
+        <span class="kpi">
+          (<span class="healthy">{{ healthyPct }}%</span> /
+           <span class="unhealthy">{{ unhealthyPct }}%</span>)
+        </span>
+      </h1>
     </div>
 
     <div class="actions">

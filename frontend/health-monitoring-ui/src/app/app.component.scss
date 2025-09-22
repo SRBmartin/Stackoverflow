@@ -45,6 +45,9 @@
       box-shadow: 0 0 28px rgba(96,165,250,.9);
     }
     h1 { margin: 0; font-weight: 800; letter-spacing: .2px; color: var(--text); }
+    .kpi { margin-left: 8px; font-size: .9rem; font-weight: 800; }
+    .kpi .healthy { color: #16a34a; }
+    .kpi .unhealthy { color: #dc2626; }
   }
 
   .actions .btn {
