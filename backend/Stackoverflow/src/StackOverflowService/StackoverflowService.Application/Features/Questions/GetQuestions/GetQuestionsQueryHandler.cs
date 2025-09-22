@@ -9,7 +9,6 @@ using StackoverflowService.Application.Features.Questions.GetQuestions.Enums;
 using System.Collections.Generic;
 using System.Linq;
 using System;
-using StackoverflowService.Domain.Enums;
 using StackoverflowService.Domain.Entities;
 using StackoverflowService.Application.DTOs.Users;
 
@@ -73,6 +72,7 @@ namespace StackoverflowService.Application.Features.Questions.GetQuestions
             foreach (var question in slice)
             {
                 var user = await _userRepository.GetAsync(question.UserId, cancellationToken);
+                var answerCount = await _answerRepository.CountByQuestionAsync(question.Id, cancellationToken);
 
                 items.Add(new QuestionDto
                 {
@@ -86,6 +86,7 @@ namespace StackoverflowService.Application.Features.Questions.GetQuestions
                     IsClosed = question.IsClosed,
                     IsDeleted = question.IsDeleted,
                     VoteScore = voteScores.TryGetValue(question.Id, out var s) ? s : 0,
+                    AnswersCount = answerCount,
                     User = new UserPreviewDto
                         {
                             Id = user.Id,
