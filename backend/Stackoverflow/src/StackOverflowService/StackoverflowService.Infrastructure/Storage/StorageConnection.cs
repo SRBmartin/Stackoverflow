@@ -3,7 +3,7 @@ using System.Configuration;
 
 namespace StackoverflowService.Infrastructure.Storage
 {
-    internal static class StorageConnection
+    public static class StorageConnection
     {
         public static string Get()
         {
