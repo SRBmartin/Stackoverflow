@@ -1,12 +1,17 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-button',
   templateUrl: './basic-button.component.html',
   styleUrls: ['./basic-button.component.scss'],
   standalone: true,
-  imports: [CommonModule] // neophodno za ngStyle
+  imports: [
+    CommonModule,
+    RouterModule
+  ]
 })
 export class BasicButtonComponent {
   @Input() label: string = '';
@@ -15,12 +20,19 @@ export class BasicButtonComponent {
   @Input() disabled: boolean = false;
   @Input() size: 'sm' | 'md' | 'lg' = 'sm';
   @Input() backgroundImage: string = '';
+  @Input() routerLink?: string | any[];
+  @Input() routerLinkActive?: string;   
 
   @Output() clickEvent: EventEmitter<void> = new EventEmitter<void>();
+
+  constructor(private router: Router) {}
 
   onClick(): void {
     if (!this.disabled) {
       this.clickEvent.emit();
+      if (this.routerLink) {
+        this.router.navigate(Array.isArray(this.routerLink) ? this.routerLink : [this.routerLink]);
+      }
     }
   }
 

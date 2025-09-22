@@ -1,0 +1,37 @@
+<div>
+  <label 
+    *ngIf="label" 
+    [for]="name" 
+    class="form-label text-secondary">
+    {{ label }}
+    <span 
+      *ngIf="required" 
+      class="text-danger">
+        *
+    </span>
+  </label>
+  <input
+    [type]="type"
+    [id]="name"
+    [name]="name"
+    [placeholder]="placeholder"
+    [required]="required"
+    [value]="value"
+    (input)="onInput($event)"
+    (blur)="onBlurEvent($event)"
+    class="form-control"
+    [ngClass]="{
+      'form-control-sm': size === 'sm',
+      'form-control-lg': size === 'lg',
+      'error-border': hasError,
+      class
+    }"
+    [disabled]="isDisabled"
+    style="
+      border-color: var(--secondary-color);
+      transition: border-color 0.3s;
+    "
+    [attr.autocomplete]="'new-password'"
+  />
+</div>
+  
