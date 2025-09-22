@@ -1,0 +1,241 @@
+
+<a href="http://localhost:4200/questions" class="back-link"> ◁ Back to All Questions</a>
+<div *ngIf="loading" class="loading">Loading...</div>
+<div *ngIf="!loading && !question" class="not-found">Question not found.</div>
+
+<div *ngIf="question" class="question-details">
+
+  
+  <div class="header">
+    <h1 class="title">{{ question.Title }}</h1>
+    <div class="meta">Asked: {{ getTimeAgo(question.CreationDate) }}</div>
+  </div>
+
+  <div class="body">
+
+    <div class="votes">
+      <div class="vote-button-wrapper">
+        <button
+          class="vote-button up"
+          [class.active]="question.MyVote === 1"
+          (click)="vote(1)"
+          [disabled]="question.IsClosed">
+          
+          ▲
+        </button>
+        <div class="vote-tooltip">This question shows research effort; 
+            it is useful and clear.</div>
+      </div>
+
+      <div class="score">{{ question.VoteScore }}</div>
+
+      <div class="vote-button-wrapper">
+        <button
+          class="vote-button down"
+          [class.active]="question.MyVote === -1"
+          (click)="vote(-1)"
+          [disabled]="question.IsClosed">
+          ▼
+        </button>
+        <div class="vote-tooltip">This question does not show any research effort; 
+            it is unclear or not useful</div>
+      </div>
+    </div>
+
+    
+    <div class="content">
+      <p class="description">{{ question.Description }}</p>
+
+      <div *ngIf="questionPhotoUrl" class="question-photo-wrapper">
+        <img [src]="questionPhotoUrl" alt="" />
+      </div>
+
+      <div class="actions" *ngIf="isCurrentUserAuthor() && !editMode">
+        <button type="button" class="action-link" (click)="startEdit()">EDIT</button>
+        <button type="button" class="action-link" (click)="deleteQuestion()">DELETE</button>
+      </div>
+
+      
+      <div *ngIf="editMode" class="modal-overlay" (click)="cancelEdit()"></div>
+
+      
+      <div *ngIf="editMode" class="modal-edit" (click)="$event.stopPropagation()">
+
+        <div *ngIf="editMode" class="modal-edit" (click)="$event.stopPropagation()">
+        <h2>Edit Question</h2>
+
+        <div class="form-group">
+            <input
+            type="text"
+            [(ngModel)]="editedTitle"
+            placeholder="Title"
+            [class.invalid]="titleError"
+            />
+            <div *ngIf="titleError" class="error-message">This field is required</div>
+        </div>
+
+        <div class="form-group">
+            <textarea
+            [(ngModel)]="editedDescription"
+            placeholder="Description"
+            [class.invalid]="descriptionError"
+            ></textarea>
+            <div *ngIf="descriptionError" class="error-message">This field is required</div>
+        </div>
+
+        <div class="photo-upload-container">
+            <div *ngIf="editedPhotoUrl; else uploadZone" class="photo-preview-wrapper">
+            <button type="button" class="remove-photo-btn" (click)="removePhoto()">✕</button>
+            <img [src]="editedPhotoUrl" alt="Selected photo preview" />
+            </div>
+
+            <ng-template #uploadZone>
+            <label
+                for="photoInput"
+                class="upload-dropzone"
+                tabindex="0"
+                (keydown.enter)="$event.preventDefault(); photoInput.click()"
+                (keydown.space)="$event.preventDefault(); photoInput.click()"
+                [class.invalid]="photoError"
+            >
+                <div class="upload-text">CLICK TO UPLOAD PHOTO</div>
+                <input
+                id="photoInput"
+                type="file"
+                accept="image/*"
+                (change)="onPhotoSelected($event)"
+                #photoInput
+                hidden
+                />
+            </label>
+            <div *ngIf="photoError" class="error-message">This field is required</div>
+            </ng-template>
+        </div>
+
+        <div class="button-group">
+            <button (click)="saveEdit()">SAVE</button>
+            <button (click)="cancelEdit()">CANCEL</button>
+        </div>
+        </div>
+
+      </div>
+
+      <div class="user-info-container">
+        <div class="user-photo-wrapper">
+          <img
+            *ngIf="userPhotoUrl"
+            [src]="userPhotoUrl"
+            alt="User photo"
+            class="user-photo"
+          />
+        </div>
+        <div class="user-details">
+          <div class="user-meta">
+            {{ question.User.Name }} {{ question.User.Lastname }}
+          </div>
+          <div class="asked-time">Asked: {{ getTimeAgo(question.CreationDate) }}</div>
+        </div>
+      </div>
+
+    </div>
+
+    
+    
+  </div>
+  <div class="answers-header" *ngIf="question?.Answers">
+    {{ question.Answers.length }} Answer{{ question.Answers.length === 1 ? '' : 's' }}
+  </div>
+
+
+  <div class="answers-list" *ngIf="question?.Answers?.length">
+    <div class="answer-item" *ngFor="let answer of question.Answers">
+      <div class="body">
+        <div class="votes">
+          <div class="vote-button-wrapper" >
+            <button
+              class="vote-button up"
+              [class.active]="isUpvoted(answer.MyVote)"
+              (click)="voteAnswer(answer, 1)"
+              [disabled]="answer.IsFinal || question.IsClosed">
+              ▲
+            </button>
+            <div class="vote-tooltip">This answer is helpful or useful.</div>
+          </div>
+        
+          <div class="score">{{ answer.VoteScore }}</div>
+        
+          <div class="vote-button-wrapper">
+            <button
+              class="vote-button down"
+              [class.active]="isDownvoted(answer.MyVote)"
+              (click)="voteAnswer(answer, -1)"
+              [disabled]="answer.IsFinal || question.IsClosed">
+              ▼
+            </button>
+            <div class="vote-tooltip">This answer is unclear or not useful.</div>
+          </div>
+    
+          <button
+            *ngIf="isCurrentUserAuthor() && !question.IsClosed && !answer.IsFinal"
+            class="final-btn"
+            title="Select as final answer"
+            (click)="selectFinalAnswer(answer)">
+            ✔ 
+          </button>
+    
+          <div *ngIf="answer.IsFinal" class="final-answer">
+            ✔ 
+          </div>
+        </div>
+    
+        <div class="content">
+          <p class="description">{{ answer.Text }}</p>
+    
+          <div class="answer-user-info">
+            <div class="user-photo-wrapper" *ngIf="answer.User.PhotoBlobName">
+              <img *ngIf="answerUserPhotos[answer.User.Id]" [src]="answerUserPhotos[answer.User.Id]" alt="User photo" class="user-photo"/>
+            </div>
+            <div class="user-details">
+              <div class="user-meta">{{ answer.User.Name }} {{ answer.User.Lastname }}</div>
+              <div class="asked-time">Answered: {{ getTimeAgo(answer.CreationDate) }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+
+</div>
+<div class="answer-action-container" *ngIf="question">
+  <button 
+    class="answer-btn"
+    [disabled]="question.IsClosed"
+    (click)="openAnswerModal()">
+    {{ isCurrentUserAuthor() ? 'ANSWER YOUR QUESTION' : 'ANSWER THIS QUESTION' }}
+  </button>
+</div>
+
+<div *ngIf="answerModalOpen" class="modal-overlay" (click)="closeAnswerModal()"></div>
+
+<div *ngIf="answerModalOpen" class="modal-edit" (click)="$event.stopPropagation()">
+  <h2>Submit Your Answer</h2>
+  <div class="form-group">
+    <textarea
+      [(ngModel)]="newAnswerText"
+      placeholder="Type your answer here..."
+      [class.invalid]="!newAnswerText.trim() && submitAttempted">
+  </textarea>
+
+    <div *ngIf="!newAnswerText.trim() && submitAttempted" class="error-message">
+      This field is required
+    </div>    
+
+  </div>
+  <div class="button-group">
+    <button (click)="submitAnswer()" >SUBMIT</button>
+    <button (click)="closeAnswerModal()">CANCEL</button>
+  </div>
+</div>
+         
+

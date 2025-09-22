@@ -70,5 +70,12 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>  
 </nav>
+
+<app-ask-question-dialog
+  *ngIf="showAskDialog"
+  (closed)="onDialogClosed()"
+  (submitted)="onDialogSubmitted($event)">
+</app-ask-question-dialog>
+

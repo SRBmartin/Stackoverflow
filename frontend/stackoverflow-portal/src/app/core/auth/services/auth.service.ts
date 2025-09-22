@@ -53,4 +53,17 @@ export class AuthService {
     localStorage.removeItem(TOKEN_KEY);
   }
 
+  getCurrentUserId(): string | null {
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (!token) return null;
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.sub || null; // sub claim = user ID
+    } catch (e) {
+      console.error('Invalid JWT token', e);
+      return null;
+    }
+  }
+
 }

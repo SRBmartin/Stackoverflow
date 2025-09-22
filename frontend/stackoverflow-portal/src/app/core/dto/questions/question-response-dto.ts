@@ -1,3 +1,4 @@
+import { AnswerDto } from "../answer-dto";
 export interface QuestionResponseDto {
   Page: number;
   PageSize: number;
@@ -24,7 +25,7 @@ export interface QuestionDto {
     PhotoBlobName: string | null;
     PhotoContainer: string | null;
   };
-  Answers: any[]; 
+  Answers: AnswerDto[]; 
   VoteScore: number;
   AnswersCount: number;
   MyVote: number | null;
