@@ -1,0 +1,102 @@
+<div class="container">
+      <div class="row">
+      <div class="col-md-12">
+        <h1>General Information</h1>
+      </div>
+    </div>
+    <div class="row">
+    <div class="col-md-6">
+      <div class="photo-wrapper" *ngIf="photoPreview; else dropzone">
+        <div class="photo-preview-wrapper">
+          <img [src]="photoPreview" class="photo-preview" />
+        </div>
+        <button type="button" class="remove-photo-btn" (click)="removePhoto()">×</button>
+      </div>
+
+      <ng-template #dropzone>
+        <div
+          class="photo-drop-zone"
+          [class.dragging]="isDragOver"
+          (dragover)="onDragOver($event)"
+          (dragleave)="onDragLeave($event)"
+          (drop)="onFileDropped($event)"
+        >
+          <p>Click or drag & drop photo</p>
+          <input type="file" (change)="onFileSelected($event)" hidden #fileInput />
+        </div>
+        <button class="btn btn-secondary choose-file-btn" (click)="fileInput.click()">Choose File</button>
+      </ng-template>
+    </div>
+  </div>
+  <form [formGroup]="generalInfoForm" (ngSubmit)="onSave()">
+    <div class="row">
+      <div class="col-md-6">
+        <app-input
+          type="text"
+          name="name"
+          placeholder="Enter your first name"
+          [required]="true"
+          formControlName="name"
+        ></app-input>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <app-input
+          type="text"
+          name="lastname"
+          placeholder="Enter your last name"
+          [required]="true"
+          formControlName="lastname"
+        ></app-input>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <app-input
+          type="text"
+          name="state"
+          placeholder="Enter your state"
+          [required]="true"
+          formControlName="state"
+        ></app-input>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <app-input
+          type="text"
+          name="city"
+          placeholder="Enter your city"
+          [required]="true"
+          formControlName="city"
+        ></app-input>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <app-input
+          type="text"
+          name="address"
+          placeholder="Enter your address"
+          [required]="true"
+          formControlName="address"
+        ></app-input>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <app-button 
+          class="btn btn-tercial"
+          type="submit"
+          label="Save Changes"
+        ></app-button>
+      </div>
+    </div>
+  </form>
+</div>

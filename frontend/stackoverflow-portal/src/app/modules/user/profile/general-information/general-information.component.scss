@@ -1,0 +1,54 @@
+h1 {
+  margin-bottom: 30px;
+}
+
+app-input {
+  margin-bottom: 20px;
+}
+
+app-button {
+  padding: 0;
+}
+
+.photo-drop-zone {
+  border: 2px dashed #ccc;
+  border-radius: 6px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.3s;
+}
+
+.photo-drop-zone.dragging {
+  border-color: #007bff;
+  background-color: #f0f8ff;
+}
+
+.photo-preview-wrapper {
+  width: 150px;
+  height: 150px;
+  overflow: hidden;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.photo-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.remove-photo-btn {
+  background: red;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.choose-file-btn {
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
