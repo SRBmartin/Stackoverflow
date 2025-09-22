@@ -1,4 +1,6 @@
 ﻿using Autofac;
+using HealthMonitoringService.Domain.Repositories;
+using HealthMonitoringService.Infrastructure.Repositories;
 using HealthMonitoringService.Infrastructure.Tables.Context;
 using HealthMonitoringService.Infrastructure.Tables.Interfaces;
 
@@ -12,6 +14,14 @@ namespace HealthMonitoringService.Infrastructure.Composition
                 .As<ITableContext>()
                 .SingleInstance()
                 .AutoActivate();
+
+            builder.RegisterType<HealthCheckRepository>()
+                .As<IHealthCheckRepository>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<AlertEmailRepository>()
+                .As<IAlertEmailRepository>()
+                .InstancePerLifetimeScope();
 
         }
     }
