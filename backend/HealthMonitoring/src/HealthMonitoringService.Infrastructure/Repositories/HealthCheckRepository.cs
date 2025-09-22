@@ -4,7 +4,9 @@ using HealthMonitoringService.Domain.Repositories;
 using HealthMonitoringService.Infrastructure.Mapping;
 using HealthMonitoringService.Infrastructure.Tables.Entities;
 using HealthMonitoringService.Infrastructure.Tables.Interfaces;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -60,5 +62,20 @@ namespace HealthMonitoringService.Infrastructure.Repositories
 
             return list;
         }
+
+        public async Task<IReadOnlyList<HealthCheck>> GetSinceAsync(DateTimeOffset sinceUtc, CancellationToken cancellationToken)
+        {
+            var filter = TableClient.CreateQueryFilter<HealthCheckEntity>(e => e.DateTime >= sinceUtc);
+
+            var list = new List<HealthCheck>();
+            await foreach (var e in _healthChecks.QueryAsync<HealthCheckEntity>(
+                filter: filter, cancellationToken: cancellationToken))
+            {
+                list.Add(e.ToDomain());
+            }
+
+            return list.OrderByDescending(h => h.DateTime).ToList();
+        }
+
     }
 }

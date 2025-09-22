@@ -117,11 +117,20 @@
   <ItemGroup>
     <Compile Include="Composition\ApplicationModule.cs" />
     <Compile Include="DTOs\Email\OutgoingMail.cs" />
+    <Compile Include="DTOs\HealthCheck\HealthCheckDto.cs" />
+    <Compile Include="Features\HealthCheck\GetLatest\GetLatestHealthChecksQuery.cs" />
+    <Compile Include="Features\HealthCheck\GetLatest\GetLatestHealthChecksQueryHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HealthMonitoringService.Domain\HealthMonitoringService.Domain.csproj">
+      <Project>{7aba89b7-62e9-4387-aa78-c30c8a5d7997}</Project>
+      <Name>HealthMonitoringService.Domain</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
