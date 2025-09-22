@@ -20,7 +20,7 @@
   <div class="questions-table">
     <div class="question-row" *ngFor="let question of questions?.Items">
       <div class="vote-section">
-        <span class="vote-score" [ngClass]="{'negative-vote': question.VoteScore < 0}">{{ question.VoteScore }} score</span>
+        <span class="vote-score" [ngClass]="{'negative-vote': question.VoteScore < 0}">{{ question.VoteScore }} votes</span>
         <div class="answers" [ngClass]="{'closed': question.IsClosed && question.AnswersCount > 0}">
           {{ getAnswersText(question.AnswersCount, question.IsClosed) }}
         </div>
