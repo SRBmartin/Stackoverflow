@@ -107,7 +107,9 @@ export class RegisterComponent {
     this.authService.register(request)
       .pipe(
         switchMap(() => this.authService.login({ email: request.email, password: request.password })),
-        switchMap(() => this.photoFile ? this.userService.uploadPhoto(this.photoFile) : of(null)),
+        switchMap(() => {
+          return this.photoFile ? this.userService.uploadPhoto(this.photoFile) : of(null);
+        }),
         catchError(err => {
           console.error('Registration or photo upload failed:', err);
           this.toastServer.showToast('Registration failed. Please try again.', 'error');  

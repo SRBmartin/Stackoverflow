@@ -1,0 +1,170 @@
+/* frontend\stackoverflow-portal\src\app\modules\questions\list-questions\list-questions.component.scss */
+.questions-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  position: relative;
+}
+
+.welcome-text {
+  text-align: center;
+  margin-bottom: 20px;
+
+  h1 {
+    color: var(--dark-color);
+    font-size: 2rem;
+    margin-bottom: 10px;
+  }
+
+  p {
+    color: var(--grey-color);
+    font-size: 1rem;
+  }
+}
+
+.search-container {
+  margin-bottom: 20px;
+  text-align: right;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+
+  app-search-input {
+    flex-grow: 1;
+    max-width: 300px;
+  }
+
+  .sort-controls {
+    display: flex;
+    gap: 5px;
+
+    select {
+      padding: 8px 12px;
+      border: 1px solid var(--grey-color);
+      border-radius: 4px;
+      font-size: 14px;
+    }
+  }
+}
+
+.questions-table {
+  .question-row {
+    display: flex;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--light-color);
+
+    .vote-section {
+      width: 70px;
+      text-align: center;
+      padding-right: 15px;
+
+      span {
+        display: block;
+        padding: 5px;
+        border-radius: 4px;
+      }
+
+      .negative-vote {
+        color: #dc3545; // Reddish color
+      }
+    }
+
+    .content-section {
+      flex: 1;
+
+      .question-title {
+        color: #3399ff; // Blue color for title
+        font-size: 1.2rem;
+        text-decoration: none;
+        font-weight: 600;
+
+        &:hover {
+          color: var(--accent-color);
+        }
+      }
+
+      .question-description {
+        color: var(--dark-color);
+        font-size: 0.9rem;
+        margin-top: 5px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .meta {
+        color: var(--grey-color);
+        font-size: 0.9rem;
+        margin-top: 5px;
+
+        span {
+          margin-right: 10px;
+        }
+
+        .date {
+          font-style: italic;
+        }
+      }
+
+      .answers {
+        margin-top: 5px;
+        font-size: 0.9rem;
+        color: var(--grey-color);
+        padding: 2px 8px;
+        border-radius: 4px;
+
+        &.closed {
+          background-color: #28a745; // Green background for closed questions
+          color: var(--white-color);
+        }
+      }
+    }
+  }
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  gap: 10px;
+
+  button {
+    padding: 5px 10px;
+    border: 1px solid var(--grey-color);
+    border-radius: 4px;
+    background: var(--white-color);
+    cursor: pointer;
+
+    &.active {
+      background: var(--accent-color);
+      color: var(--white-color);
+      font-weight: bold;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+  }
+
+  span {
+    padding: 5px 10px;
+    color: var(--grey-color);
+    align-self: center;
+  }
+}
+
+app-loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+}
+
+app-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1001;
+}
