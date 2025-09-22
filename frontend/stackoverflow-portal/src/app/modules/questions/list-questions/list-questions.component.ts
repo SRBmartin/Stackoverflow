@@ -1,14 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { QuestionResponseDto } from '../../../core/dto/questions/question-response-dto';
 import { QuestionService } from '../../../core/services/question.service';
 import { ToastServer } from '../../../common/ui/toast/toast.service';
 import { LoaderService } from '../../../common/ui/loader/loader.service';
-import { SearchInputComponent } from '../../../components/shared/ui/search-input/search-input.component';
 import { QuestionsSortBy } from './const/questions-sort-by';
 import { SortDirection } from './const/sort-direction';
+import { SearchService } from '../../../core/services/shared/search.service';
+import { debounceTime, distinctUntilChanged, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-list-questions',
@@ -16,13 +17,12 @@ import { SortDirection } from './const/sort-direction';
   imports: [
     CommonModule,
     RouterModule,
-    FormsModule,
-    SearchInputComponent
+    FormsModule
   ],
   templateUrl: './list-questions.component.html',
   styleUrl: './list-questions.component.scss'
 })
-export class ListQuestionsComponent implements OnInit {
+export class ListQuestionsComponent implements OnInit, OnDestroy {
   questions: QuestionResponseDto | null = null;
   currentPage: number = 1;
   searchTerm: string = '';
@@ -30,18 +30,43 @@ export class ListQuestionsComponent implements OnInit {
   direction: SortDirection = SortDirection.Desc;
   totalPages: number = 1;
 
-  // Expose enum values as arrays
   sortByOptions: string[] = Object.values(QuestionsSortBy);
   directionOptions: string[] = Object.values(SortDirection);
 
+  private searchSubscription: Subscription | undefined;
+
   constructor(
     private readonly questionService: QuestionService,
+    private readonly searchService: SearchService,
     private readonly toastService: ToastServer,
     private readonly loaderService: LoaderService
   ) {}
 
   ngOnInit(): void {
     this.loadQuestions();
+    let firstLoad = true;
+    this.searchSubscription = this.searchService.searchTerm$.pipe(
+      debounceTime(1500),
+      distinctUntilChanged()
+    ).subscribe(term => {
+      this.searchTerm = term.trim();
+      this.currentPage = 1;
+
+      if (firstLoad) {
+        firstLoad = false;
+        return;
+      }
+
+      if (this.searchTerm.length === 0 || this.searchTerm.length >= 3) {
+        this.loadQuestions(); 
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.searchSubscription) {
+      this.searchSubscription.unsubscribe();
+    }
   }
 
   loadQuestions(): void {
@@ -53,8 +78,8 @@ export class ListQuestionsComponent implements OnInit {
         this.loaderService.hide();
       },
       error: (err) => {
-        console.error('Failed to load questions:', err);
-        this.toastService.showToast('Failed to load questions. Please try again.', 'error');
+        let errorMessage = err?.error?.message || 'Failed to load questions. Please try again.';
+        this.toastService.showToast(errorMessage, 'error');
         this.loaderService.hide();
       }
     });
@@ -68,14 +93,8 @@ export class ListQuestionsComponent implements OnInit {
     this.loadQuestions();
   }
 
-  onSearchTermChanged(term: string): void {
-    this.searchTerm = term;
-    this.currentPage = 1; // Reset to first page on new search
-    this.loadQuestions();
-  }
-
   onSortChange(): void {
-    this.currentPage = 1; // Reset to first page on sort change
+    this.currentPage = 1; 
     this.loadQuestions();
   }
 
@@ -112,10 +131,14 @@ export class ListQuestionsComponent implements OnInit {
     return pages;
   }
 
-  getAnswersText(answersLength: number): string {
-    if (answersLength === 0) {
+  getAnswersText(answerCount: number, isClosed: boolean): string {
+    if (answerCount === undefined || answerCount === null) {
       return 'No answers yet';
     }
-    return `${answersLength} ${answersLength === 1 ? 'answer' : 'answers'}`;
+    let text = answerCount === 0 ? 'No answers yet' : `${answerCount} ${answerCount === 1 ? 'answer' : 'answers'}`;
+    if (isClosed && answerCount > 0) {
+      text = '✓ ' + text;
+    }
+    return text;
   }
 }

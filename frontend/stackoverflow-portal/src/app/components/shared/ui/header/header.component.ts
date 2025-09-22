@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { AskQuestionDialogComponent } from '../../../../modules/questions/create-question/ask-question-dialog.component';
 import { ToastServer } from '../../../../common/ui/toast/toast.service';
 import { LoaderService } from '../../../../common/ui/loader/loader.service';
+import { SearchService } from '../../../../core/services/shared/search.service';
 
 @Component({
   selector: 'app-header',
@@ -21,9 +22,11 @@ import { LoaderService } from '../../../../common/ui/loader/loader.service';
   ]
 })
 export class HeaderComponent {
+
   showAskDialog = false;
 
   constructor(
+    private searchService: SearchService,
     private questionService: QuestionService,
     private router: Router, 
     private toast: ToastServer, 
@@ -36,7 +39,9 @@ export class HeaderComponent {
 
   onLogin() { }
   onSignup() { }
-  onSearch(query: string) { }
+  onSearch(query: string) {
+    this.searchService.setSearchTerm(query);
+  }
   onProfile() { }
 
   onAskQuestion() { 

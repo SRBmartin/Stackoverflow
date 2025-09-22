@@ -52,11 +52,11 @@ export class QuestionService {
     return this.httpClient.delete<void>(`${this.questionsUrl}/${id}/photo`);
   } 
 
-createQuestion(title: string, description: string) {
-  return this.httpClient.post<any>(this.questionsUrl, {
-    Title: title,
-    Description: description
-  });
-}
+  createQuestion(title: string, description: string) {
+    return this.httpClient.post<any>(this.questionsUrl, {
+      Title: title,
+      Description: description
+    });
+  }
 
 }
