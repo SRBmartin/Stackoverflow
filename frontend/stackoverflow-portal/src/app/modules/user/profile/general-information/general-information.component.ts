@@ -69,7 +69,7 @@ export class GeneralInformationComponent implements OnInit {
         }
       },
       error: (err) => {
-        this.toastService.showToast('Greška pri učitavanju profila', 'error');
+        this.toastService.showToast('Error loading profile', 'error');
       }
     });
   }
