@@ -75,7 +75,7 @@ namespace StackoverflowService.Application.Features.Votes
                 if (answer is null || answer.IsDeleted)
                     return Result.Fail<bool>(Error.NotFound("Answers.NotFound", "Answer not found."));
 
-                if (answer.UserId == command.UserId || question.UserId == command.UserId)
+                if (answer.UserId == command.UserId)
                     return Result.Fail<bool>(Error.Forbidden("Votes.OwnContent", "You cannot vote on your own content."));
 
                 var existing = await _voteRepository.GetUserVoteForAnswerAsync(answer.Id, command.UserId, ct);
