@@ -8,6 +8,7 @@ import { AskQuestionDialogComponent } from '../../../../modules/questions/create
 import { ToastServer } from '../../../../common/ui/toast/toast.service';
 import { LoaderService } from '../../../../common/ui/loader/loader.service';
 import { SearchService } from '../../../../core/services/shared/search.service';
+import { getToken, isJwtExpired } from '../../../../core/auth/utils/jwt.utils';
 
 @Component({
   selector: 'app-header',
@@ -34,7 +35,9 @@ export class HeaderComponent {
   ) {}
 
   isLoggedIn(): boolean {
-    return true;
+    const token = getToken();
+    if (!token) return false;
+      return !isJwtExpired(token)
   }
 
   onLogin() { }

@@ -8,7 +8,7 @@
             </div>
             <div class="col-md-8">
 
-                        <app-search-input (searchChanged)="onSearch($event)"></app-search-input>
+                        <!-- <app-search-input (searchChanged)="onSearch($event)"></app-search-input> -->
             </div>
             <div class="col-md-2 btn-holder">
                 <app-button
@@ -62,7 +62,7 @@
                         type="button"
                         class="btn btn-accent btn-md"
                         label="Ask Question"
-                        routerLink="/ask-question"
+                        (clickEvent)="onAskQuestion()"
                         routerLinkActive="active"
                     ></app-button>
                 </div>
