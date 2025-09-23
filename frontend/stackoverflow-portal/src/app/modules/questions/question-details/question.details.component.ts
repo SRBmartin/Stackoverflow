@@ -67,7 +67,6 @@ export class QuestionDetailsComponent implements OnInit {
 
           this.loading = false;
           this.loadService.hide();
-          this.toastServer.showToast('Question loaded successfully',"success");
         },
         error: (err) => {
           let errorMessage = err?.error?.message || 'Failed to load question';
